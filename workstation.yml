@@ -1,0 +1,79 @@
+---
+- name: Configure Workstation
+  hosts: localhost
+  tasks:
+
+    - name: Add VSCode Repo
+      become: yes
+      yum_repository:
+        name: vscode
+        description: Visual Studio Code repo
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgcheck: yes
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+    - name: Add Teams Repo
+      become: yes
+      yum_repository:
+        name: teams
+        description: MS Teams repo
+        baseurl: https://packages.microsoft.com/yumrepos/ms-teams
+        gpgcheck: yes
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+    - name: Add Google Chrome repo
+      become: yes
+      yum_repository:
+        name: google-chrome
+        description: Google Chrome repo
+        baseurl: https://dl.google.com/linux/chrome/rpm/stable/x86_64
+        gpgcheck: yes
+        gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+    - name: Add Google Earth repo
+      become: yes
+      yum_repository:
+        name: google-earth
+        description: Google Earth repo
+        baseurl: https://dl.google.com/linux/earth/rpm/stable/x86_64
+        gpgcheck: yes
+        gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+    - name: Update Package Metadata and Packages
+      yum:
+        update_cache: yes
+        update_only: yes
+        state: latest
+
+    - name: Install Packages
+      become: yes
+      yum:
+        state: present
+        name:
+          - blender
+          - code
+          - dnf-plugin-system-upgrade
+          - dotnet
+          - ffmpeg
+          - gimp
+          - gnome-extensions-app
+          - gnome-tweaks
+          - gnucash
+          - google-chrome-stable
+          - google-earth-pro-stable
+          - google-roboto-fonts
+          - htop
+          - inkscape
+          - jpegoptim
+          - keepassxc
+          - libjpeg-turbo-utils
+          - libva-utils
+          - libva-vdpau-driver
+          - nodejs
+          - perl-Image-ExifTool
+          - postgresql-server
+          - postgresql-upgrade
+          - rawtherapee
+          - tmux
+          - vdpauinfo
+          - vlc
