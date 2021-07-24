@@ -48,6 +48,13 @@
           - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
           - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm
 
+    - name: Add NVIDIA Container Repos
+      become: yes
+      uri:
+        url: https://nvidia.github.io/nvidia-container-runtime/rhel8.3/nvidia-container-runtime.repo
+        dest: /etc/yum.repos.d/nvidia-container-runtime.repo
+        creates: /etc/yum.repos.d/nvidia-container-runtime.repo
+
     - name: Update Package Metadata and Packages
       become: yes
       dnf:
@@ -72,6 +79,7 @@
           - code
           - dnf-plugin-system-upgrade
           - dotnet
+          - ffmpeg
           - fira-code-fonts
           - gimp
           - gnome-extensions-app
@@ -81,6 +89,7 @@
           - google-earth-pro-stable
           - google-roboto-fonts
           - htop
+          - ImageMagick-devel
           - inkscape
           - jpegoptim
           - keepassxc
@@ -88,6 +97,7 @@
           - libva-utils
           - libva-vdpau-driver
           - nodejs
+          - nvidia-container-runtime
           - perl-Image-ExifTool
           - podman
           - postgresql-server
@@ -97,3 +107,9 @@
           - teams
           - tmux
           - vdpauinfo
+
+#    - name: update network name
+
+#    - name: Setup SSH Key (create / add to remotes?)
+
+#    - name: Setup local PSQL (restores)
