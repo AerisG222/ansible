@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  vars:
+    has_nvidia_gpu: yes
+
+  name: Configure Workstation
+  roles:
+    - fedora_workstation
