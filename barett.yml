@@ -2,6 +2,8 @@
 - hosts: localhost
   vars:
     has_nvidia_gpu: yes
+    hostname: barett
+    domain: mikeandwan.us
 
   name: Configure Workstation
   roles:
