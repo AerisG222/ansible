@@ -12,6 +12,7 @@ When Authoring Ansible files in VSCode
 1. Install Ansible Language extension
 2. Run: `sudo dnf install ansible-lint`
 
-# References
+## References
+
 - https://www.quora.com/How-can-TensorFlow-with-NVIDIA-GPU-support-be-installed-on-Fedora-32
 - https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#podman
