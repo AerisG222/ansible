@@ -112,8 +112,15 @@
       - teams
       - tmux
       - vdpauinfo
+      - vlc
 
-#    - name: update network name
+- name: Install Azure Studio
+  become: yes
+  dnf:
+    state: present
+    disable_gpg_check: yes
+    name:
+      - https://go.microsoft.com/fwlink/?linkid=2168271
 
 #    - name: Setup SSH Key (create / add to remotes?)
 
