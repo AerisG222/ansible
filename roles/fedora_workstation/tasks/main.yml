@@ -122,6 +122,17 @@
     name:
       - https://go.microsoft.com/fwlink/?linkid=2168271
 
+- name: Install Android Studio Dependencies
+  become: yes
+  dnf:
+    state: present
+    name:
+      - zlib.i686
+      - ncurses-libs.i686
+      - bzip2-libs.i686
+
+# Android Studio requires accepting Terms and Conditions - so not automating this now
+
 #    - name: Setup SSH Key (create / add to remotes?)
 
 #    - name: Setup local PSQL (restores)
