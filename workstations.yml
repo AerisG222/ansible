@@ -1,0 +1,8 @@
+---
+- name: Configure Workstations
+  hosts: workstations
+
+  tasks:
+    - name: Configure Workstation
+      include_role:
+        name: fedora_workstation

@@ -1,0 +1,17 @@
+all:
+  children:
+
+    servers:
+      hosts:
+        tifa:
+          hostname: tifa
+
+    workstations:
+      hosts:
+        barett:
+          ansible_connection: local
+          has_nvidia_gpu: yes
+          hostname: barett
+
+  vars:
+    domain: mikeandwan.us
