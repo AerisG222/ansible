@@ -1,0 +1,8 @@
+---
+- name: Configure Servers
+  hosts: servers
+
+  tasks:
+    - name: Configure Server
+      include_role:
+        name: fedora_server

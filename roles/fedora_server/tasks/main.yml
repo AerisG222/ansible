@@ -1,0 +1,13 @@
+- name: Update Package Metadata and Packages
+  become: yes
+  dnf:
+    update_cache: yes
+    state: present
+
+- name: Install Packages
+  become: yes
+  dnf:
+    state: present
+    name:
+      - dnf-plugin-system-upgrade
+      - podman
