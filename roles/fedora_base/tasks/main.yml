@@ -1,0 +1,7 @@
+---
+- name: Set hostname
+  when: hostname | length > 0 and domain | length > 0
+  become: yes
+  hostname:
+    name: '{{ hostname }}.{{ domain }}'
+    use: systemd

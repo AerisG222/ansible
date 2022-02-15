@@ -1,10 +1,7 @@
 ---
-- name: Set hostname
-  when: hostname | length > 0 and domain | length > 0
-  become: yes
-  hostname:
-    name: '{{ hostname }}.{{ domain }}'
-    use: systemd
+- name: Run Common Fedora Tasks
+  include_role:
+    name: fedora_base
 
 - name: Add VSCode Repo
   become: yes
