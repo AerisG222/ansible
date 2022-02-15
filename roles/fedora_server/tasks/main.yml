@@ -1,3 +1,4 @@
+---
 - name: Update Package Metadata and Packages
   become: yes
   dnf:
