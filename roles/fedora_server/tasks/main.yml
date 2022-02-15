@@ -12,3 +12,15 @@
     name:
       - dnf-plugin-system-upgrade
       - podman
+
+- name: Allow inbound HTTP/HTTPS traffic
+  become: yes
+  firewalld:
+    immediate: yes
+    permanent: yes
+    service: "{{ item }}"
+    state: enabled
+    zone: FedoraServer
+  loop:
+    - http
+    - https
