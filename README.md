@@ -4,9 +4,12 @@ This is an attempt to learn Ansible to automate the provisioning of a new server
 
 To use:
 
+Consider adding `--check` to the commands below to see what ansible would do w/o actually performing the task.
+
 1. Install Ansible: `sudo dnf install ansible`
-2. Run (servers): `ansible-playbook -K -i inventory.yml servers.yml`
-3. Run (workstations): `ansible-playbook -K -i inventory.yml workstations.yml`
+2. Run (servers): `ansible-playbook -K -i inventory.yml playbook_servers.yml`
+3. Run (workstations): `ansible-playbook -K -i inventory.yml playbook_workstations.yml`
+4. Run (vmtest - note the ask-pass `-k` as ssh keys not configured yet): `ansible-playbook -kK -i inventory_test.yml playbook_servers.yml`
 
 When Authoring Ansible files in VSCode
 

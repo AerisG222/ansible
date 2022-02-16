@@ -1,0 +1,12 @@
+---
+all:
+  children:
+
+    servers:
+      hosts:
+        vmtest:
+          ansible_host: 192.168.122.43
+          ansible_user: mmorano
+
+  vars:
+    domain: mikeandwan.us

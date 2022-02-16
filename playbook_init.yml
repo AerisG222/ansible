@@ -1,0 +1,8 @@
+---
+- name: Initialize Servers to be managed by Ansible
+  hosts: servers
+
+  tasks:
+    - name: Initialize Server
+      include_role:
+        name: fedora_init

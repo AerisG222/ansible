@@ -5,3 +5,9 @@
   hostname:
     name: '{{ hostname }}.{{ domain }}'
     use: systemd
+
+- name: Add SSH public keys
+  authorized_key:
+    user: mmorano
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub')) }}"
