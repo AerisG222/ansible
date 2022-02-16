@@ -5,6 +5,7 @@
     update_cache: yes
     name: '*'
     state: latest
+  tags: skip_ansible_lint
 
 - name: add ssh public keys
   ansible.builtin.authorized_key:
