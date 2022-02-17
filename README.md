@@ -1,20 +1,24 @@
-# Ansible Scripts
+# Ansible
 
 This is an attempt to learn Ansible to automate the provisioning of a new server and workstation.
 
-To use:
+## Install Ansible
+
+While it is possible to run `sudo dnf install ansible` to install Ansible, it may not be the most recent version.  As such, prefer installing via `pip install --user ansible` and be sure to use
+`pip` to update Ansible afterwards.
+
+If you will be authoring Ansible files in VSCode, make sure you additionally install the following:
+
+1. Install Ansible Language extension in VSCode
+2. Run: `pip install --user ansible-lint`
+
+## Using Playbook Examples
 
 Consider adding `--check` to the commands below to see what ansible would do w/o actually performing the task.
 
-1. Install Ansible: `sudo dnf install ansible`
-2. Run (servers): `ansible-playbook -K -i inventory.yml playbook_servers.yml`
-3. Run (workstations): `ansible-playbook -K -i inventory.yml playbook_workstations.yml`
-4. Run (vmtest - note the ask-pass `-k` as ssh keys not configured yet): `ansible-playbook -kK -i inventory_test.yml playbook_servers.yml`
-
-When Authoring Ansible files in VSCode
-
-1. Install Ansible Language extension
-2. Run: `sudo dnf install ansible-lint`
+1. Run (servers): `ansible-playbook -K -i inventory.yml playbook_servers.yml`
+2. Run (workstations): `ansible-playbook -K -i inventory.yml playbook_workstations.yml`
+3. Run (vmtest - note the ask-pass `-k` as ssh keys not configured yet): `ansible-playbook -kK -i inventory_test.yml playbook_servers.yml`
 
 ## References
 
