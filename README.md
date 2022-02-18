@@ -22,5 +22,8 @@ Consider adding `--check` to the commands below to see what ansible would do w/o
 
 ## References
 
+- https://www.ansible.com/hubfs/2018_Content/Ansible%20Best%20Practices%20Roles%20&%20Modules.pdf
 - https://www.quora.com/How-can-TensorFlow-with-NVIDIA-GPU-support-be-installed-on-Fedora-32
 - https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#podman
+- https://github.com/geerlingguy/ansible-for-devops
+- https://github.com/vbotka/ansible-linux-postinstall
