@@ -8,6 +8,13 @@
   tags: skip_ansible_lint
   when: update_packages
 
+- name: Install Packages
+  become: yes
+  dnf:
+    state: present
+    name:
+      - dnf-plugin-system-upgrade
+
 # https://www.cyberciti.biz/tips/linux-unix-bsd-nginx-webserver-security.html
 # https://www.cyberciti.biz/cloud-computing/increase-your-linux-server-internet-speed-with-tcp-bbr-congestion-control/
 # https://www.bufferbloat.net/projects/codel/wiki/
