@@ -6,6 +6,7 @@ all:
       hosts:
         tifa:
           hostname: tifa
+          ansible_user: mmorano
 
     workstations:
       hosts:
