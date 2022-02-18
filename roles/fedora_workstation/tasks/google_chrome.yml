@@ -1,0 +1,17 @@
+---
+- name: Add Google Chrome repo
+  become: yes
+  ansible.builtin.yum_repository:
+    name: google-chrome
+    description: Google Chrome repo
+    baseurl: https://dl.google.com/linux/chrome/rpm/stable/x86_64
+    gpgcheck: yes
+    gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+  notify: update_package_cache
+
+- name: Install Google Chrome
+  become: yes
+  ansible.builtin.dnf:
+    state: present
+    name:
+      - google-chrome-stable

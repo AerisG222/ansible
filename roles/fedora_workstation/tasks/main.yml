@@ -1,43 +1,31 @@
 ---
-- name: Run Common Fedora Tasks
-  include_role:
-    name: fedora_base
+- name: Import android_studio.yml
+  ansible.builtin.import_tasks: android_studio.yml
+  when: android_studio
 
-- name: Add VSCode Repo
-  become: yes
-  yum_repository:
-    name: vscode
-    description: Visual Studio Code repo
-    baseurl: https://packages.microsoft.com/yumrepos/vscode
-    gpgcheck: yes
-    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+- name: Import azure_data_studio.yml
+  ansible.builtin.import_tasks: azure_data_studio.yml
+  when: azure_data_studio
 
-- name: Add Teams Repo
-  become: yes
-  yum_repository:
-    name: teams
-    description: MS Teams repo
-    baseurl: https://packages.microsoft.com/yumrepos/ms-teams
-    gpgcheck: yes
-    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+- name: Import google_chrome.yml
+  ansible.builtin.import_tasks: google_chrome.yml
+  when: google_chrome
 
-- name: Add Google Chrome repo
-  become: yes
-  yum_repository:
-    name: google-chrome
-    description: Google Chrome repo
-    baseurl: https://dl.google.com/linux/chrome/rpm/stable/x86_64
-    gpgcheck: yes
-    gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+- name: Import google_earth.yml
+  ansible.builtin.import_tasks: google_earth.yml
+  when: google_earth
 
-- name: Add Google Earth repo
-  become: yes
-  yum_repository:
-    name: google-earth
-    description: Google Earth repo
-    baseurl: https://dl.google.com/linux/earth/rpm/stable/x86_64
-    gpgcheck: yes
-    gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+- name: Import ms_teams.yml
+  ansible.builtin.import_tasks: ms_teams.yml
+  when: ms_teams
+
+- name: Import nvidia.yml
+  ansible.builtin.import_tasks: nvidia.yml
+  when: nvidia
+
+- name: Import vscode.yml
+  ansible.builtin.import_tasks: vscode.yml
+  when: vscode
 
 - name: Add RPM Fusion repos
   become: yes
@@ -48,29 +36,6 @@
       - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
       - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm
 
-- name: Add NVIDIA Container Repos
-  become: yes
-  when: has_nvidia_gpu
-  uri:
-    url: https://nvidia.github.io/nvidia-container-runtime/rhel8.3/nvidia-container-runtime.repo
-    dest: /etc/yum.repos.d/nvidia-container-runtime.repo
-    creates: /etc/yum.repos.d/nvidia-container-runtime.repo
-
-- name: Update Package Metadata and Packages
-  become: yes
-  dnf:
-    update_cache: yes
-    state: present
-
-- name: Install Nvidia Drivers
-  become: yes
-  when: has_nvidia_gpu
-  dnf:
-    state: present
-    name:
-      - akmod-nvidia
-      - xorg-x11-drv-nvidia-cuda
-
 - name: Install Packages
   become: yes
   dnf:
@@ -78,8 +43,6 @@
     name:
       - blender
       - buildah
-      - code
-      - dnf-plugin-system-upgrade
       - dotnet
       - ffmpeg
       - fira-code-fonts
@@ -87,8 +50,6 @@
       - gnome-extensions-app
       - gnome-tweaks
       - gnucash
-      - google-chrome-stable
-      - google-earth-pro-stable
       - google-roboto-fonts
       - htop
       - ImageMagick-devel
@@ -99,55 +60,12 @@
       - libva-utils
       - libva-vdpau-driver
       - nodejs
-      - nvidia-container-runtime
       - perl-Image-ExifTool
       - podman
       - postgresql-server
       - postgresql-upgrade
       - python3-ansible-lint
       - rawtherapee
-      - teams
       - tmux
       - vdpauinfo
       - vlc
-
-- name: Install Azure Studio
-  become: yes
-  dnf:
-    state: present
-    disable_gpg_check: yes
-    name:
-      - https://go.microsoft.com/fwlink/?linkid=2168271
-
-- name: Install Android Studio Dependencies
-  become: yes
-  dnf:
-    state: present
-    name:
-      - zlib.i686
-      - ncurses-libs.i686
-      - bzip2-libs.i686
-
-- name: Install VM acceleration dependencies for Android Emulator
-  become: yes
-  dnf:
-    state: present
-    name:
-      - bridge-utils
-      - libvirt
-      - virt-install
-      - qemu-kvm
-
-- name: Start and Enable libvirtd
-  become: yes
-  systemd:
-    state: started
-    enabled: yes
-    name: libvirtd
-
-# You may need to enable VT-D or VT-x or SVM in your bios - you should see that /dev/kvm exists
-# Android Studio requires accepting Terms and Conditions - so not automating this now
-
-#    - name: Setup SSH Key (create / add to remotes?)
-
-#    - name: Setup local PSQL (restores)

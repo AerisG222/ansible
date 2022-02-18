@@ -14,6 +14,3 @@ all:
           ansible_connection: local
           has_nvidia_gpu: yes
           hostname: barett
-
-  vars:
-    domain: mikeandwan.us

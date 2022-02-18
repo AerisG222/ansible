@@ -1,0 +1,25 @@
+---
+- name: Install Nvidia Drivers
+  become: yes
+  ansible.builtin.dnf:
+    state: present
+    name:
+      - akmod-nvidia
+      - xorg-x11-drv-nvidia-cuda
+
+- name: Add NVIDIA Container Repos
+  become: yes
+  ansible.builtin.uri:
+    url: https://nvidia.github.io/nvidia-container-runtime/rhel8.3/nvidia-container-runtime.repo
+    dest: /etc/yum.repos.d/nvidia-container-runtime.repo
+    creates: /etc/yum.repos.d/nvidia-container-runtime.repo
+  notify: update_package_cache
+  when: nvidia_container
+
+- name: Install Nvidia Container Runtime
+  become: yes
+  ansible.builtin.dnf:
+    state: present
+    name:
+      - nvidia-container-runtime
+  when: nvidia_container

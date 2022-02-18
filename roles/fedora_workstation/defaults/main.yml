@@ -1,4 +1,9 @@
 ---
-has_nvidia_gpu: false
-hostname: ""
-domain: ""
+android_studio: no
+azure_data_studio: no
+google_chrome: no
+google_earth: no
+ms_teams: no
+vscode: no
+nvidia: false
+nvidia_container: false

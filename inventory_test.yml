@@ -8,5 +8,8 @@ all:
           ansible_host: 192.168.122.43
           ansible_user: mmorano
 
-  vars:
-    domain: mikeandwan.us
+    workstations:
+      hosts:
+        vmwstest:
+          ansible_host: 192.168.122.247
+          ansible_user: mmorano

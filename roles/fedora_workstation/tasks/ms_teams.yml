@@ -1,0 +1,17 @@
+---
+- name: Add Teams Repo
+  become: yes
+  ansible.builtin.yum_repository:
+    name: teams
+    description: MS Teams repo
+    baseurl: https://packages.microsoft.com/yumrepos/ms-teams
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+  notify: update_package_cache
+
+- name: Install MS Teams
+  become: yes
+  ansible.builtin.dnf:
+    state: present
+    name:
+      - teams

@@ -1,0 +1,17 @@
+---
+- name: Add VSCode Repo
+  become: yes
+  ansible.builtin.yum_repository:
+    name: vscode
+    description: Visual Studio Code repo
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+  notify: update_package_cache
+
+- name: Install Visual Studio Code
+  become: yes
+  ansible.builtin.dnf:
+    state: present
+    name:
+      - code
