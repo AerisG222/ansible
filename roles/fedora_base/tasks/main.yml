@@ -1,13 +1,14 @@
 ---
-- name: Set hostname
-  when: hostname | length > 0 and domain | length > 0
-  become: yes
-  hostname:
-    name: '{{ hostname }}.{{ domain }}'
-    use: systemd
+- name: Import hostname.yml
+  ansible.builtin.import_tasks: hostname.yml
 
-- name: Add SSH public keys
-  authorized_key:
-    user: mmorano
-    state: present
-    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub')) }}"
+- name: Import os.yml
+  ansible.builtin.import_tasks: os.yml
+
+- name: Import ssh.yml
+  ansible.builtin.import_tasks: ssh.yml
+  when: ssh_host
+
+- name: Import sshguard.yml
+  ansible.builtin.import_tasks: sshguard.yml
+  when: ssh_host

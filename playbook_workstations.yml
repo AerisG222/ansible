@@ -3,6 +3,10 @@
   hosts: workstations
 
   tasks:
+    - name: Configure Base
+      include_role:
+        name: fedora_base
+
     - name: Configure Workstation
       include_role:
         name: fedora_workstation

@@ -1,12 +1,8 @@
 ---
 - name: Configure Servers
-  hosts: servers
+  hosts: all
 
   tasks:
     - name: Configure Base
       include_role:
         name: fedora_base
-
-    - name: Configure Server
-      include_role:
-        name: fedora_server

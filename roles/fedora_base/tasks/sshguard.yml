@@ -1,0 +1,36 @@
+---
+- name: install sshguard
+  become: yes
+  ansible.builtin.dnf:
+    name: sshguard
+    state: latest
+  tags: skip_ansible_lint
+
+- name: enable sshguard whitelist
+  become: yes
+  ansible.builtin.lineinfile:
+    path: "/etc/sshguard.conf"
+    backup: yes
+    regex: "^(#)?{{ item }}"
+    line: "{{ item }}"
+    state: present
+  loop:
+    - "WHITELIST_FILE=/etc/sshguard.whitelist"
+
+- name: whitelist some addresses in sshguard
+  become: yes
+  ansible.builtin.lineinfile:
+    path: "/etc/sshguard.whitelist"
+    backup: yes
+    regex: "^(#)?{{ item }}"
+    line: "{{ item }}"
+    state: present
+  loop:
+    - 192.168.0.0/16
+
+- name: start and enable sshguard
+  become: yes
+  ansible.builtin.service:
+    name: sshguard
+    enabled: yes
+    state: started
