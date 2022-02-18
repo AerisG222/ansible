@@ -1,0 +1,20 @@
+---
+- name: Allow firewall traffic
+  become: yes
+  ansible.posix.firewalld:
+    immediate: yes
+    permanent: yes
+    service: "{{ item }}"
+    state: enabled
+    zone: FedoraServer
+  loop: "{{ firewall_allowed_services if firewall_allowed_services is iterable else [] }}"
+
+- name: Deny firewall traffic
+  become: yes
+  ansible.posix.firewalld:
+    immediate: yes
+    permanent: yes
+    service: "{{ item }}"
+    state: disabled
+    zone: FedoraServer
+  loop: "{{ firewall_denied_services if firewall_denied_services is iterable else [] }}"

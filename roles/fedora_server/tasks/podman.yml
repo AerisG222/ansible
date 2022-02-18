@@ -1,0 +1,7 @@
+---
+- name: Install Packages
+  become: yes
+  dnf:
+    state: present
+    name:
+      - podman

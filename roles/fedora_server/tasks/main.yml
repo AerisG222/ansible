@@ -1,26 +1,7 @@
 ---
-- name: Update Package Metadata and Packages
-  become: yes
-  dnf:
-    update_cache: yes
-    state: present
+- name: Import firewall.yml
+  ansible.builtin.import_tasks: firewall.yml
 
-- name: Install Packages
-  become: yes
-  dnf:
-    state: present
-    name:
-      - dnf-plugin-system-upgrade
-      - podman
-
-- name: Allow inbound HTTP/HTTPS traffic
-  become: yes
-  firewalld:
-    immediate: yes
-    permanent: yes
-    service: "{{ item }}"
-    state: enabled
-    zone: FedoraServer
-  loop:
-    - http
-    - https
+- name: Import podman.yml
+  ansible.builtin.import_tasks: podman.yml
+  when: podman_host

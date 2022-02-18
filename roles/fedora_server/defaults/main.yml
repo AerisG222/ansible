@@ -1,0 +1,4 @@
+---
+podman_host: no
+firewall_allowed_services:
+firewall_denied_services:

@@ -1,4 +1,11 @@
 ---
 hostname: vmtest
+
 ssh_host: yes
 allow_ssh_users: user1 user2
+
+firewall_allowed_services:
+  - http
+  - https
+
+firewall_denied_services:
