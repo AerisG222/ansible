@@ -10,7 +10,7 @@
 
 - name: Install Packages
   become: yes
-  dnf:
+  ansible.builtin.dnf:
     state: present
     name:
       - dnf-plugin-system-upgrade
