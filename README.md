@@ -18,7 +18,7 @@ Consider adding `--check` to the commands below to see what ansible would do w/o
 
 1. Run (servers): `ansible-playbook -K -i inventory.yml playbook_servers.yml`
 2. Run (workstations): `ansible-playbook -K -i inventory.yml playbook_workstations.yml`
-3. Run (vmtest - note the ask-pass `-k` as ssh keys not configured yet): `ansible-playbook -kK -i inventory_test.yml playbook_servers.yml`
+3. Run (vmtest - note the ask-pass `-k` as ssh keys not configured yet): `ansible-playbook -kK -i inventory_test.yml --ask-vault-password -e @~/ansible_vault/server.yml playbook_servers.yml`
 
 ## Notes
 
