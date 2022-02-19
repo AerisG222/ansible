@@ -43,4 +43,5 @@ Now that you have a vault, you can use them from a playbook.  To do so, run the 
 ## References
 
 - https://docs.ansible.com/ansible/latest/user_guide/vault.html
+- https://www.redhat.com/sysadmin/ansible-playbooks-secrets
 - https://www.digitalocean.com/community/tutorials/how-to-use-vault-to-protect-sensitive-ansible-data
