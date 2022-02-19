@@ -1,0 +1,10 @@
+---
+- name: Vault Test
+  hosts: localhost
+  vars:
+    - mysecret: "{{ vault_mysecret }}"
+
+  tasks:
+    - name: print secret
+      ansible.builtin.debug:
+        msg: "decrypted secret: {{ mysecret }}"
