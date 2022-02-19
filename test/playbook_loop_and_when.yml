@@ -1,0 +1,20 @@
+---
+- name: Loop and When Test
+  hosts: localhost
+  vars:
+    namelist:
+      - name: namea
+        use: yes
+      - name: nameb
+        use: no
+      - name: namec
+        use: yes
+      - name: named
+        use: no
+
+  tasks:
+    - name: output used names
+      ansible.builtin.debug:
+        msg: "{{ item.name }}"
+      loop: "{{ namelist }}"
+      when: "{{ item.use }}"
