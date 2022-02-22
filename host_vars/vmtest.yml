@@ -19,15 +19,15 @@ service_accounts:
     password: "{{ vault_password_vmtest_test_svc_account }}"
     allow_ssh: yes
     use_podman: yes
-    subuid: 100000-165536
-    subgid: 100000-165536
+    subuid: 200000-265536
+    subgid: 200000-265536
   - username: svc_ddclient
     groups:
     password: "{{ vault_password_vmtest_svc_ddclient }}"
     allow_ssh: yes
     use_podman: yes
-    subuid: 200000-265536
-    subgid: 200000-265536
+    subuid: 300000-365536
+    subgid: 300000-365536
 
 podman_host: yes
 
