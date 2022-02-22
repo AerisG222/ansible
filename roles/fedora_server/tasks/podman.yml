@@ -1,7 +1,20 @@
 ---
 - name: Install Packages
   become: yes
-  dnf:
+  ansible.builtin.dnf:
     state: present
     name:
       - podman
+
+- name: Configure subuid and subgid
+  become: yes
+  ansible.builtin.command:
+    cmd: usermod
+    argv:
+      - --add-subuids
+      - "{{ item.subuid }}"
+      - --add-subgids
+      - "{{ item.subgid }}"
+      - "{{ item.username }}"
+  loop: "{{ service_accounts if service_accounts is iterable else [] }}"
+  when: item.use_podman

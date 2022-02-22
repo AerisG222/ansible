@@ -10,8 +10,14 @@ firewall_allowed_services:
 
 firewall_denied_services:
 
+# subuid / subgid hopefully coming to user module eventually
+# https://github.com/ansible/ansible/issues/68199
+# https://github.com/ansible/ansible/pull/73741
 service_accounts:
   - username: test_svc_account
     groups: wheel
     password: "{{ vault_password_vmtest_test_svc_account }}"
     allow_ssh: yes
+    use_podman: yes
+    subuids: 100000-165536
+    subgids: 100000-165536
