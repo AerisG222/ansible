@@ -18,3 +18,10 @@
       - "{{ item.username }}"
   loop: "{{ service_accounts if service_accounts is iterable else [] }}"
   when: item.use_podman
+
+- name: Enable linger for rootless containers
+  become: yes
+  ansible.builtin.command:
+    cmd: loginctl enable-linger {{ item.username }}
+  loop: "{{ service_accounts if service_accounts is iterable else [] }}"
+  when: item.use_podman
