@@ -1,0 +1,18 @@
+---
+- name: "Temporarily set SSH username to {{ ddclient_svc_account }}"
+  set_fact:
+    orig_ansible_user: "{{ ansible_user }}"
+    ansible_user: "{{ ddclient_svc_account }}"
+  changed_when: false
+  delegate_to: localhost
+
+- name: Create ddclient config volume
+  containers.podman.podman_volume:
+    name: ddclient_config
+    state: present
+
+- name: "Reset SSH username to {{ orig_ansible_ssh_user }}"
+  set_fact:
+    ansible_user: "{{ orig_ansible_user }}"
+  changed_when: false
+  delegate_to: localhost
