@@ -3,6 +3,7 @@
   set_fact:
     orig_ansible_user: "{{ ansible_user }}"
     ansible_user: "{{ ddclient_svc_account }}"
+    ddclient_podname: ddclient-pod
   changed_when: false
   delegate_to: localhost
 
@@ -10,6 +11,24 @@
   containers.podman.podman_volume:
     name: ddclient_config
     state: present
+
+- name: Create ddclient-pod
+  containers.podman.podman_pod:
+    name: "{{ ddclient_podname }}"
+
+- name: Pull ddclient image
+  containers.podman.podman_image:
+    name: docker.io/linuxserver/ddclient
+    state: present
+
+- name: Create ddclient-container
+  containers.podman.podman_container:
+    name: ddclient-container
+    image: linuxserver/ddclient
+    pod: "{{ ddclient_podname }}"
+    volume: ddclient_config:/config
+    label:
+      io.containers.autoupdate: image
 
 - name: "Reset SSH username to {{ orig_ansible_ssh_user }}"
   set_fact:
