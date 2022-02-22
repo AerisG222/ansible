@@ -9,8 +9,8 @@
 - name: Configure subuid and subgid
   become: yes
   ansible.builtin.command:
-    cmd: usermod
     argv:
+      - usermod
       - --add-subuids
       - "{{ item.subuid }}"
       - --add-subgids

@@ -19,5 +19,20 @@ service_accounts:
     password: "{{ vault_password_vmtest_test_svc_account }}"
     allow_ssh: yes
     use_podman: yes
-    subuids: 100000-165536
-    subgids: 100000-165536
+    subuid: 100000-165536
+    subgid: 100000-165536
+  - username: svc_ddclient
+    groups:
+    password: "{{ vault_password_vmtest_svc_ddclient }}"
+    allow_ssh: yes
+    use_podman: yes
+    subuid: 200000-265536
+    subgid: 200000-265536
+
+podman_host: yes
+
+ddclient_host: yes
+ddclient_svc_account: svc_ddclient
+ddclient_svc_account_password: "{{ vault_password_vmtest_svc_ddclient }}"
+ddclient_namecheap_username: asdf
+ddclient_namecheap_password: "{{ vault_namecheap_password }}"

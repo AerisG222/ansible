@@ -2,9 +2,9 @@
 - name: Import firewall.yml
   ansible.builtin.import_tasks: firewall.yml
 
+- name: Import service_accounts.yml
+  ansible.builtin.import_tasks: service_accounts.yml
+
 - name: Import podman.yml
   ansible.builtin.import_tasks: podman.yml
   when: podman_host
-
-- name: Import service_accounts.yml
-  ansible.builtin.import_tasks: service_accounts.yml
