@@ -13,36 +13,21 @@
     state: present
   register: ddclient_volume
 
-# https://stackoverflow.com/questions/52668990/ansible-copy-files-to-docker-volume
-- name: create temporary data-only container
-  containers.podman.podman_container:
-    name: temp_data_container
-    image: docker.io/tianon/true
-    state: present
-    volumes:
-    - ddclient_config:/data
-
 - name: Prepare ddclient config
   ansible.builtin.template:
     src: ddclient.conf.j2
     dest: ddclient.conf
 
-- name: copy file to volume
-  ansible.builtin.command:
-    argv:
-      - podman
-      - cp
-      - ddclient.conf
-      - temp_data_container:/data
+- name: Copy ddclient config to volume
+  ansible.builtin.include_tasks:
+    file: podman_copy_files_to_volume.yml
+  vars:
+    volume: ddclient_config
+    file: ddclient.conf
 
-- name: delete temp file
+- name: Delete temp file
   ansible.builtin.file:
     path: ddclient.conf
-    state: absent
-
-- name: stop data only container
-  containers.podman.podman_container:
-    name: temp_data_container
     state: absent
 
 - name: Create ddclient-pod
