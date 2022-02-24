@@ -44,4 +44,7 @@
     - { key: "X11Forwarding", value: "no" }
     - { key: "AllowUsers", value: "{{ ansible_user }} {{ allow_ssh_users }}" }
   notify:
-    - reload sshd
+    - "reload_sshd"
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
