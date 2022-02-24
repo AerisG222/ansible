@@ -67,7 +67,7 @@
     state: started
     scope: user
 
-- name: "Reset SSH username to {{ orig_ansible_ssh_user }}"
+- name: "Reset SSH username to {{ orig_ansible_user }}"
   ansible.builtin.set_fact:
     ansible_user: "{{ orig_ansible_user }}"
   changed_when: false
