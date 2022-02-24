@@ -1,6 +1,6 @@
 ---
 - name: "Temporarily set SSH username to {{ ddclient_svc_account }}"
-  set_fact:
+  ansible.builtin.set_fact:
     orig_ansible_user: "{{ ansible_user }}"
     ansible_user: "{{ ddclient_svc_account }}"
     ddclient_podname: ddclient-pod
@@ -11,6 +11,39 @@
   containers.podman.podman_volume:
     name: ddclient_config
     state: present
+  register: ddclient_volume
+
+# https://stackoverflow.com/questions/52668990/ansible-copy-files-to-docker-volume
+- name: create temporary data-only container
+  containers.podman.podman_container:
+    name: temp_data_container
+    image: docker.io/tianon/true
+    state: present
+    volumes:
+    - ddclient_config:/data
+
+- name: Prepare ddclient config
+  ansible.builtin.template:
+    src: ddclient.conf
+    dest: ddclient.conf
+
+- name: copy file to volume
+  ansible.builtin.command:
+    argv:
+      - podman
+      - cp
+      - ddclient.conf
+      - temp_data_container:/data
+
+- name: delete temp file
+  ansible.builtin.file:
+    path: ddclient.conf
+    state: absent
+
+- name: stop data only container
+  containers.podman.podman_container:
+    name: temp_data_container
+    state: absent
 
 - name: Create ddclient-pod
   containers.podman.podman_pod:
@@ -31,7 +64,7 @@
       io.containers.autoupdate: image
 
 - name: "Reset SSH username to {{ orig_ansible_ssh_user }}"
-  set_fact:
+  ansible.builtin.set_fact:
     ansible_user: "{{ orig_ansible_user }}"
   changed_when: false
   delegate_to: localhost
