@@ -28,6 +28,13 @@ service_accounts:
     use_podman: yes
     subuid: 300000-365536
     subgid: 300000-365536
+  - username: svc_www_maw
+    groups:
+    password: "{{ vault_password_vmtest_svc_www_maw }}"
+    allow_ssh: yes
+    use_podman: yes
+    subuid: 400000-465536
+    subgid: 400000-465536
 
 podman_host: yes
 
@@ -35,3 +42,6 @@ ddclient_host: no
 ddclient_svc_account: svc_ddclient
 ddclient_svc_account_password: "{{ vault_password_vmtest_svc_ddclient }}"
 ddclient_namecheap_password: "{{ vault_namecheap_password }}"
+
+mawus_host: yes
+mawus_svc_account: svc_www_maw
