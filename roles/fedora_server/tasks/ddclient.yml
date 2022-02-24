@@ -24,7 +24,7 @@
 
 - name: Prepare ddclient config
   ansible.builtin.template:
-    src: ddclient.conf
+    src: ddclient.conf.j2
     dest: ddclient.conf
 
 - name: copy file to volume
