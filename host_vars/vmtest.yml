@@ -34,5 +34,4 @@ podman_host: yes
 ddclient_host: yes
 ddclient_svc_account: svc_ddclient
 ddclient_svc_account_password: "{{ vault_password_vmtest_svc_ddclient }}"
-ddclient_namecheap_username: asdf
 ddclient_namecheap_password: "{{ vault_namecheap_password }}"
