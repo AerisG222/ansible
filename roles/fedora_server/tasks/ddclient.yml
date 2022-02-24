@@ -48,6 +48,7 @@
 - name: Create ddclient-pod
   containers.podman.podman_pod:
     name: "{{ ddclient_podname }}"
+    state: started
 
 - name: Pull ddclient image
   containers.podman.podman_image:
@@ -60,8 +61,26 @@
     image: linuxserver/ddclient
     pod: "{{ ddclient_podname }}"
     volume: ddclient_config:/config
+    state: started
     label:
       io.containers.autoupdate: image
+
+- name: Create systemd unit files
+  containers.podman.podman_pod:
+    name: "{{ ddclient_podname }}"
+    generate_systemd:
+      new: yes
+      path: .config/systemd/user
+      container_prefix: ""
+      pod_prefix: ""
+      separator: ""
+
+- name: Enable ddclient via systemd
+  ansible.builtin.systemd:
+    name: ddclient-pod
+    enabled: yes
+    state: started
+    scope: user
 
 - name: "Reset SSH username to {{ orig_ansible_ssh_user }}"
   ansible.builtin.set_fact:
