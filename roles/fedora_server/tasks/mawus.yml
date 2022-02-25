@@ -4,11 +4,36 @@
     orig_ansible_user: "{{ ansible_user }}"
     ansible_user: "{{ mawus_svc_account }}"
     mawus_podname: maw-pod
+    redis_tag: 6-alpine
   changed_when: false
   delegate_to: localhost
 
-- name: show maw svc user
-  ansible.builtin.command: whoami
+- name: create maw-pod pod
+  containers.podman.podman_pod:
+    name: "{{ mawus_podname }}"
+    state: started
+
+- name: create redis volume
+  containers.podman.podman_volume:
+    name: "redis-{{ redis_tag }}"
+    state: present
+  register: redis_volume
+
+- name: debug
+  debug:
+    msg: "{{ redis_volume.volume.Name }}:/data"
+
+- name: create redis container
+  containers.podman.podman_container:
+    name: maw-redis
+    image: "docker.io/redis:{{ redis_tag }}"
+    pod: "{{ mawus_podname }}"
+    state: started
+    command: redis-server --save 60 1
+    volume:
+      - "{{ redis_volume.volume.Name }}:/data"
+    label:
+      io.containers.autoupdate: image
 
 - name: "Reset SSH username to {{ orig_ansible_user }}"
   ansible.builtin.set_fact:
