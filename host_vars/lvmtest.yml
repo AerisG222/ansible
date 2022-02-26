@@ -1,0 +1,44 @@
+---
+# base
+hostname: lvmtest
+update_packages: no
+
+
+
+
+ssh_host: yes
+
+firewall_allowed_services:
+  - http
+  - https
+
+firewall_denied_services:
+
+# subuid / subgid hopefully coming to user module eventually
+# https://github.com/ansible/ansible/issues/68199
+# https://github.com/ansible/ansible/pull/73741
+service_accounts:
+  - username: svc_ddclient
+    groups:
+    password: "{{ vault_password_vmtest_svc_ddclient }}"
+    allow_ssh: yes
+    use_podman: yes
+    subuid: 300000-365536
+    subgid: 300000-365536
+  - username: svc_www_maw
+    groups:
+    password: "{{ vault_password_vmtest_svc_www_maw }}"
+    allow_ssh: yes
+    use_podman: yes
+    subuid: 400000-465536
+    subgid: 400000-465536
+
+podman_host: yes
+
+ddclient_host: no
+ddclient_svc_account: svc_ddclient
+ddclient_svc_account_password: "{{ vault_password_vmtest_svc_ddclient }}"
+ddclient_namecheap_password: "{{ vault_namecheap_password }}"
+
+mawus_host: yes
+mawus_svc_account: svc_www_maw
