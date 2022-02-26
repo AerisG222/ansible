@@ -1,8 +1,0 @@
----
-- name: Configure Servers
-  hosts: all
-
-  tasks:
-    - name: Configure Base
-      ansible.builtin.include_role:
-        name: fedora_base

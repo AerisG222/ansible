@@ -42,6 +42,11 @@ should use when ssh'ing to the remote machine, along with the password to use fo
 fedora_base role will harden ssh, so ansible will only use the ssh password for this initial step/role
 and will instead use the public key afterwords when connecting.
 
+Additionally, you may try to run a role individually against a host.  For example, the following
+will run the `firewall` role against the `lvmtest` host.
+
+`ansible -kK -i inventory_laptop_test.yml -m include_role -a name=firewall lvmtest`
+
 ## References
 
 - https://www.ansible.com/hubfs/2018_Content/Ansible%20Best%20Practices%20Roles%20&%20Modules.pdf
