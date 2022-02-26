@@ -10,7 +10,6 @@ firewall_allowed_services:
 firewall_denied_services:
 
 
-ssh_host: yes
 allow_ssh_users: user1 user2
 
 # subuid / subgid hopefully coming to user module eventually

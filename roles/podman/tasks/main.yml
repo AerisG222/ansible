@@ -16,12 +16,10 @@
       - --add-subgids
       - "{{ item.subgid }}"
       - "{{ item.username }}"
-  loop: "{{ service_accounts if service_accounts is iterable else [] }}"
-  when: item.use_podman
+  loop: "{{ podman_users if podman_users is iterable else [] }}"
 
 - name: Enable linger for rootless containers
   become: yes
   ansible.builtin.command:
     cmd: loginctl enable-linger {{ item.username }}
-  loop: "{{ service_accounts if service_accounts is iterable else [] }}"
-  when: item.use_podman
+  loop: "{{ podman_users if podman_users is iterable else [] }}"

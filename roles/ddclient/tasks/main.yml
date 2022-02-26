@@ -3,7 +3,6 @@
   ansible.builtin.set_fact:
     orig_ansible_user: "{{ ansible_user }}"
     ansible_user: "{{ ddclient_svc_account }}"
-    ddclient_podname: ddclient-pod
   changed_when: false
   delegate_to: localhost
 
@@ -13,12 +12,12 @@
     state: present
   register: ddclient_volume
 
-- name: Prepare ddclient config
+- name: Prepare ddclient.conf
   ansible.builtin.template:
     src: ddclient.conf.j2
     dest: ddclient.conf
 
-- name: Copy ddclient config to volume
+- name: Copy ddclient.conf to volume
   ansible.builtin.include_tasks:
     file: podman_copy_files_to_volume.yml
   vars:
@@ -32,7 +31,7 @@
 
 - name: Create ddclient-pod
   containers.podman.podman_pod:
-    name: "{{ ddclient_podname }}"
+    name: "{{ ddclient_pod_name }}"
     state: started
 
 - name: Pull ddclient image
@@ -42,9 +41,9 @@
 
 - name: Create ddclient-container
   containers.podman.podman_container:
-    name: ddclient-container
+    name: "{{ ddclient_container_name }}"
     image: linuxserver/ddclient
-    pod: "{{ ddclient_podname }}"
+    pod: "{{ ddclient_pod_name }}"
     volume: ddclient_config:/config
     state: started
     label:
@@ -52,7 +51,7 @@
 
 - name: Create systemd unit files
   containers.podman.podman_pod:
-    name: "{{ ddclient_podname }}"
+    name: "{{ ddclient_pod_name }}"
     generate_systemd:
       new: yes
       path: .config/systemd/user
