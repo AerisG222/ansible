@@ -7,10 +7,6 @@
       ansible.builtin.include_role:
         name: fedora_base
 
-    - name: Configure Firewall
-      ansible.builtin.include_role:
-        name: fedora_firewall
-
     - name: Configure Workstation
       ansible.builtin.include_role:
         name: fedora_workstation
