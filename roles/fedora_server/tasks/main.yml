@@ -1,7 +1,4 @@
 ---
-- name: Import firewall.yml
-  ansible.builtin.import_tasks: firewall.yml
-
 - name: Import service_accounts.yml
   ansible.builtin.import_tasks: service_accounts.yml
 

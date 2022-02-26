@@ -3,16 +3,17 @@
 hostname: lvmtest
 update_packages: no
 
-
-
-
-ssh_host: yes
-
+# firewall
 firewall_allowed_services:
   - http
   - https
 
 firewall_denied_services:
+
+# server
+
+
+ssh_host: yes
 
 # subuid / subgid hopefully coming to user module eventually
 # https://github.com/ansible/ansible/issues/68199

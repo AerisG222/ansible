@@ -1,14 +1,17 @@
 ---
+# base
 hostname: vmtest
 
-ssh_host: yes
-allow_ssh_users: user1 user2
-
+# firewall
 firewall_allowed_services:
   - http
   - https
 
 firewall_denied_services:
+
+
+ssh_host: yes
+allow_ssh_users: user1 user2
 
 # subuid / subgid hopefully coming to user module eventually
 # https://github.com/ansible/ansible/issues/68199
