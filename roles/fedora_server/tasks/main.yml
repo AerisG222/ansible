@@ -8,11 +8,3 @@
 - name: Import podman.yml
   ansible.builtin.import_tasks: podman.yml
   when: podman_host
-
-- name: Import ddclient.yml
-  ansible.builtin.import_tasks: ddclient.yml
-  when: ddclient_host
-
-- name: Import mawus.yml
-  ansible.builtin.import_tasks: mawus.yml
-  when: mawus_host

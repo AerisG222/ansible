@@ -4,11 +4,3 @@
 
 - name: Import os.yml
   ansible.builtin.import_tasks: os.yml
-
-- name: Import ssh.yml
-  ansible.builtin.import_tasks: ssh.yml
-  when: ssh_host
-
-- name: Import sshguard.yml
-  ansible.builtin.import_tasks: sshguard.yml
-  when: ssh_host

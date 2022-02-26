@@ -25,8 +25,7 @@
     regex: "^(#)?{{ item }}"
     line: "{{ item }}"
     state: present
-  loop:
-    - 192.168.0.0/16
+  loop: "{{ sshd_sshguard_whitelist if sshd_sshguard_whitelist is iterable else [] }}"
 
 - name: start and enable sshguard
   become: yes

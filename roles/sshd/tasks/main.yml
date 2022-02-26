@@ -1,0 +1,26 @@
+---
+- name: Import sshguard.yml
+  ansible.builtin.import_tasks: sshguard.yml
+
+- name: Import add_users.yml
+  ansible.builtin.import_tasks: add_users.yml
+  loop: "{{ sshd_allow_users if sshd_allow_users is iterable else [] }}"
+  loop_control:
+    loop_var: username
+
+- name: Import harden.yml
+  ansible.builtin.import_tasks: harden.yml
+  vars:
+    sshd_harden_items:
+      - { key: "PubkeyAuthentication", value: "yes" }  # should be on by default
+      - { key: "MaxAuthTries", value: "3" }
+      - { key: "LoginGraceTime", value: "10" }
+      - { key: "PermitRootLogin", value: "no" }
+      - { key: "PermitEmptyPasswords", value: "no" }
+      - { key: "ChallengeResponseAuthentication", value: "no" }
+      - { key: "KerberosAuthentication", value: "no" }
+      - { key: "GSSAPIAuthentication", value: "no" }
+      - { key: "PasswordAuthentication", value: "no" }
+      - { key: "KbdInteractiveAuthentication", value: "no" }
+      - { key: "HostbasedAuthentication", value: "no" }
+      - { key: "X11Forwarding", value: "no" }

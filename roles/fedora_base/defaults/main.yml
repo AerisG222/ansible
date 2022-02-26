@@ -1,6 +1,4 @@
 ---
 hostname: ""
 domain: ""
-ssh_host: no
-allow_ssh_users: ""
 update_packages: no

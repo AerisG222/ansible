@@ -1,0 +1,6 @@
+---
+sshd_allow_users:
+  - "{{ ansible_user }}"
+
+sshd_sshguard_whitelist:
+  - 192.168.0.0/16
