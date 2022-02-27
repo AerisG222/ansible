@@ -1,49 +1,31 @@
 ---
 # base
 hostname: vmtest
+update_packages: no
 
-# firewall
-firewall_allowed_services:
-  - http
-  - https
-
-firewall_denied_services:
-
-
-allow_ssh_users: user1 user2
-
-# subuid / subgid hopefully coming to user module eventually
-# https://github.com/ansible/ansible/issues/68199
-# https://github.com/ansible/ansible/pull/73741
-service_accounts:
-  - username: test_svc_account
-    groups: wheel
-    password: "{{ vault_password_vmtest_test_svc_account }}"
+# ddclient
+ddclient_config:
+  service_account:
+    username: svc_ddclient
+    password: "{{ vault_password_vmtest_svc_ddclient }}"
+    groups:
     allow_ssh: yes
     use_podman: yes
     subuid: 200000-265536
     subgid: 200000-265536
-  - username: svc_ddclient
-    groups:
-    password: "{{ vault_password_vmtest_svc_ddclient }}"
-    allow_ssh: yes
-    use_podman: yes
-    subuid: 300000-365536
-    subgid: 300000-365536
-  - username: svc_www_maw
+  namecheap_password: "{{ vault_namecheap_password }}"
+
+# mikeandwan.us
+mawus_config:
+  service_account:
+    username: svc_www_maw
     groups:
     password: "{{ vault_password_vmtest_svc_www_maw }}"
     allow_ssh: yes
     use_podman: yes
-    subuid: 400000-465536
-    subgid: 400000-465536
+    subuid: 300000-365536
+    subgid: 300000-365536
 
-podman_host: yes
-
-ddclient_host: no
-ddclient_svc_account: svc_ddclient
-ddclient_svc_account_password: "{{ vault_password_vmtest_svc_ddclient }}"
-ddclient_namecheap_password: "{{ vault_namecheap_password }}"
-
-mawus_host: yes
-mawus_svc_account: svc_www_maw
+# subuid / subgid hopefully coming to user module eventually
+# https://github.com/ansible/ansible/issues/68199
+# https://github.com/ansible/ansible/pull/73741

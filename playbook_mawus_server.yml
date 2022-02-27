@@ -12,7 +12,15 @@
         name: service_accounts
       vars:
         service_accounts:
-          - "{{ ddclient_config.service_account }}"
+          - "{{ mawus_config.service_account }}"
+
+    - name: Configure firewall
+      ansible.builtin.include_role:
+        name: firewall
+      vars:
+        firewall_allowed_services:
+          - http
+          - https
 
     - name: Configure sshd
       ansible.builtin.include_role:
@@ -20,17 +28,17 @@
       vars:
         sshd_allow_users:
           - "{{ ansible_user }}"
-          - "{{ ddclient_config.service_account.username }}"
+          - "{{ mawus_config.service_account.username }}"
 
     - name: Configure podman
       ansible.builtin.include_role:
         name: podman
       vars:
         podman_users:
-          - "{{ ddclient_config.service_account }}"
+          - "{{ mawus_config.service_account }}"
 
-    - name: Configure ddclient
+    - name: Configure mikeandwan.us
       ansible.builtin.include_role:
-        name: ddclient
+        name: mikeandwan_us
       vars:
-        ddclient_svc_account: "{{ ddclient_config.service_account.username }}"
+        mawus_svc_account: "{{ mawus_config.service_account.username }}"
