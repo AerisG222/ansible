@@ -5,6 +5,23 @@
     state: present
     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
 
+# todo: naive approach below will duplicate usernames each time this is run
+- name: add user to sshd AllowUsers
+  become: yes
+  ansible.builtin.lineinfile:
+    path: "/etc/ssh/sshd_config"
+    backup: yes
+    backrefs: yes
+    regex: "^AllowUsers\\s+(.*)$"
+    line: "AllowUsers \\1 {{ username }}"
+    state: present
+    validate: sshd -t -f %s
+  notify:
+    - "reload_sshd"
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: validate ssh
   delegate_to: localhost
   ansible.builtin.command:
@@ -17,5 +34,3 @@
     msg: Could not confirm SSH connectivity
   when: validate_ssh_output.stdout != "success"
   ignore_errors: "{{ ansible_check_mode }}"
-
-  - { key: "AllowUsers", value: "{{ username }}" }

@@ -24,3 +24,5 @@
       - { key: "KbdInteractiveAuthentication", value: "no" }
       - { key: "HostbasedAuthentication", value: "no" }
       - { key: "X11Forwarding", value: "no" }
+  notify:
+    - "reload_sshd"
