@@ -34,15 +34,10 @@
     name: "{{ ddclient_pod_name }}"
     state: started
 
-- name: Pull ddclient image
-  containers.podman.podman_image:
-    name: docker.io/linuxserver/ddclient
-    state: present
-
 - name: Create ddclient-container
   containers.podman.podman_container:
     name: "{{ ddclient_container_name }}"
-    image: linuxserver/ddclient
+    image: docker.io/linuxserver/ddclient
     pod: "{{ ddclient_pod_name }}"
     volume: ddclient_config:/config
     state: started
@@ -65,6 +60,7 @@
     enabled: yes
     state: started
     scope: user
+    daemon_reload: yes
 
 - name: "Reset SSH username to {{ orig_ansible_user }}"
   ansible.builtin.set_fact:
