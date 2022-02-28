@@ -1,11 +1,25 @@
 ---
 - name: add ssh public keys
+  become: yes
   ansible.builtin.authorized_key:
     user: "{{ username }}"
     state: present
     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
 
-# todo: naive approach below will duplicate usernames each time this is run
+# the following 2 tasks work in tandem:
+#   the first will try to find the current user in the AllowUsers line
+#   the second will add the user if grep returns 1 indicating the line did not match
+- name: check if user is allowed in sshd_config
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - grep
+      - -E
+      - '^AllowUsers.*\b{{ username }}\b.*$'
+      - /etc/ssh/sshd_config
+  ignore_errors: yes
+  register: grep_allowusers
+
 - name: add user to sshd AllowUsers
   become: yes
   ansible.builtin.lineinfile:
@@ -16,6 +30,8 @@
     line: "AllowUsers \\1 {{ username }}"
     state: present
     validate: sshd -t -f %s
+  when:
+    - grep_allowusers.rc == 1
   notify:
     - "reload_sshd"
 

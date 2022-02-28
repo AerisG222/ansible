@@ -15,7 +15,7 @@
           - "{{ ddclient_config.service_account }}"
 
     - name: Configure sshd
-      ansible.builtin.include_role:
+      ansible.builtin.import_role:
         name: sshd
       vars:
         sshd_allow_users:
@@ -34,3 +34,4 @@
         name: ddclient
       vars:
         ddclient_svc_account: "{{ ddclient_config.service_account.username }}"
+        ddclient_namecheap_password: "{{ ddclient_config.namecheap_password }}"

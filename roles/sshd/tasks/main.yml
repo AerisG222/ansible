@@ -2,8 +2,8 @@
 - name: Import sshguard.yml
   ansible.builtin.import_tasks: sshguard.yml
 
-- name: Import add_users.yml
-  ansible.builtin.import_tasks: add_users.yml
+- name: Include add_users.yml
+  ansible.builtin.include_tasks: add_users.yml
   loop: "{{ sshd_allow_users if sshd_allow_users is iterable else [] }}"
   loop_control:
     loop_var: username
