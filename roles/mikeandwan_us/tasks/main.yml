@@ -1,4 +1,14 @@
 ---
+- name: Include maw_hostnames.yml
+  ansible.builtin.include_tasks: maw_hostnames.yml
+  loop:
+    - mikeandwan.us
+    - api.mikeandwan.us
+    - auth.mikeandwan.us
+    - files.mikeandwan.us
+    - photos.mikeandwan.us
+    - www.mikeandwan.us
+
 - name: "Temporarily set SSH username to {{ mawus_svc_account }}"
   ansible.builtin.set_fact:
     orig_ansible_user: "{{ ansible_user }}"
