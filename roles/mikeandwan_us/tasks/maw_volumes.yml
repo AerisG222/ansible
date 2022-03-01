@@ -53,26 +53,30 @@
     state: present
   register: www_dataprotection_volume
 
-- name: create maw-certbot-validation volume
-  containers.podman.podman_volume:
-    name: maw-certbot-validation
-    state: present
-  register: certbot_validation_volume
-
-- name: create maw-certbot-certs volume
-  containers.podman.podman_volume:
-    name: maw-certbot-certs
-    state: present
-  register: certbot_certs_volume
-
 - name: create maw-google-creds volume
   containers.podman.podman_volume:
     name: maw-google-creds
     state: present
   register: google_creds_volume
 
+# production only volumes
+- name: create maw-certbot-validation volume
+  containers.podman.podman_volume:
+    name: maw-certbot-validation
+    state: present
+  when: maw_is_prod
+  register: certbot_validation_volume
+
+- name: create maw-certbot-certs volume
+  containers.podman.podman_volume:
+    name: maw-certbot-certs
+    state: present
+  when: maw_is_prod
+  register: certbot_certs_volume
+
 - name: create maw-gdrive-creds volume
   containers.podman.podman_volume:
     name: maw-gdrive-creds
     state: present
+  when: maw_is_prod
   register: gdrive_creds_volume
