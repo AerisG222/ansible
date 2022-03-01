@@ -1,0 +1,17 @@
+---
+- name: Create systemd unit files
+  containers.podman.podman_pod:
+    name: "{{ mawus_podname }}"
+    generate_systemd:
+      new: yes
+      path: .config/systemd/user
+      container_prefix: ""
+      pod_prefix: ""
+      separator: ""
+
+- name: Enable mawus via systemd
+  ansible.builtin.systemd:
+    name: "{{ mawus_podname }}"
+    enabled: yes
+    state: started
+    scope: user

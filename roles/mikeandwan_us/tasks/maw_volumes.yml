@@ -1,0 +1,66 @@
+---
+- name: create redis volume
+  containers.podman.podman_volume:
+    name: "redis-{{ redis_version }}"
+    state: present
+  register: redis_volume
+
+- name: create postgres volume
+  containers.podman.podman_volume:
+    name: "postgres-{{ postgres_version }}"
+    state: present
+  register: postgres_volume
+
+- name: create solr volume
+  containers.podman.podman_volume:
+    name: "solr-{{ solr_version }}"
+    state: present
+  register: solr_volume
+
+- name: create maw cert volume
+  containers.podman.podman_volume:
+    name: maw-certs
+    state: present
+  register: maw_cert_volume
+
+- name: create auth dataprotection volume
+  containers.podman.podman_volume:
+    name: maw-auth-dataprotection
+    state: present
+  register: auth_dataprotection_volume
+
+- name: create api dataprotection volume
+  containers.podman.podman_volume:
+    name: maw-api-dataprotection
+    state: present
+  register: api_dataprotection_volume
+
+- name: create uploads volume
+  containers.podman.podman_volume:
+    name: maw-uploads
+    state: present
+  register: uploads_volume
+
+- name: create www dataprotection volume
+  containers.podman.podman_volume:
+    name: maw-www-dataprotection
+    state: present
+  register: www_dataprotection_volume
+
+- name: create maw-certbot-validation volume
+  containers.podman.podman_volume:
+    name: maw-certbot-validation
+    state: present
+  register: certbot_validation_volume
+
+- name: create maw-certbot-certs volume
+  containers.podman.podman_volume:
+    name: maw-certbot-certs
+    state: present
+  register: certbot_certs_volume
+
+- name: create maw-google-creds volume
+  containers.podman.podman_volume:
+    name: maw-google-creds
+    state: present
+  register: google_creds_volume
