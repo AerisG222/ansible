@@ -7,6 +7,14 @@
 #    value: 1
 #    state: present
 
+- name: Set ports to forward
+  ansible.builtin.set_fact:
+    redirect_ports:
+      - port: 80
+        toport: 8080
+      - port: 443
+        toport: 8443
+
 - name: Enable masquerading
   become: yes
   ansible.posix.firewalld:
@@ -24,8 +32,23 @@
     permanent: yes
     state: enabled
     zone: FedoraServer
-  loop:
-    - port: 80
-      toport: 8080
-    - port: 443
-      toport: 8443
+  loop: "{{ redirect_ports }}"
+
+# todo: is this needed?
+#- name: Forward ports for localhost
+#  become: yes
+#  ansible.builtin.iptables:
+#    action: append
+#    chain: OUTPUT
+#    table: nat
+#    protocol: tcp
+#    destination: 127.0.0.1
+#    destination_port: "{{ item.port }}"
+#    jump: REDIRECT
+#    to_ports: "{{ item.toport }}"
+#  loop: "{{ redirect_ports }}"
+
+#- name: Save iptables localhost forward rules to survive reboots
+#  become: yes
+#  ansible.builtin.command:
+#    cmd: service iptables save
