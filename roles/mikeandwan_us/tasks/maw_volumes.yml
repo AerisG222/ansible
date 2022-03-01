@@ -1,15 +1,21 @@
 ---
 - name: create redis volume
   containers.podman.podman_volume:
-    name: "redis-{{ redis_version }}"
+    name: "maw-redis-{{ redis_version }}"
     state: present
   register: redis_volume
 
 - name: create postgres volume
   containers.podman.podman_volume:
-    name: "postgres-{{ postgres_version }}"
+    name: "maw-postgres-{{ postgres_version }}"
     state: present
   register: postgres_volume
+
+- name: create postgres backup volume
+  containers.podman.podman_volume:
+    name: maw-postgres-backup
+    state: present
+  register: postgres_backup_volume
 
 - name: create solr volume
   containers.podman.podman_volume:
@@ -64,3 +70,9 @@
     name: maw-google-creds
     state: present
   register: google_creds_volume
+
+- name: create maw-gdrive-creds volume
+  containers.podman.podman_volume:
+    name: maw-gdrive-creds
+    state: present
+  register: gdrive_creds_volume
