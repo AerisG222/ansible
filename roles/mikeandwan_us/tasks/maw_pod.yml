@@ -7,6 +7,25 @@
       - 8080:80
       - 8443:443
 
+- name: define images (prod)
+  ansible.builtin.set-fact:
+    image_photos: localhost/maw-photos-dev:latest
+    image_files: localhost/maw-files-dev:latest
+    image_auth: localhost/maw-auth-dev:latest
+    image_api: localhost/maw-api-dev:latest
+    image_www: localhost/maw-www-dev:latest
+    image_gateway: localhost/maw-gateway-dev:latest
+  when: maw_is_prod
+
+- name: define images (dev)
+    image_photos: docker.io/aerisg222/maw-photos:latest
+    image_files: docker.io/aerisg222/maw-files:latest
+    image_auth: docker.io/aerisg222/maw-auth:latest
+    image_api: docker.io/aerisg222/maw-api:latest
+    image_www: docker.io/aerisg222/maw-www:latest
+    image_gateway: docker.io/aerisg222/maw-gateway:latest
+  when: not maw_is_prod
+
 # redis
 - name: create redis container
   containers.podman.podman_container:
@@ -49,7 +68,7 @@
   containers.podman.podman_container:
     pod: "{{ mawus_podname }}"
     name: maw-auth
-    image: "docker.io/aerisg222/maw-auth:latest"
+    image: "{{ image_auth }}"
     state: started
     env_file: "{{ env_file_dir }}/maw-auth.env"
     volume:
@@ -64,7 +83,7 @@
   containers.podman.podman_container:
     pod: "{{ mawus_podname }}"
     name: maw-api
-    image: "docker.io/aerisg222/maw-api:latest"
+    image: "{{ image_api }}"
     state: started
     env_file: "{{ env_file_dir }}/maw-api.env"
     security-opt:
@@ -82,7 +101,7 @@
   containers.podman.podman_container:
     pod: "{{ mawus_podname }}"
     name: maw-www
-    image: "docker.io/aerisg222/maw-www:latest"
+    image: "{{ image_www }}"
     state: started
     env_file: "{{ env_file_dir }}/maw-www.env"
     security-opt:
@@ -101,7 +120,7 @@
   containers.podman.podman_container:
     pod: "{{ mawus_podname }}"
     name: maw-files
-    image: "docker.io/aerisg222/maw-files:latest"
+    image: "{{ image_files }}"
     state: started
     volume:
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
@@ -113,7 +132,7 @@
   containers.podman.podman_container:
     pod: "{{ mawus_podname }}"
     name: maw-photos
-    image: "docker.io/aerisg222/maw-photos:latest"
+    image: "{{ image_photos }}"
     state: started
     volume:
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
@@ -121,18 +140,28 @@
       io.containers.autoupdate: image
 
 # gateway
+- name: define gateway volumes
+  ansible.builtin.set_fact:
+    maw_gateway_volumes:
+      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+      - /srv/www/website_assets:/assets:ro
+    maw_gateway_volumes_prod:
+      - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
+      - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
+
+- name: append production specific gateway volumes (prod)
+  ansible.builtin.set_fact:
+    maw_gateway_volumes: "{{ maw_gateway_volumes + maw_gateway_volumes_prod }}"
+  when: maw_is_prod
+
 - name: create maw-gateway container
   containers.podman.podman_container:
     pod: "{{ mawus_podname }}"
     name: maw-gateway
-    image: "docker.io/aerisg222/maw-gateway:latest"
+    image: "{{ image_gateway }}"
     state: started
+    volume: "{{ maw_gateway_volumes }}"
     security-opt:
       - label=disable
-    volume:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-      - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
-      - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
-      - /srv/www/website_assets:/assets:ro
     label:
       io.containers.autoupdate: image
