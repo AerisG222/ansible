@@ -59,6 +59,12 @@
     state: present
   register: google_creds_volume
 
+- name: create maw-reverse-geocode volume
+  containers.podman.podman_volume:
+    name: maw-reverse-geocode
+    state: present
+  register: reverse_geocode_volume
+
 # production only volumes
 - name: create maw-certbot-validation volume
   containers.podman.podman_volume:
