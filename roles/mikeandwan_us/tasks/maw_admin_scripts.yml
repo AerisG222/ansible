@@ -1,0 +1,15 @@
+---
+- name: Make sure admin_scripts directory exists
+  ansible.builtin.file:
+    path: admin_scripts
+    state: directory
+
+- name: Prepare scripts
+  ansible.builtin.template:
+    backup: yes
+    src: "admin_scripts/{{ item }}.j2"
+    dest: "admin_scripts/{{ item }}"
+    mode: u+rwx
+  loop:
+    - idsrvsql.sh
+    - wwwsql.sh

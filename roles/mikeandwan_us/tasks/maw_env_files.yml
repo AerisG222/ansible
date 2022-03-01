@@ -1,0 +1,18 @@
+---
+- name: Make sure maw_env directory exists
+  ansible.builtin.file:
+    path: maw_env
+    state: directory
+
+- name: Prepare environment files
+  ansible.builtin.template:
+    backup: yes
+    src: "maw_env/{{ item }}.j2"
+    dest: "maw_env/{{ item }}"
+    mode: u+rw
+  loop:
+    - maw-api.env
+    - maw-auth.env
+    - maw-postgres-backup.env
+    - maw-reverse-geocode.env
+    - maw-www.env

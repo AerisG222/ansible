@@ -1,0 +1,6 @@
+[Unit]
+Description=Renew Let's Encrypt certificates for mikeandwan.us
+
+[Service]
+Type=oneshot
+ExecStart=podman run -it --rm --pull always --pod {{ mawus_podname }} --volume {{ certbot_validation_volume.volume.Name }}:/var/www/certbot:rw,z --volume {{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:rw,z docker.io/certbot/certbot:latest renew --agree-tos

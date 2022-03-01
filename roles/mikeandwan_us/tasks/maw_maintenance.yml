@@ -1,0 +1,48 @@
+---
+- name: Create user systemd directory if necessary
+  ansible.builtin.file:
+    path: .config/systemd/user
+    recurse: yes
+    state: directory
+
+- name: define common service and timers
+  ansible.builtin.set_fact:
+    services:
+      - reverse-geocode.service
+      - solr-indexer.service
+    timers:
+      - reverse-geocode.timer
+      - solr-indexer.timer
+    services_prod:
+      - certbot-renew.service
+      - postgres-maintenance.service
+      - remote-archive-daily.service
+      - remote-archive-monthly.service
+    timers_prod:
+      - certbot-renew.timer
+      - postgres-maintenance.timer
+      - remote-archive-daily.timer
+      - remote-archive-monthly.timer
+
+- name: Merge services and timers
+  ansible.builtin.set_fact:
+    services: "{{ services + services_prod }}"
+    timers: "{{ timers + timers_prod }}"
+  when: maw_is_prod
+
+- name: Prepare systemd service and timer files
+  ansible.builtin.template:
+    backup: yes
+    src: "systemd/{{ item }}.j2"
+    dest: ".config/systemd/user/{{ item }}"
+    mode: u+rw
+  loop: "{{ services + timers }}"
+
+- name: Enable timers
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+    scope: user
+    daemon_reload: yes
+  loop: "{{ timers }}"

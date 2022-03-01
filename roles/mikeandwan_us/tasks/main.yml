@@ -20,12 +20,24 @@
     redis_version: 6
     postgres_version: 14
     solr_version: 8
-    env_file_dir: /home/svc_www_maw
+    env_file_dir: "/home/{{ mawus_svc_account }}/maw_env"
   changed_when: false
   delegate_to: localhost
 
+- name: Include maw_admin_scripts.yml
+  ansible.builtin.include_tasks: maw_admin_scripts.yml
+
+- name: Include maw_env_files.yml
+  ansible.builtin.include_tasks: maw_env_files.yml
+
+- name: Include maw_systemd_scripts.yml
+  ansible.builtin.include_tasks: maw_systemd_scripts.yml
+
 - name: Include maw_volumes.yml
   ansible.builtin.include_tasks: maw_volumes.yml
+
+- name: Include maw_maintenance.yml
+  ansible.builtin.include_tasks: maw_maintenance.yml
 
 - name: Initialize environment
   ansible.builtin.include_tasks: maw_init.yml

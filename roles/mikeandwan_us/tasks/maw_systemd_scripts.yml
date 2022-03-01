@@ -1,0 +1,14 @@
+---
+- name: Make sure systemd_scripts directory exists
+  ansible.builtin.file:
+    path: systemd_scripts
+    state: directory
+
+- name: Prepare scripts
+  ansible.builtin.template:
+    backup: yes
+    src: "systemd_scripts/{{ item }}.j2"
+    dest: "systemd_scripts/{{ item }}"
+    mode: u+rwx
+  loop:
+    - remote-archive.sh
