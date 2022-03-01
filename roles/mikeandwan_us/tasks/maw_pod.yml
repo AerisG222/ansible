@@ -3,6 +3,9 @@
   containers.podman.podman_pod:
     name: "{{ mawus_podname }}"
     state: started
+    publish:
+      - 8080:80
+      - 8443:443
 
 # redis
 - name: create redis container
