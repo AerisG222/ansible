@@ -1,0 +1,26 @@
+---
+- name: Merge List Test
+  hosts: localhost
+
+  tasks:
+    - name: define lists
+      ansible.builtin.set_fact:
+        start_list:
+          - a
+          - b
+        second_list:
+          - c
+          - d
+        # merge_in_same: "{{ start_list + second_list }}"  this is not allowed!
+
+    - name: merge outside
+      ansible.builtin.set_fact:
+        merge_outside: "{{ start_list + second_list }}"
+
+    #- name: print merge in same set_fact
+    #  ansible.builtin.debug:
+    #    msg: "{{ merge_in_same }}"
+
+    - name: print merge outside initial set_fact
+      ansible.builtin.debug:
+        msg: "{{ merge_outside }}"
