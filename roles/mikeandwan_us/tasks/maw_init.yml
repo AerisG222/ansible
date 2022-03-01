@@ -1,0 +1,11 @@
+---
+# certs
+# todo: evaluate dev/prod support
+- name: initialize local certs
+  containers.podman.podman_container:
+    name: maw-certs
+    image: "docker.io/aerisg222/maw-certs:latest"
+    state: started
+    rm: yes
+    volume:
+      - "{{ maw_cert_volume.volume.Name }}:/certs:rw,z"
