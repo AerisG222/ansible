@@ -1,0 +1,222 @@
+---
+- name: create maw-pod pod
+  containers.podman.podman_pod:
+    name: "{{ mawus_podname }}"
+    state: started
+
+# redis
+- name: create redis volume
+  containers.podman.podman_volume:
+    name: "redis-{{ redis_version }}"
+    state: present
+  register: redis_volume
+
+- name: create redis container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-redis
+    image: "docker.io/redis:{{ redis_version }}-alpine"
+    command: redis-server --save 60 1
+    state: started
+    volume:
+      - "{{ redis_volume.volume.Name }}:/data:rw,z"
+    label:
+      io.containers.autoupdate: image
+
+# postgres
+- name: create postgres volume
+  containers.podman.podman_volume:
+    name: "postgres-{{ postgres_version }}"
+    state: present
+  register: postgres_volume
+
+- name: create postgres container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-postgres
+    image: "docker.io/postgres:{{ postgres_version }}-alpine"
+    state: started
+    volume:
+      - "{{ postgres_volume.volume.Name }}:/var/lib/postgresql/data:rw,z"
+    label:
+      io.containers.autoupdate: image
+
+# solr
+- name: create solr volume
+  containers.podman.podman_volume:
+    name: "solr-{{ solr_version }}"
+    state: present
+  register: solr_volume
+
+- name: create solr container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-solr
+    image: "docker.io/solr:{{ solr_version }}"
+    state: started
+    volume:
+      - "{{ solr_volume.volume.Name }}:/var/solr:rw,z"
+    label:
+      io.containers.autoupdate: image
+
+# certs
+# todo: evaluate dev/prod support
+- name: create maw cert volume
+  containers.podman.podman_volume:
+    name: "{{ maw_cert_volume }}"
+    state: present
+
+- name: initialize local certs
+  containers.podman.podman_container:
+    name: maw-certs
+    image: "docker.io/aerisg222/maw-certs:latest"
+    state: started
+    rm: yes
+    volume:
+      - "{{ maw_cert_volume }}:/certs:rw,z"
+
+# auth
+- name: create auth dataprotection volume
+  containers.podman.podman_volume:
+    name: maw-auth-dataprotection
+    state: present
+
+- name: create maw-auth container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-auth
+    image: "docker.io/aerisg222/maw-auth:latest"
+    state: started
+    env_file: "{{ env_file_dir }}/maw-auth.env"
+    volume:
+      - "{{ maw_cert_volume }}:/certs:ro,z"
+      - maw-auth-dataprotection:/dataprotection:rw,Z
+      - maw-google-creds:/google-creds:ro,z
+    label:
+      io.containers.autoupdate: image
+
+# api
+- name: create api dataprotection volume
+  containers.podman.podman_volume:
+    name: maw-api-dataprotection
+    state: present
+
+- name: create uploads volume
+  containers.podman.podman_volume:
+    name: maw-uploads
+    state: present
+
+- name: create maw-api container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-api
+    image: "docker.io/aerisg222/maw-api:latest"
+    state: started
+    env_file: "{{ env_file_dir }}/maw-api.env"
+    security-opt:
+      - label=disable
+    volume:
+      - "{{ maw_cert_volume }}:/certs:ro,z"
+      - maw-api-dataprotection:/dataprotection:rw,Z
+      - maw-uploads:/maw-uploads:rw,z
+      - /srv/www/website_assets/images:/srv/www/website_assets/images:ro
+    label:
+      io.containers.autoupdate: image
+
+# www
+- name: create www dataprotection volume
+  containers.podman.podman_volume:
+    name: maw-www-dataprotection
+    state: present
+
+- name: create maw-www container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-www
+    image: "docker.io/aerisg222/maw-www:latest"
+    state: started
+    env_file: "{{ env_file_dir }}/maw-www.env"
+    security-opt:
+      - label=disable
+    volume:
+      - "{{ maw_cert_volume }}:/certs:ro,z"
+      - maw-www-dataprotection:/dataprotection:rw,Z
+      - maw-google-creds:/google-creds:ro,z
+      - /srv/www/website_assets/images:/srv/www/website_assets/images:ro
+      - /srv/www/website_assets/movies:/srv/www/website_assets/movies:ro
+    label:
+      io.containers.autoupdate: image
+
+# files
+- name: create maw-files container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-files
+    image: "docker.io/aerisg222/maw-files:latest"
+    state: started
+    volume:
+      - "{{ maw_cert_volume }}:/certs:ro,z"
+    label:
+      io.containers.autoupdate: image
+
+# photos
+- name: create maw-photos container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-photos
+    image: "docker.io/aerisg222/maw-photos:latest"
+    state: started
+    volume:
+      - "{{ maw_cert_volume }}:/certs:ro,z"
+    label:
+      io.containers.autoupdate: image
+
+# gateway
+- name: create maw-certbot-validation volume
+  containers.podman.podman_volume:
+    name: maw-certbot-validation
+    state: present
+
+- name: create maw-certbot-certs volume
+  containers.podman.podman_volume:
+    name: maw-certbot-certs
+    state: present
+
+- name: create maw-gateway container
+  containers.podman.podman_container:
+    pod: "{{ mawus_podname }}"
+    name: maw-gateway
+    image: "docker.io/aerisg222/maw-gateway:latest"
+    state: started
+    security-opt:
+      - label=disable
+    volume:
+      - "{{ maw_cert_volume }}:/certs:ro,z"
+      - maw-certbot-validation:/var/www/certbot:ro,z
+      - maw-certbot-certs:/etc/letsencrypt:ro,z
+      - /srv/www/website_assets:/assets:ro
+    label:
+      io.containers.autoupdate: image
+
+# reverse geocode
+
+# redis sync
+
+
+# systemd
+#- name: Create systemd unit files
+#  containers.podman.podman_pod:
+#    name: "{{ mawus_podname }}"
+#    generate_systemd:
+#      new: yes
+#      path: .config/systemd/user
+#      container_prefix: ""
+#      pod_prefix: ""
+#      separator: ""
+
+#- name: Enable mawus via systemd
+#  ansible.builtin.systemd:
+#    name: "{{ mawus_podname }}"
+#    enabled: yes
+#    state: started
+#    scope: user
