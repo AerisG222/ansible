@@ -21,6 +21,14 @@
     #  ansible.builtin.debug:
     #    msg: "{{ merge_in_same }}"
 
-    - name: print merge outside initial set_fact
+    - name: print merge outside result
       ansible.builtin.debug:
         msg: "{{ merge_outside }}"
+
+    - name: merge into existing list
+      ansible.builtin.set_fact:
+        start_list: "{{ start_list + second_list }}"
+
+    - name: print merge into existing list result
+      ansible.builtin.debug:
+        msg: "{{ start_list }}"
