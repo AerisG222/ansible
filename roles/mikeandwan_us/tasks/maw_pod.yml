@@ -8,7 +8,7 @@
       - 8443:443
 
 - name: define images (prod)
-  ansible.builtin.set-fact:
+  ansible.builtin.set_fact:
     image_photos: localhost/maw-photos-dev:latest
     image_files: localhost/maw-files-dev:latest
     image_auth: localhost/maw-auth-dev:latest
@@ -18,6 +18,7 @@
   when: maw_is_prod
 
 - name: define images (dev)
+  ansible.builtin.set_fact:
     image_photos: docker.io/aerisg222/maw-photos:latest
     image_files: docker.io/aerisg222/maw-files:latest
     image_auth: docker.io/aerisg222/maw-auth:latest
@@ -87,7 +88,7 @@
     image: "{{ image_api }}"
     state: started
     env_file: "{{ env_file_dir }}/maw-api.env"
-    security-opt:
+    security_opt:
       - label=disable
     volume:
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
@@ -105,7 +106,7 @@
     image: "{{ image_www }}"
     state: started
     env_file: "{{ env_file_dir }}/maw-www.env"
-    security-opt:
+    security_opt:
       - label=disable
     volume:
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
@@ -162,7 +163,7 @@
     image: "{{ image_gateway }}"
     state: started
     volume: "{{ maw_gateway_volumes }}"
-    security-opt:
+    security_opt:
       - label=disable
     label:
       io.containers.autoupdate: image
