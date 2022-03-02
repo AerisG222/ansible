@@ -19,7 +19,7 @@
 
 - name: create solr volume
   containers.podman.podman_volume:
-    name: "solr-{{ solr_version }}"
+    name: "maw-solr-{{ solr_version }}"
     state: present
   register: solr_volume
 
