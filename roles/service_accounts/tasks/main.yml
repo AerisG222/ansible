@@ -7,4 +7,6 @@
     password: "{{ item.password | password_hash('sha512') }}"
     update_password: always
     state: present
+  loop_control:
+    label: "{{ item.username }}"
   loop: "{{ service_accounts if service_accounts is iterable else [] }}"
