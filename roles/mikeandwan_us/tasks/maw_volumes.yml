@@ -70,19 +70,19 @@
   containers.podman.podman_volume:
     name: maw-certbot-validation
     state: present
-  when: maw_is_prod
+  when: maw_env == 'prod'
   register: certbot_validation_volume
 
 - name: create maw-certbot-certs volume
   containers.podman.podman_volume:
     name: maw-certbot-certs
     state: present
-  when: maw_is_prod
+  when: maw_env == 'prod'
   register: certbot_certs_volume
 
 - name: create maw-gdrive-creds volume
   containers.podman.podman_volume:
     name: maw-gdrive-creds
     state: present
-  when: maw_is_prod
+  when: maw_env == 'prod'
   register: gdrive_creds_volume
