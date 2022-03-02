@@ -13,6 +13,6 @@
   loop:
     - maw-api.env
     - maw-auth.env
-    - maw-postgres-backup.env
+    - maw-postgres.env
     - maw-reverse-geocode.env
     - maw-www.env
