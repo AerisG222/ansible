@@ -12,6 +12,9 @@
 - name: Include port_mapping.yml
   ansible.builtin.include_tasks: port_mapping.yml
 
+- name: Initialize host
+  ansible.builtin.include_tasks: maw_host_init.yml
+
 - name: "Temporarily set SSH username to {{ mawus_svc_account }}"
   ansible.builtin.set_fact:
     orig_ansible_user: "{{ ansible_user }}"

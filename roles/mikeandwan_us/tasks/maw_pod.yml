@@ -94,7 +94,7 @@
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
       - "{{ api_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
       - "{{ uploads_volume.volume.Name }}:/maw-uploads:rw,z"
-      - /srv/www/website_assets/images:/srv/www/website_assets/images:ro
+      - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
     label:
       io.containers.autoupdate: image
 
@@ -112,8 +112,8 @@
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
       - "{{ www_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
       - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
-      - /srv/www/website_assets/images:/srv/www/website_assets/images:ro
-      - /srv/www/website_assets/movies:/srv/www/website_assets/movies:ro
+      - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
+      - "{{ host_assets_dir_movies }}:/srv/www/website_assets/movies:ro"
     label:
       io.containers.autoupdate: image
 
@@ -146,10 +146,14 @@
   ansible.builtin.set_fact:
     maw_gateway_volumes:
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-      - /srv/www/website_assets:/assets:ro
+      - "{{ host_assets_dir }}:/assets:ro"
+
+- name: define prod volumes
+  ansible.builtin.set_fact:
     maw_gateway_volumes_prod:
       - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
       - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
+  when: maw_is_prod
 
 - name: append production specific gateway volumes (prod)
   ansible.builtin.set_fact:

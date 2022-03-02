@@ -1,0 +1,13 @@
+---
+# assets
+# todo: copy files for prod
+- name: ensure asset directories exist
+  become: yes
+  ansible.builtin.file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+  loop:
+    - "{{ host_assets_dir }}"
+    - "{{ host_assets_dir_images }}"
+    - "{{ host_assets_dir_movies }}"
