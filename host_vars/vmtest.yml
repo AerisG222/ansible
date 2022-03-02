@@ -2,6 +2,7 @@
 # base
 hostname: vmtest
 update_packages: no
+maw_is_stage: yes
 
 # ddclient
 ddclient_config:

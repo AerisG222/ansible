@@ -7,7 +7,7 @@
       - 8080:80
       - 8443:443
 
-- name: define images (prod)
+- name: define images (dev)
   ansible.builtin.set_fact:
     image_photos: localhost/maw-photos-dev:latest
     image_files: localhost/maw-files-dev:latest
@@ -15,9 +15,9 @@
     image_api: localhost/maw-api-dev:latest
     image_www: localhost/maw-www-dev:latest
     image_gateway: localhost/maw-gateway-dev:latest
-  when: maw_is_prod
+  when: not maw_is_prod
 
-- name: define images (dev)
+- name: define images (prod or stage)
   ansible.builtin.set_fact:
     image_photos: docker.io/aerisg222/maw-photos:latest
     image_files: docker.io/aerisg222/maw-files:latest
@@ -25,7 +25,7 @@
     image_api: docker.io/aerisg222/maw-api:latest
     image_www: docker.io/aerisg222/maw-www:latest
     image_gateway: docker.io/aerisg222/maw-gateway:latest
-  when: not maw_is_prod
+  when: maw_is_prod or maw_is_stage
 
 # redis
 - name: create redis container
