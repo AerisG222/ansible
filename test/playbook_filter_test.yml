@@ -19,3 +19,7 @@
       ansible.builtin.debug:
         msg: "{{ item.name }}"
       loop: "{{ container_output.containers | selectattr('state.started', 'defined') | selectattr('state.started') }}"
+
+    - name: is first container started?
+      ansible.builtin.debug:
+        msg: "{{ container_output.containers[0].state.started }}"
