@@ -1,0 +1,21 @@
+---
+- name: Filter Test
+  hosts: localhost
+  vars:
+    container_output:
+      containers:
+        - name: a
+          state:
+            started: yes
+        - name: b
+          state:
+            started: no
+        - name: c
+          state:
+            started: True
+
+  tasks:
+    - name: get started containers
+      ansible.builtin.debug:
+        msg: "{{ item.name }}"
+      loop: "{{ container_output.containers | selectattr('state.started') }}"
