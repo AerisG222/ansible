@@ -18,4 +18,4 @@
     - name: get started containers
       ansible.builtin.debug:
         msg: "{{ item.name }}"
-      loop: "{{ container_output.containers | selectattr('state.started') }}"
+      loop: "{{ container_output.containers | selectattr('state.started', 'defined') | selectattr('state.started') }}"
