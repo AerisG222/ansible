@@ -54,8 +54,8 @@
     name: "{{ mawus_podname }}"
     state: started
     publish:
-      - 8080:80
-      - 8443:443
+      - 80:80
+      - 443:443
 
 - name: redis container
   containers.podman.podman_container:
