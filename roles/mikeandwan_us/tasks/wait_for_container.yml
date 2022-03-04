@@ -1,0 +1,7 @@
+- name: "wait for container {{ container_name }} to start"
+  containers.podman.podman_container_info:
+    name: "{{ container_name }}"
+  register: wait_container_info
+  delay: 10
+  retries: 12
+  until: wait_container_info.containers[0].State.Running
