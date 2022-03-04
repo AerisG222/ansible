@@ -1,12 +1,4 @@
 ---
-- name: create maw-pod pod
-  containers.podman.podman_pod:
-    name: "{{ mawus_podname }}"
-    state: started
-    publish:
-      - 8080:80
-      - 8443:443
-
 - name: define vars (dev)
   ansible.builtin.set_fact:
     image_photos: localhost/maw-photos-dev:latest
@@ -47,6 +39,23 @@
       - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
       - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
   when: maw_env == 'prod'
+
+# stop pod via systemd, otherwise systemd and podman fight
+- name: Disable mawus via systemd
+  ansible.builtin.systemd:
+    name: "pod-{{ mawus_podname }}"
+    enabled: no
+    state: stopped
+    scope: user
+  ignore_errors: yes # nothing to stop if it doesn't exist
+
+- name: create maw-pod pod
+  containers.podman.podman_pod:
+    name: "{{ mawus_podname }}"
+    state: started
+    publish:
+      - 8080:80
+      - 8443:443
 
 - name: redis container
   containers.podman.podman_container:
@@ -111,7 +120,6 @@
       - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
     label:
       io.containers.autoupdate: image
-  register: maw_auth_container
 
 - name: wait for auth container
   ansible.builtin.include_tasks: wait_for_container.yml
@@ -134,7 +142,6 @@
       - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
     label:
       io.containers.autoupdate: image
-  register: maw_api_container
 
 - name: wait for api container
   ansible.builtin.include_tasks: wait_for_container.yml
@@ -158,7 +165,6 @@
       - "{{ host_assets_dir_movies }}:/srv/www/website_assets/movies:ro"
     label:
       io.containers.autoupdate: image
-  register: maw_www_container
 
 - name: wait for www container
   ansible.builtin.include_tasks: wait_for_container.yml
@@ -175,7 +181,6 @@
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
     label:
       io.containers.autoupdate: image
-  register: maw_files_container
 
 - name: wait for files container
   ansible.builtin.include_tasks: wait_for_container.yml
@@ -192,7 +197,6 @@
       - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
     label:
       io.containers.autoupdate: image
-  register: maw_photos_container
 
 - name: wait for photos container
   ansible.builtin.include_tasks: wait_for_container.yml
@@ -210,9 +214,45 @@
       - label=disable
     label:
       io.containers.autoupdate: image
-  register: maw_gateway_container
 
 - name: wait for gateway container
   ansible.builtin.include_tasks: wait_for_container.yml
   vars:
     - container_name: maw-gateway
+
+# manually creating these as containers.podman.podman_pod generate_systemd was not
+# producing the individual container service files for some reason
+- name: Create systemd unit files (manually)
+  ansible.builtin.command:
+    cmd: "podman generate systemd -f -n --new {{ mawus_podname }}"
+    chdir: .config/systemd/user
+
+- name: Configure container order
+  ansible.builtin.lineinfile:
+    path: ".config/systemd/user/{{ item.unitfile }}"
+    insertafter: ^After=.*$
+    line: "Before={{ item.before }}"
+  loop:
+    - unitfile: container-maw-api.service
+      before: container-maw-gateway.service
+    - unitfile: container-maw-auth.service
+      before: container-maw-gateway.service
+    - unitfile: container-maw-files.service
+      before: container-maw-gateway.service
+    - unitfile: container-maw-photos.service
+      before: container-maw-gateway.service
+    - unitfile: container-maw-postgres.service
+      before: container-maw-api.service container-maw-auth.service container-maw-www.service
+    - unitfile: container-maw-redis.service
+      before: container-maw-api.service container-maw-www.service
+    - unitfile: container-maw-solr.service
+      before: container-maw-api.service container-maw-www.service
+    - unitfile: container-maw-www.service
+      before: container-maw-gateway.service
+
+- name: Enable mawus via systemd
+  ansible.builtin.systemd:
+    name: "pod-{{ mawus_podname }}"
+    enabled: yes
+    state: started
+    scope: user

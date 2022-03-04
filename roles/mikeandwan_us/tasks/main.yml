@@ -48,9 +48,6 @@
 - name: Include maw_pod.yml
   ansible.builtin.include_tasks: maw_pod.yml
 
-- name: Include maw_systemd.yml
-  ansible.builtin.include_tasks: maw_systemd.yml
-
 - name: "Reset SSH username to {{ orig_ansible_user }}"
   ansible.builtin.set_fact:
     ansible_user: "{{ orig_ansible_user }}"
