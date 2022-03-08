@@ -8,4 +8,5 @@ azure_data_studio: no
 google_chrome: yes
 google_earth: yes
 ms_teams: yes
+powershell: yes
 vscode: yes

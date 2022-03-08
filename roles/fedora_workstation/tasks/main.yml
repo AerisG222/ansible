@@ -27,6 +27,10 @@
   ansible.builtin.import_tasks: nvidia.yml
   when: nvidia
 
+- name: Import powershell.yml
+  ansible.builtin.import_tasks: powershell.yml
+  when: powershell
+
 - name: Import vscode.yml
   ansible.builtin.import_tasks: vscode.yml
   when: vscode
