@@ -1,0 +1,27 @@
+---
+- name: Prepare temp directory
+  ansible.builtin.file:
+    path: aws_cli
+    state: directory
+
+- name: Download AWS CLI
+  ansible.builtin.uri:
+    dest: aws_cli/awscliv2.zip
+    creates: aws_cli/awscliv2.zip
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+
+- name: Unzip archive
+  ansible.builtin.unarchive:
+    remote_src: yes
+    src: aws_cli/awscliv2.zip
+    dest: aws_cli
+
+- name: Install AWS CLI
+  become: yes
+  ansible.builtin.command:
+    cmd: aws_cli/aws/install
+
+- name: Clean temp directory
+  ansible.builtin.file:
+    path: aws_cli
+    state: absent

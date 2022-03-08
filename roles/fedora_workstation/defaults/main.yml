@@ -1,5 +1,6 @@
 ---
 android_studio: no
+aws_cli: no
 azure_cli: no
 azure_data_studio: no
 google_chrome: no

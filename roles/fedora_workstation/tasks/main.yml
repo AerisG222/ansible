@@ -3,6 +3,10 @@
   ansible.builtin.import_tasks: android_studio.yml
   when: android_studio
 
+- name: Import aws_cli.yml
+  ansible.builtin.import_tasks: aws_cli.yml
+  when: aws_cli
+
 - name: Import azure_cli.yml
   ansible.builtin.import_tasks: azure_cli.yml
   when: azure_cli
