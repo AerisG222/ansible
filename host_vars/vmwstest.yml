@@ -3,6 +3,7 @@ hostname: vmwstest
 
 update_packages: yes
 android_studio: yes
+azure_cli: yes
 azure_data_studio: no
 google_chrome: yes
 google_earth: yes

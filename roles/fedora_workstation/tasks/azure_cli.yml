@@ -1,0 +1,17 @@
+---
+- name: Add Azure CLI Repo
+  become: yes
+  ansible.builtin.yum_repository:
+    name: azure_cli
+    description: Azure CLI
+    baseurl: https://packages.microsoft.com/yumrepos/azure-cli
+    gpgcheck: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+  notify: update_package_cache
+
+- name: Install Azure CLI
+  become: yes
+  ansible.builtin.dnf:
+    state: present
+    name:
+      - azure-cli

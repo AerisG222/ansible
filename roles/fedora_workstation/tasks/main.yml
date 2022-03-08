@@ -3,6 +3,10 @@
   ansible.builtin.import_tasks: android_studio.yml
   when: android_studio
 
+- name: Import azure_cli.yml
+  ansible.builtin.import_tasks: azure_cli.yml
+  when: azure_cli
+
 - name: Import azure_data_studio.yml
   ansible.builtin.import_tasks: azure_data_studio.yml
   when: azure_data_studio
