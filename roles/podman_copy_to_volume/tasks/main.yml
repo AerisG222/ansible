@@ -6,15 +6,15 @@
     image: docker.io/tianon/true
     state: present
     volumes:
-    - "{{ volume }}:/data"
+    - "{{ volume_name }}:/data"
 
 - name: copy file(s) to volume
   ansible.builtin.command:
     argv:
       - podman
       - cp
-      - "{{ file }}"
-      - temp_data_container:/data
+      - "{{ src_path }}"
+      - "temp_data_container:/data/{{ dest_relative_path }}"
 
 - name: stop data only container
   containers.podman.podman_container:

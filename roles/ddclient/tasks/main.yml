@@ -18,16 +18,25 @@
     dest: ddclient.conf
 
 - name: Copy ddclient.conf to volume
-  ansible.builtin.include_tasks:
-    file: podman_copy_files_to_volume.yml
+  ansible.builtin.include_role:
+    name: podman_copy_to_volume
   vars:
-    volume: ddclient_config
-    file: ddclient.conf
+    volume_name: ddclient_config
+    src_path: ddclient.conf
 
 - name: Delete temp file
   ansible.builtin.file:
     path: ddclient.conf
     state: absent
+
+# stop pod via systemd, otherwise systemd and podman fight
+- name: "Disable {{ ddclient_pod_name }} via systemd"
+  ansible.builtin.systemd:
+    name: "pod-{{ ddclient_pod_name }}"
+    enabled: no
+    state: stopped
+    scope: user
+  ignore_errors: yes # nothing to stop if it doesn't exist
 
 - name: Create ddclient-pod
   containers.podman.podman_pod:
@@ -50,13 +59,10 @@
     generate_systemd:
       new: yes
       path: .config/systemd/user
-      container_prefix: ""
-      pod_prefix: ""
-      separator: ""
 
 - name: Enable ddclient via systemd
   ansible.builtin.systemd:
-    name: ddclient-pod
+    name: "pod-{{ ddclient_pod_name }}"
     enabled: yes
     state: started
     scope: user
