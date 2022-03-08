@@ -40,6 +40,24 @@
       - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
   when: maw_env == 'prod'
 
+- name: Prepare postgres init script
+  ansible.builtin.template:
+    src: postgres_init/configure_pg_hba.sh.j2
+    dest: configure_pg_hba.sh
+    mode: u+x
+
+- name: Copy init script to volume
+  ansible.builtin.include_role:
+    name: podman_copy_to_volume
+  vars:
+    volume_name: "{{ postgres_volume_init.volume.Name }}"
+    src_path: configure_pg_hba.sh
+
+- name: Delete temp file
+  ansible.builtin.file:
+    path: configure_pg_hba.sh
+    state: absent
+
 # stop pod via systemd, otherwise systemd and podman fight
 - name: Disable mawus via systemd
   ansible.builtin.systemd:
@@ -82,6 +100,7 @@
     state: started
     env_file: "{{ env_file_dir }}/maw-postgres.env"
     volume:
+      - "{{ postgres_volume_init.volume.Name }}:/docker-entrypoint-initdb.d:ro,z"
       - "{{ postgres_volume.volume.Name }}:/var/lib/postgresql/data:rw,z"
     label:
       io.containers.autoupdate: image

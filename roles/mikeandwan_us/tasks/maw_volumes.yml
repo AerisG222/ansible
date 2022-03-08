@@ -11,6 +11,12 @@
     state: present
   register: postgres_volume
 
+- name: create postgres initialization volume
+  containers.podman.podman_volume:
+    name: "maw-postgres-{{ postgres_version }}-init"
+    state: present
+  register: postgres_volume_init
+
 - name: create postgres backup volume
   containers.podman.podman_volume:
     name: maw-postgres-backup
