@@ -1,0 +1,66 @@
+---
+- name: set vars
+  ansible.builtin.set_fact:
+    pginit_dir: postgres_init
+
+- name: "prepare {{ pginit_dir }} directory"
+  ansible.builtin.file:
+    path: "{{ pginit_dir }}"
+    state: directory
+
+- name: copy backup files
+  ansible.builtin.copy:
+    src: "{{ pg_backup_host_dir }}"
+    dest: "{{ pginit_dir }}"
+
+- name: create roles
+  ansible.builtin.command:
+    cmd: "podman run -it --rm --pod {{ mawus_podname }} --env-file {{ env_file_dir }}/maw-postgres.env --volume ./{{ pginit_dir }}:/postgres_init:rw,Z docker.io/postgres:{{ postgres_version }} psql -h 127.0.0.1 -U postgres -f postgres_init/db_backups/roles.sql"
+
+- name: set role passwords
+  ansible.builtin.command:
+    cmd: "podman run -it --rm --pod {{ mawus_podname }} --env-file {{ env_file_dir }}/maw-postgres.env docker.io/postgres:{{ postgres_version }} psql -h 127.0.0.1 -U postgres -d postgres -c \"ALTER ROLE {{ item.username }} WITH PASSWORD '{{ item.password }}';\""
+  loop:
+    - username: "{{ mawus_config.sql_username }}"
+      password: "{{ mawus_config.sql_password }}"
+    - username: idsrv
+      password: "{{ mawus_config.sql_idsrv_password }}"
+    - username: svc_solr
+      password: "{{ mawus_config.sql_solr_password }}"
+
+- name: test if idsrv exists
+  ansible.builtin.command:
+    cmd: "podman run -it --rm --pod {{ mawus_podname }} --env-file {{ env_file_dir }}/maw-postgres.env docker.io/postgres:{{ postgres_version }} psql -h 127.0.0.1 -U postgres -d idsrv -c 'SELECT 1;'"
+  ignore_errors: yes
+  register: idsrv_test
+
+- name: restore idsrv database
+  ansible.builtin.command:
+    cmd: "podman run -it --rm --pod {{ mawus_podname }} --env-file {{ env_file_dir }}/maw-postgres.env --volume ./{{ pginit_dir }}:/postgres_init:rw,Z docker.io/postgres:{{ postgres_version }} pg_restore -h 127.0.0.1 -U postgres -C -d postgres postgres_init/db_backups/{{ pg_backup_idsrv }}"
+  when: idsrv_test.rc == 2
+
+- name: optimize idsrv database
+  ansible.builtin.command:
+    cmd: "podman run -it --rm --pod {{ mawus_podname }} --env-file {{ env_file_dir }}/maw-postgres.env docker.io/postgres:{{ postgres_version }} psql -h 127.0.0.1 -U postgres -d idsrv -c 'VACUUM ANALYZE;'"
+  when: idsrv_test.rc == 2
+
+- name: test if maw_website exists
+  ansible.builtin.command:
+    cmd: "podman run -it --rm --pod {{ mawus_podname }} --env-file {{ env_file_dir }}/maw-postgres.env docker.io/postgres:{{ postgres_version }} psql -h 127.0.0.1 -U postgres -d maw_website -c 'SELECT 1;'"
+  ignore_errors: yes
+  register: maw_website_test
+
+- name: restore maw_website database
+  ansible.builtin.command:
+    cmd: "podman run -it --rm --pod {{ mawus_podname }} --env-file {{ env_file_dir }}/maw-postgres.env --volume ./{{ pginit_dir }}:/postgres_init:rw,Z docker.io/postgres:{{ postgres_version }} pg_restore -h 127.0.0.1 -U postgres -C -d postgres postgres_init/db_backups/{{ pg_backup_www }}"
+  when: maw_website_test.rc == 2
+
+- name: optimize maw_website database
+  ansible.builtin.command:
+    cmd: "podman run -it --rm --pod {{ mawus_podname }} --env-file {{ env_file_dir }}/maw-postgres.env docker.io/postgres:{{ postgres_version }} psql -h 127.0.0.1 -U postgres -d maw_website -c 'VACUUM ANALYZE;'"
+  when: maw_website_test.rc == 2
+
+- name: "remove temp {{ pginit_dir }} directory"
+  ansible.builtin.file:
+    path: "{{ pginit_dir }}"
+    state: absent

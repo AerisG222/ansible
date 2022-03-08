@@ -91,6 +91,9 @@
   vars:
     - container_name: maw-postgres
 
+- name: include maw_postgres_init.yml
+  ansible.builtin.include_tasks: maw_postgres_init.yml
+
 - name: maw-solr container
   containers.podman.podman_container:
     name: maw-solr
