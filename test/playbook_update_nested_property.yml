@@ -1,0 +1,30 @@
+---
+- name: Update nested property
+  hosts: localhost
+
+  tasks:
+    - name: define var
+      ansible.builtin.set_fact:
+        myvar:
+          a: a
+          b: b
+          c: c
+
+    - name: initial state
+      ansible.builtin.debug:
+        msg: "{{ myvar }}"
+
+    - name: create new var w/ desired (partial) values
+      ansible.builtin.set_fact:
+        myvar_new:
+          d: d
+          b: z
+
+    # https://stackoverflow.com/questions/37043746/how-to-update-nested-variables-in-ansible
+    - name: update original variable
+      ansible.builtin.set_fact:
+        myvar: "{{ myvar | combine(myvar_new, recursive=True) }}"
+
+    - name: print result
+      ansible.builtin.debug:
+        msg: "{{ myvar }}"
