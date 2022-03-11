@@ -1,45 +1,4 @@
 ---
-- name: define vars (dev)
-  ansible.builtin.set_fact:
-    image_photos: localhost/maw-photos-dev:latest
-    image_files: localhost/maw-files-dev:latest
-    image_auth: localhost/maw-auth-dev:latest
-    image_api: localhost/maw-api-dev:latest
-    image_www: localhost/maw-www-dev:latest
-    image_gateway: localhost/maw-gateway-dev:latest
-    maw_gateway_volumes:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-      - "{{ host_assets_dir }}:/assets:ro"
-  when: maw_env == 'dev'
-
-- name: define vars (stage)
-  ansible.builtin.set_fact:
-    image_photos: docker.io/aerisg222/maw-photos:latest
-    image_files: docker.io/aerisg222/maw-files:latest
-    image_auth: docker.io/aerisg222/maw-auth:latest
-    image_api: docker.io/aerisg222/maw-api:latest
-    image_www: docker.io/aerisg222/maw-www:latest
-    image_gateway: docker.io/aerisg222/maw-gateway-dev:latest
-    maw_gateway_volumes:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-      - "{{ host_assets_dir }}:/assets:ro"
-  when: maw_env == 'stage'
-
-- name: define vars (prod)
-  ansible.builtin.set_fact:
-    image_photos: docker.io/aerisg222/maw-photos:latest
-    image_files: docker.io/aerisg222/maw-files:latest
-    image_auth: docker.io/aerisg222/maw-auth:latest
-    image_api: docker.io/aerisg222/maw-api:latest
-    image_www: docker.io/aerisg222/maw-www:latest
-    image_gateway: docker.io/aerisg222/maw-gateway:latest
-    maw_gateway_volumes:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-      - "{{ host_assets_dir }}:/assets:ro"
-      - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
-      - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
-  when: maw_env == 'prod'
-
 - name: Prepare postgres init script
   ansible.builtin.template:
     src: postgres_init/configure_pg_hba.sh.j2
@@ -61,220 +20,264 @@
 # stop pod via systemd, otherwise systemd and podman fight
 - name: Disable mawus via systemd
   ansible.builtin.systemd:
-    name: "pod-{{ mawus_podname }}"
+    name: "pod-{{ mawus_config.podman_podname }}"
     enabled: no
     state: stopped
     scope: user
   ignore_errors: yes # nothing to stop if it doesn't exist
 
-- name: create maw-pod pod
+- name: "create {{ mawus_config.podman_podname }} pod"
   containers.podman.podman_pod:
-    name: "{{ mawus_podname }}"
+    name: "{{ mawus_config.podman_podname }}"
     state: started
-    publish:
-      - 80:80
-      - 443:443
+    publish: "{{ mawus_config.podman_publish_ports if mawus_config.podman_publish_ports is iterable else [] }}"
 
 - name: redis container
   containers.podman.podman_container:
-    name: maw-redis
-    pod: "{{ mawus_podname }}"
-    image: "docker.io/redis:{{ redis_version }}-alpine"
+    name: "{{ mawus_config.env }}-maw-redis"
+    pod: "{{ mawus_config.podman_podname }}"
+    image: "docker.io/redis:{{ mawus_config.version_redis }}-alpine"
     command: redis-server --save 60 1
     state: started
     volume:
       - "{{ redis_volume.volume.Name }}:/data:rw,z"
     label:
       io.containers.autoupdate: image
+  register: redis_container
 
 - name: wait for redis container
   ansible.builtin.include_tasks: wait_for_container.yml
   vars:
-    - container_name: maw-redis
+    container_name: "{{ redis_container.container.Name }}"
 
 - name: maw-postgres container
   containers.podman.podman_container:
-    name: maw-postgres
-    pod: "{{ mawus_podname }}"
-    image: "docker.io/postgres:{{ postgres_version }}-alpine"
+    name: "{{ mawus_config.env }}-maw-postgres"
+    pod: "{{ mawus_config.podman_podname }}"
+    image: "docker.io/postgres:{{ mawus_config.version_postgres }}-alpine"
     state: started
-    env_file: "{{ env_file_dir }}/maw-postgres.env"
+    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
     volume:
       - "{{ postgres_volume_init.volume.Name }}:/docker-entrypoint-initdb.d:ro,z"
       - "{{ postgres_volume.volume.Name }}:/var/lib/postgresql/data:rw,z"
     label:
       io.containers.autoupdate: image
+  register: postgres_container
 
 - name: wait for postgres container
   ansible.builtin.include_tasks: wait_for_container.yml
   vars:
-    - container_name: maw-postgres
+    container_name: "{{ postgres_container.container.Name }}"
 
 - name: include maw_postgres_init.yml
   ansible.builtin.include_tasks: maw_postgres_init.yml
 
 - name: maw-solr container
   containers.podman.podman_container:
-    name: maw-solr
-    pod: "{{ mawus_podname }}"
-    image: "docker.io/solr:{{ solr_version }}"
+    name: "{{ mawus_config.env }}-maw-solr"
+    pod: "{{ mawus_config.podman_podname }}"
+    image: "docker.io/solr:{{ mawus_config.version_solr }}"
     state: started
     volume:
       - "{{ solr_volume.volume.Name }}:/var/solr:rw,z"
     label:
       io.containers.autoupdate: image
+  register: solr_container
 
 - name: wait for solr container
   ansible.builtin.include_tasks: wait_for_container.yml
   vars:
-    - container_name: maw-solr
+    container_name: "{{ solr_container.container.Name }}"
 
-- name: maw-auth container
-  containers.podman.podman_container:
-    name: maw-auth
-    pod: "{{ mawus_podname }}"
-    image: "{{ image_auth }}"
-    state: started
-    env_file: "{{ env_file_dir }}/maw-auth.env"
-    volume:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-      - "{{ auth_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
-      - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
-    label:
-      io.containers.autoupdate: image
+- name: auth container block
+  block:
 
-- name: wait for auth container
-  ansible.builtin.include_tasks: wait_for_container.yml
-  vars:
-    - container_name: maw-auth
+    - name: maw-auth container
+      containers.podman.podman_container:
+        name: "{{ mawus_config.env }}-maw-auth"
+        pod: "{{ mawus_config.podman_podname }}"
+        image: "{{ mawus_config.podman_image_auth }}"
+        state: started
+        env_file: "{{ mawus_config.podman_env_dir }}/maw-auth.env"
+        volume:
+          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+          - "{{ auth_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
+          - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
+        label:
+          io.containers.autoupdate: image
+      register: auth_container
 
-- name: maw-api container
-  containers.podman.podman_container:
-    name: maw-api
-    pod: "{{ mawus_podname }}"
-    image: "{{ image_api }}"
-    state: started
-    env_file: "{{ env_file_dir }}/maw-api.env"
-    security_opt:
-      - label=disable
-    volume:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-      - "{{ api_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
-      - "{{ uploads_volume.volume.Name }}:/maw-uploads:rw,z"
-      - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
-    label:
-      io.containers.autoupdate: image
+    - name: wait for auth container
+      ansible.builtin.include_tasks: wait_for_container.yml
+      vars:
+        container_name: "{{ auth_container.container.Name }}"
 
-- name: wait for api container
-  ansible.builtin.include_tasks: wait_for_container.yml
-  vars:
-    - container_name: maw-api
+  when: mawus_config.podman_image_auth | length > 0
 
-- name: maw-www container
-  containers.podman.podman_container:
-    name: maw-www
-    pod: "{{ mawus_podname }}"
-    image: "{{ image_www }}"
-    state: started
-    env_file: "{{ env_file_dir }}/maw-www.env"
-    security_opt:
-      - label=disable
-    volume:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-      - "{{ www_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
-      - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
-      - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
-      - "{{ host_assets_dir_movies }}:/srv/www/website_assets/movies:ro"
-    label:
-      io.containers.autoupdate: image
+- name: api container block
+  block:
 
-- name: wait for www container
-  ansible.builtin.include_tasks: wait_for_container.yml
-  vars:
-    - container_name: maw-www
+    - name: maw-api container
+      containers.podman.podman_container:
+        name: "{{ mawus_config.env }}-maw-api"
+        pod: "{{ mawus_config.podman_podname }}"
+        image: "{{ mawus_config.podman_image_api }}"
+        state: started
+        env_file: "{{ mawus_config.podman_env_dir }}/maw-api.env"
+        security_opt:
+          - label=disable
+        volume:
+          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+          - "{{ api_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
+          - "{{ uploads_volume.volume.Name }}:/maw-uploads:rw,z"
+          - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
+        label:
+          io.containers.autoupdate: image
+      register: api_container
 
-- name: maw-files container
-  containers.podman.podman_container:
-    name: maw-files
-    pod: "{{ mawus_podname }}"
-    image: "{{ image_files }}"
-    state: started
-    volume:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-    label:
-      io.containers.autoupdate: image
+    - name: wait for api container
+      ansible.builtin.include_tasks: wait_for_container.yml
+      vars:
+        container_name: "{{ api_container.container.Name }}"
 
-- name: wait for files container
-  ansible.builtin.include_tasks: wait_for_container.yml
-  vars:
-    - container_name: maw-files
+  when: mawus_config.podman_image_api | length > 0
 
-- name: maw-photos container
-  containers.podman.podman_container:
-    name: maw-photos
-    pod: "{{ mawus_podname }}"
-    image: "{{ image_photos }}"
-    state: started
-    volume:
-      - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-    label:
-      io.containers.autoupdate: image
+- name: www container block
+  block:
 
-- name: wait for photos container
-  ansible.builtin.include_tasks: wait_for_container.yml
-  vars:
-    - container_name: maw-photos
+    - name: maw-www container
+      containers.podman.podman_container:
+        name: "{{ mawus_config.env }}-maw-www"
+        pod: "{{ mawus_config.podman_podname }}"
+        image: "{{ mawus_config.podman_image_www }}"
+        state: started
+        env_file: "{{ mawus_config.podman_env_dir }}/maw-www.env"
+        security_opt:
+          - label=disable
+        volume:
+          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+          - "{{ www_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
+          - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
+          - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
+          - "{{ host_assets_dir_movies }}:/srv/www/website_assets/movies:ro"
+        label:
+          io.containers.autoupdate: image
+      register: www_container
 
-- name: maw-gateway container
-  containers.podman.podman_container:
-    name: maw-gateway
-    pod: "{{ mawus_podname }}"
-    image: "{{ image_gateway }}"
-    state: started
-    volume: "{{ maw_gateway_volumes }}"
-    security_opt:
-      - label=disable
-    label:
-      io.containers.autoupdate: image
+    - name: wait for www container
+      ansible.builtin.include_tasks: wait_for_container.yml
+      vars:
+        container_name: "{{ www_container.container.Name }}"
 
-- name: wait for gateway container
-  ansible.builtin.include_tasks: wait_for_container.yml
-  vars:
-    - container_name: maw-gateway
+  when: mawus_config.podman_image_www | length > 0
+
+- name: files container block
+  block:
+
+    - name: maw-files container
+      containers.podman.podman_container:
+        name: "{{ mawus_config.env }}-maw-files"
+        pod: "{{ mawus_config.podman_podname }}"
+        image: "{{ mawus_config.podman_image_files }}"
+        state: started
+        volume:
+          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+        label:
+          io.containers.autoupdate: image
+      register: files_container
+
+    - name: wait for files container
+      ansible.builtin.include_tasks: wait_for_container.yml
+      vars:
+        container_name: "{{ files_container.container.Name }}"
+
+  when: mawus_config.podman_image_files | length > 0
+
+- name: photos container block
+  block:
+
+    - name: maw-photos container
+      containers.podman.podman_container:
+        name: "{{ mawus_config.env }}-maw-photos"
+        pod: "{{ mawus_config.podman_podname }}"
+        image: "{{ mawus_config.podman_image_photos }}"
+        state: started
+        volume:
+          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+        label:
+          io.containers.autoupdate: image
+      register: photos_container
+
+    - name: wait for photos container
+      ansible.builtin.include_tasks: wait_for_container.yml
+      vars:
+        container_name: "{{ photos_container.container.Name }}"
+
+  when: mawus_config.podman_image_photos | length > 0
+
+- name: gateway container block
+  block:
+
+    - name: maw-gateway container
+      containers.podman.podman_container:
+        name: "{{ mawus_config.env }}-maw-gateway"
+        pod: "{{ mawus_config.podman_podname }}"
+        image: "{{ mawus_config.podman_image_gateway }}"
+        state: started
+        volume: "{{ mawus_config.gateway_volumes }}"
+        security_opt:
+          - label=disable
+        label:
+          io.containers.autoupdate: image
+      register: gateway_container
+
+    - name: wait for gateway container
+      ansible.builtin.include_tasks: wait_for_container.yml
+      vars:
+        container_name: "{{ gateway_container.container.Name }}"
+
+  when: mawus_config.podman_image_gateway | length > 0
+
+- name: Ensure user systemd directory exists
+  ansible.builtin.file:
+    path: "{{ mawus_config.systemd_dir }}"
+    state: directory
 
 # manually creating these as containers.podman.podman_pod generate_systemd was not
 # producing the individual container service files for some reason
 - name: Create systemd unit files (manually)
   ansible.builtin.command:
-    cmd: "podman generate systemd -f -n --new {{ mawus_podname }}"
-    chdir: .config/systemd/user
+    cmd: "podman generate systemd -f -n --new {{ mawus_config.podman_podname }}"
+    chdir: "{{ mawus_config.systemd_dir }}"
 
 - name: Configure container order
   ansible.builtin.lineinfile:
-    path: ".config/systemd/user/{{ item.unitfile }}"
+    path: "{{ mawus_config.systemd_dir }}/{{ item.unitfile }}"
     insertafter: ^After=.*$
     line: "Before={{ item.before }}"
   loop:
-    - unitfile: container-maw-api.service
-      before: container-maw-gateway.service
-    - unitfile: container-maw-auth.service
-      before: container-maw-gateway.service
-    - unitfile: container-maw-files.service
-      before: container-maw-gateway.service
-    - unitfile: container-maw-photos.service
-      before: container-maw-gateway.service
-    - unitfile: container-maw-postgres.service
-      before: container-maw-api.service container-maw-auth.service container-maw-www.service
-    - unitfile: container-maw-redis.service
-      before: container-maw-api.service container-maw-www.service
-    - unitfile: container-maw-solr.service
-      before: container-maw-api.service container-maw-www.service
-    - unitfile: container-maw-www.service
-      before: container-maw-gateway.service
+    - unitfile: "container-{{ mawus_config.env }}-maw-api.service"
+      before: "container-{{ mawus_config.env }}-maw-gateway.service"
+    - unitfile: "container-{{ mawus_config.env }}-maw-auth.service"
+      before: "container-{{ mawus_config.env }}-maw-gateway.service"
+    - unitfile: "container-{{ mawus_config.env }}-maw-files.service"
+      before: "container-{{ mawus_config.env }}-maw-gateway.service"
+    - unitfile: "container-{{ mawus_config.env }}-maw-photos.service"
+      before: "container-{{ mawus_config.env }}-maw-gateway.service"
+    - unitfile: "container-{{ mawus_config.env }}-maw-postgres.service"
+      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-auth.service container-{{ mawus_config.env }}-maw-www.service"
+    - unitfile: "container-{{ mawus_config.env }}-maw-redis.service"
+      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service"
+    - unitfile: "container-{{ mawus_config.env }}-maw-solr.service"
+      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service"
+    - unitfile: "container-{{ mawus_config.env }}-maw-www.service"
+      before: "container-{{ mawus_config.env }}-maw-gateway.service"
+  when: mawus_config.env != 'local'
 
-- name: Enable mawus via systemd
+- name: Start and/or Enable mawus via systemd
   ansible.builtin.systemd:
-    name: "pod-{{ mawus_podname }}"
-    enabled: yes
+    daemon_reload: yes
+    name: "pod-{{ mawus_config.podman_podname }}"
+    enabled: "{{ mawus_config.env == 'prod' }}"
     state: started
     scope: user

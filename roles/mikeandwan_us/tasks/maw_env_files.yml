@@ -1,18 +1,24 @@
 ---
 - name: Make sure maw_env directory exists
   ansible.builtin.file:
-    path: maw_env
+    path: "{{ mawus_config.podman_env_dir }}"
     state: directory
 
 - name: Prepare environment files
   ansible.builtin.template:
     backup: yes
-    src: "maw_env/{{ item }}.j2"
-    dest: "maw_env/{{ item }}"
+    src: "maw_env/{{ item.envfile }}.j2"
+    dest: "{{ mawus_config.podman_env_dir }}/{{ item.envfile }}"
     mode: u+rw
+  when: item.generate
   loop:
-    - maw-api.env
-    - maw-auth.env
-    - maw-postgres.env
-    - maw-reverse-geocode.env
-    - maw-www.env
+    - envfile: maw-postgres.env
+      generate: yes
+    - envfile: maw-api.env
+      generate: "{{ mawus_config.env != 'local' }}"
+    - envfile: maw-auth.env
+      generate: "{{ mawus_config.env != 'local' }}"
+    - envfile: maw-reverse-geocode.env
+      generate: "{{ mawus_config.env != 'local' }}"
+    - envfile: maw-www.env
+      generate: "{{ mawus_config.env != 'local' }}"

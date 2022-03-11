@@ -24,6 +24,7 @@
   become: yes
   ansible.builtin.command:
     cmd: loginctl enable-linger {{ item.username }}
+  when: item.enable_linger
   loop_control:
     label: "{{ item.username }}"
   loop: "{{ podman_users if podman_users is iterable else [] }}"

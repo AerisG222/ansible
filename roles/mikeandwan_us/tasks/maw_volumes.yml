@@ -1,94 +1,100 @@
 ---
 - name: create redis volume
   containers.podman.podman_volume:
-    name: "maw-redis-{{ redis_version }}"
+    name: "{{ mawus_config.env }}-maw-redis-{{ mawus_config.version_redis }}"
     state: present
   register: redis_volume
 
 - name: create postgres volume
   containers.podman.podman_volume:
-    name: "maw-postgres-{{ postgres_version }}"
+    name: "{{ mawus_config.env }}-maw-postgres-{{ mawus_config.version_postgres }}"
     state: present
   register: postgres_volume
 
 - name: create postgres initialization volume
   containers.podman.podman_volume:
-    name: "maw-postgres-{{ postgres_version }}-init"
+    name: "{{ mawus_config.env }}-maw-postgres-{{ mawus_config.version_postgres }}-init"
     state: present
   register: postgres_volume_init
 
 - name: create postgres backup volume
   containers.podman.podman_volume:
-    name: maw-postgres-backup
+    name: "{{ mawus_config.env }}-maw-postgres-backup"
     state: present
+  when: mawus_config.env == 'prod'
   register: postgres_backup_volume
 
 - name: create solr volume
   containers.podman.podman_volume:
-    name: "maw-solr-{{ solr_version }}"
+    name: "{{ mawus_config.env }}-maw-solr-{{ mawus_config.version_solr }}"
     state: present
   register: solr_volume
 
 - name: create maw cert volume
   containers.podman.podman_volume:
-    name: maw-certs
+    name: "{{ mawus_config.env }}-maw-certs"
     state: present
+  when: mawus_config.env != 'local'
   register: maw_cert_volume
 
 - name: create auth dataprotection volume
   containers.podman.podman_volume:
-    name: maw-auth-dataprotection
+    name: "{{ mawus_config.env }}-maw-auth-dataprotection"
     state: present
+  when: mawus_config.env != 'local'
   register: auth_dataprotection_volume
 
 - name: create api dataprotection volume
   containers.podman.podman_volume:
-    name: maw-api-dataprotection
+    name: "{{ mawus_config.env }}-maw-api-dataprotection"
     state: present
+  when: mawus_config.env != 'local'
   register: api_dataprotection_volume
 
 - name: create uploads volume
   containers.podman.podman_volume:
-    name: maw-uploads
+    name: "{{ mawus_config.env }}-maw-uploads"
     state: present
   register: uploads_volume
 
 - name: create www dataprotection volume
   containers.podman.podman_volume:
-    name: maw-www-dataprotection
+    name: "{{ mawus_config.env }}-maw-www-dataprotection"
     state: present
+  when: mawus_config.env != 'local'
   register: www_dataprotection_volume
 
 - name: create maw-google-creds volume
   containers.podman.podman_volume:
-    name: maw-google-creds
+    name: "{{ mawus_config.env }}-maw-google-creds"
     state: present
+  when: mawus_config.env != 'local'
   register: google_creds_volume
 
 - name: create maw-reverse-geocode volume
   containers.podman.podman_volume:
-    name: maw-reverse-geocode
+    name: "{{ mawus_config.env }}-maw-reverse-geocode"
     state: present
+  when: mawus_config.env != 'local'
   register: reverse_geocode_volume
 
-# production only volumes
 - name: create maw-certbot-validation volume
   containers.podman.podman_volume:
-    name: maw-certbot-validation
+    name: "{{ mawus_config.env }}-maw-certbot-validation"
     state: present
-  when: maw_env == 'prod'
+  when: mawus_config.env == 'prod'
   register: certbot_validation_volume
 
 - name: create maw-certbot-certs volume
   containers.podman.podman_volume:
-    name: maw-certbot-certs
+    name: "{{ mawus_config.env }}-maw-certbot-certs"
     state: present
-  when: maw_env == 'prod'
+  when: mawus_config.env == 'prod'
   register: certbot_certs_volume
 
 - name: create maw-gdrive-creds volume
   containers.podman.podman_volume:
-    name: maw-gdrive-creds
+    name: "{{ mawus_config.env }}-maw-gdrive-creds"
     state: present
-  when: maw_env == 'prod'
+  when: mawus_config.env == 'prod'
   register: gdrive_creds_volume

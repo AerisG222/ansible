@@ -1,0 +1,95 @@
+# local home
+home: "{{ lookup('env', 'HOME') }}"
+
+# git root
+git_root: "{{ home }}/git"
+
+# asset directory root
+asset_dir_root: /srv/www/website_assets
+
+# where to store supporting files outside project / site
+external_root: "{{ home }}/_maw"
+external_site_dir: "{{ external_root }}/local"
+external_vars_file: "{{ external_site_dir }}/ansible-vars.yml"
+
+mawus_config:
+  env: local
+
+  # os level account that will run the site
+  service_account:
+    username: "{{ ansible_user_id }}"
+    subuid: 100000-165535
+    subgid: 100000-165535
+    enable_linger: no
+
+  fqdn_naked: local.mikeandwan.us
+  fqdn_api: local.api.mikeandwan.us
+  fqdn_auth: local.auth.mikeandwan.us
+  fqdn_files: local.files.mikeandwan.us
+  fqdn_photos: local.photos.mikeandwan.us
+  fqdn_www: local.www.mikeandwan.us
+
+  allow_low_ports: no
+  port_api: 5001
+  port_auth: 5011
+  port_photos: 4200
+  port_files: 4300
+  port_www: 5021
+
+  pg_backup_host_dir: "{{ external_root }}/db_backups"
+  pg_backup_roles: "roles.sql"
+  pg_backup_idsrv: "idsrv.20220307.dump"
+  pg_backup_www: "maw_website.20220307.dump"
+
+  systemd_dir: "{{ home }}/.config/systemd/user"
+  certs_dir: "{{ external_site_dir }}/certs"
+  asset_dir_images: "{{ asset_dir_root }}/images"
+  asset_dir_movies: "{{ asset_dir_root }}/movies"
+
+  # dependency versions
+  version_redis: 6
+  version_postgres: 14
+  version_solr: 8
+
+  podman_podname: local-maw-pod
+  podman_env_dir: "{{ external_site_dir }}/podman-env"
+  podman_image_photos: ""
+  podman_image_files: ""
+  podman_image_auth: ""
+  podman_image_api: ""
+  podman_image_www: ""
+  podman_image_gateway: ""
+  podman_publish_ports:
+    - 8983:8983  # solr
+    - 5432:5432  # postgres
+    #- 80:80
+    #- 443:443
+
+  gateway_volumes:
+    #- "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+    #- "{{ host_assets_dir }}:/assets:ro"
+    #- "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
+    #- "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
+
+  # postgres sql accounts for site
+  sql_username: svc_www_maw
+  sql_password: "{{ vault_password_sql_svc_www_maw }}"
+  sql_postgres_password: "{{ vault_password_sql_postgres }}"
+  sql_idsrv_password: "{{ vault_password_sql_idsrv }}"
+  sql_solr_password: "{{ vault_password_sql_solr }}"
+
+  # auth secrets
+  google_plus_client_id: "{{ vault_google_plus_client_id }}"
+  google_plus_client_secret: "{{ vault_google_plus_client_secret }}"
+  twitter_client_id: "{{ vault_twitter_client_id }}"
+  twitter_client_secret: "{{ vault_twitter_client_secret }}"
+  microsoft_client_id: "{{ vault_microsoft_client_id }}"
+  microsoft_client_secret: "{{ vault_microsoft_client_secret }}"
+  github_client_id: "{{ vault_github_client_id }}"
+  github_client_secret: "{{ vault_github_client_secret }}"
+  www_auth_client_secret: "{{ vault_www_auth_client_secret }}"
+  www_auth_client_id: "{{ vault_www_auth_client_id }}"
+
+  # google recaptcha key
+  google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
+  google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"

@@ -1,0 +1,74 @@
+---
+- name: Configure local mikeandwan.us environment
+  hosts: localhost
+  vars:
+    ansible_connection: local
+  vars_files:
+    - vars_mawus_local.yml
+    - "{{ external_vars_file }}"
+
+  tasks:
+    - name: Install Prerequisites
+      become: yes
+      ansible.builtin.dnf:
+        state: present
+        name:
+          - buildah
+          - dotnet
+          - git
+          - nodejs
+          - podman
+
+    - name: Configure podman
+      ansible.builtin.include_role:
+        name: podman
+      vars:
+        podman_users:
+          - "{{ mawus_config.service_account }}"
+
+    - name: Ensure git directory exists
+      ansible.builtin.file:
+        path: "{{ git_root }}"
+        state: directory
+
+    - name: Get status of mikeandwan.us git directory
+      ansible.builtin.stat:
+        name: "{{ git_root }}/mikeandwan.us"
+      register: maw_git_status
+
+    - name: Clone mikeandwan.us
+      ansible.builtin.git:
+        dest: "{{ git_root }}/mikeandwan.us"
+        repo: git@github.com:AerisG222/mikeandwan.us.git
+        version: dev
+      when: not maw_git_status.stat.exists
+
+    # todo:
+    #   - run npm install
+    #   - build client assets (www/auth)
+    #   - build client apps
+    #   - build dotnet application
+      # - ...
+
+    # todo: leverage the cert steps in the mikeandwan.us role
+    - name: Create local certificates
+      ansible.builtin.shell:
+        chdir: "{{ git_root }}/mikeandwan.us/tools"
+        cmd: "./gen_certs.sh n n n '{{ mawus_config.certs_dir }}'"
+
+    - name: Add ca cert(s) to trusted sources
+      become: yes
+      ansible.builtin.copy:
+        dest: "/usr/share/pki/ca-trust-source/anchors/maw_local_{{ item | basename }}"
+        src: "{{ item }}"
+      with_fileglob:
+        - "{{ mawus_config.certs_dir }}/ca/ca_*.crt"
+
+    - name: Make the system aware of the new ca certs
+      become: yes
+      ansible.builtin.command:
+        cmd: update-ca-trust
+
+    - name: Configure mikeandwan.us
+      ansible.builtin.include_role:
+        name: mikeandwan_us
