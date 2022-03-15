@@ -29,12 +29,25 @@ mawus_config:
   fqdn_photos: local.photos.mikeandwan.us
   fqdn_www: local.www.mikeandwan.us
 
+  url_api: https://local.api.mikeandwan.us:5011
+  url_auth: https://local.auth.mikeandwan.us:5001
+  url_files: http://local.files.mikeandwan.us:4200
+  url_photos: http://local.photos.mikeandwan.us:4200
+  url_www: https://local.www.mikeandwan.us:5021
+
+  pfx_api: "{{ external_site_dir }}/certs/api/api.pfx"
+  pfx_auth: "{{ external_site_dir }}/certs/auth/auth.pfx"
+  pfx_signing: "{{ external_site_dir }}/certs/signing/signing.pfx"
+  pfx_www: "{{ external_site_dir }}/certs/www/www.pfx"
+
   allow_low_ports: no
   port_api: 5001
   port_auth: 5011
   port_photos: 4200
   port_files: 4300
   port_www: 5021
+
+  upload_dir: "{{ external_site_dir }}/maw-uploads"
 
   pg_backup_host_dir: "{{ external_root }}/db_backups"
   pg_backup_roles: "roles.sql"
