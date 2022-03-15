@@ -7,18 +7,12 @@
 - name: Prepare environment files
   ansible.builtin.template:
     backup: yes
-    src: "maw_env/{{ item.envfile }}.j2"
-    dest: "{{ mawus_config.podman_env_dir }}/{{ item.envfile }}"
+    src: "maw_env/{{ item }}.j2"
+    dest: "{{ mawus_config.podman_env_dir }}/{{ item }}"
     mode: u+rw
-  when: item.generate
   loop:
-    - envfile: maw-postgres.env
-      generate: yes
-    - envfile: maw-api.env
-      generate: "{{ mawus_config.env != 'local' }}"
-    - envfile: maw-auth.env
-      generate: "{{ mawus_config.env != 'local' }}"
-    - envfile: maw-reverse-geocode.env
-      generate: "{{ mawus_config.env != 'local' }}"
-    - envfile: maw-www.env
-      generate: "{{ mawus_config.env != 'local' }}"
+    - maw-postgres.env
+    - maw-api.env
+    - maw-auth.env
+    - maw-reverse-geocode.env
+    - maw-www.env

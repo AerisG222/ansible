@@ -93,3 +93,6 @@ mawus_config:
   # google recaptcha key
   google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
   google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"
+
+  # google api key (maps / reverse geocode)
+  google_api_key: "{{ vault_google_api_key }}"
