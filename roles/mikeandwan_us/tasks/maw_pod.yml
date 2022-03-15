@@ -46,7 +46,7 @@
   register: redis_container
 
 - name: wait for redis container
-  ansible.builtin.include_tasks: wait_for_container.yml
+  ansible.builtin.include_tasks: wait_for_container_to_start.yml
   vars:
     container_name: "{{ redis_container.container.Name }}"
 
@@ -65,7 +65,7 @@
   register: postgres_container
 
 - name: wait for postgres container
-  ansible.builtin.include_tasks: wait_for_container.yml
+  ansible.builtin.include_tasks: wait_for_container_to_start.yml
   vars:
     container_name: "{{ postgres_container.container.Name }}"
 
@@ -85,7 +85,7 @@
   register: solr_container
 
 - name: wait for solr container
-  ansible.builtin.include_tasks: wait_for_container.yml
+  ansible.builtin.include_tasks: wait_for_container_to_start.yml
   vars:
     container_name: "{{ solr_container.container.Name }}"
 
@@ -108,7 +108,7 @@
       register: auth_container
 
     - name: wait for auth container
-      ansible.builtin.include_tasks: wait_for_container.yml
+      ansible.builtin.include_tasks: wait_for_container_to_start.yml
       vars:
         container_name: "{{ auth_container.container.Name }}"
 
@@ -136,7 +136,7 @@
       register: api_container
 
     - name: wait for api container
-      ansible.builtin.include_tasks: wait_for_container.yml
+      ansible.builtin.include_tasks: wait_for_container_to_start.yml
       vars:
         container_name: "{{ api_container.container.Name }}"
 
@@ -165,7 +165,7 @@
       register: www_container
 
     - name: wait for www container
-      ansible.builtin.include_tasks: wait_for_container.yml
+      ansible.builtin.include_tasks: wait_for_container_to_start.yml
       vars:
         container_name: "{{ www_container.container.Name }}"
 
@@ -187,7 +187,7 @@
       register: files_container
 
     - name: wait for files container
-      ansible.builtin.include_tasks: wait_for_container.yml
+      ansible.builtin.include_tasks: wait_for_container_to_start.yml
       vars:
         container_name: "{{ files_container.container.Name }}"
 
@@ -209,7 +209,7 @@
       register: photos_container
 
     - name: wait for photos container
-      ansible.builtin.include_tasks: wait_for_container.yml
+      ansible.builtin.include_tasks: wait_for_container_to_start.yml
       vars:
         container_name: "{{ photos_container.container.Name }}"
 
@@ -232,7 +232,7 @@
       register: gateway_container
 
     - name: wait for gateway container
-      ansible.builtin.include_tasks: wait_for_container.yml
+      ansible.builtin.include_tasks: wait_for_container_to_start.yml
       vars:
         container_name: "{{ gateway_container.container.Name }}"
 
