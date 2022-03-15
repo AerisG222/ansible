@@ -22,6 +22,8 @@ mawus_config:
     subgid: 100000-165535
     enable_linger: no
 
+  bash_profile: "{{ home }}/.bash_profile"
+
   fqdn_naked: local.mikeandwan.us
   fqdn_api: local.api.mikeandwan.us
   fqdn_auth: local.auth.mikeandwan.us

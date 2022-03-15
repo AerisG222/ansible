@@ -16,3 +16,21 @@
     - maw-auth.env
     - maw-reverse-geocode.env
     - maw-www.env
+
+- name: Add env files to .bash_profile for local env
+  ansible.builtin.blockinfile:
+    path: "{{ mawus_config.bash_profile }}"
+    block: |
+      function load_dotenv(){
+        # https://stackoverflow.com/a/66118031/134904
+        source <(cat $1 | sed -e '/^#/d;/^\s*$/d' -e "s/'/'\\\''/g" -e "s/=\(.*\)/='\1'/g")
+      }
+
+      set -o allexport
+
+      [ -f "{{ mawus_config.podman_env_dir }}/maw-api.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-api.env"
+      [ -f "{{ mawus_config.podman_env_dir }}/maw-auth.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-auth.env"
+      [ -f "{{ mawus_config.podman_env_dir }}/maw-www.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-www.env"
+
+      set +o allexport
+  when: mawus_config.env == 'local'
