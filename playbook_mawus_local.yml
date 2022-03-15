@@ -50,25 +50,6 @@
     #   - build dotnet application
       # - ...
 
-    # todo: leverage the cert steps in the mikeandwan.us role
-    - name: Create local certificates
-      ansible.builtin.shell:
-        chdir: "{{ git_root }}/mikeandwan.us/tools"
-        cmd: "./gen_certs.sh n n n '{{ mawus_config.certs_dir }}'"
-
-    - name: Add ca cert(s) to trusted sources
-      become: yes
-      ansible.builtin.copy:
-        dest: "/usr/share/pki/ca-trust-source/anchors/maw_local_{{ item | basename }}"
-        src: "{{ item }}"
-      with_fileglob:
-        - "{{ mawus_config.certs_dir }}/ca/ca_*.crt"
-
-    - name: Make the system aware of the new ca certs
-      become: yes
-      ansible.builtin.command:
-        cmd: update-ca-trust
-
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:
         name: mikeandwan_us

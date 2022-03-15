@@ -9,22 +9,50 @@
     cert_vol: "{{ maw_cert_volume.volume.Name }}"
   when: mawus_config.env != 'local'
 
-# todo: evaluate dev/prod support
-- name: initialize local certs
+- name: set cert fqdn prefix
+  ansible.builtin.set_fact:
+    cert_fqdn_prefix: "{{ mawus_config.env }}"
+  when: mawus_config.env != 'prod'
+
+- name: set cert fqdn prefix
+  ansible.builtin.set_fact:
+    cert_fqdn_prefix: ""
+  when: mawus_config.env == 'prod'
+
+- name: ensure cert dir exists for local projects
+  ansible.builtin.file:
+    path: "{{ mawus_config.certs_dir }}"
+    state: directory
+
+- name: initialize internal certs
   containers.podman.podman_container:
     name: maw-certs
-    image: "docker.io/aerisg222/maw-certs:latest"
+    image: docker.io/aerisg222/maw-certs:latest
+    command: "{{ mawus_config.env }} {{ cert_fqdn_prefix }}"
     state: started
     interactive: yes
     rm: yes
-    tty: yes
     volume:
-      - "{{ cert_vol }}:/certs:rw,z"
+      - "{{ cert_vol }}:/maw-certs:rw,z"
+  register: certs_container
 
 - name: wait for cert initialization to complete
-  containers.podman.podman_container_info:
-    name: maw-certs
-  register: cert_container
-  delay: 10
-  retries: 24
-  until: cert_container.containers | length == 0
+  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
+  vars:
+    container_name: maw-certs
+
+# todo: evaluate dev (certs that are generated in managed volume) support
+- name: Add ca cert(s) to trusted sources
+  become: yes
+  ansible.builtin.copy:
+    dest: "/usr/share/pki/ca-trust-source/anchors/maw_local_{{ item | basename }}"
+    src: "{{ item }}"
+  with_fileglob:
+    - "{{ mawus_config.certs_dir }}/ca/ca_*.crt"
+  when: mawus_config.env == 'local'
+
+- name: Make the system aware of the new ca certs
+  become: yes
+  ansible.builtin.command:
+    cmd: update-ca-trust
+  when: mawus_config.env == 'local'
