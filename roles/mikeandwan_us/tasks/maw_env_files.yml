@@ -20,6 +20,7 @@
     - maw-postgres.env
     - maw-api.env
     - maw-auth.env
+    - maw-cache-sync.env
     - maw-reverse-geocode.env
     - maw-www.env
 
@@ -37,6 +38,7 @@
       [ -f "{{ mawus_config.podman_env_dir }}/maw-api.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-api.env"
       [ -f "{{ mawus_config.podman_env_dir }}/maw-auth.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-auth.env"
       [ -f "{{ mawus_config.podman_env_dir }}/maw-www.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-www.env"
+      [ -f "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env"
 
       set +o allexport
   when: mawus_config.env == 'local'
