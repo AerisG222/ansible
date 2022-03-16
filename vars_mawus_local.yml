@@ -33,7 +33,7 @@ mawus_config:
 
   url_api: https://local.api.mikeandwan.us:5011
   url_auth: https://local.auth.mikeandwan.us:5001
-  url_files: http://local.files.mikeandwan.us:4200
+  url_files: http://local.files.mikeandwan.us:4300
   url_photos: http://local.photos.mikeandwan.us:4200
   url_www: https://local.www.mikeandwan.us:5021
 
