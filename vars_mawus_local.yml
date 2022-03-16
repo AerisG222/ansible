@@ -10,7 +10,7 @@ asset_dir_root: /srv/www/website_assets
 # where to store supporting files outside project / site
 external_root: "{{ home }}/_maw"
 external_site_dir: "{{ external_root }}/local"
-external_vars_file: "{{ external_site_dir }}/ansible-vars.yml"
+external_vars_file: "{{ external_site_dir }}/ansible/secret-vars.yml"
 
 mawus_config:
   env: local
