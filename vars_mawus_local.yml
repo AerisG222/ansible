@@ -113,3 +113,6 @@ mawus_config:
 
   # google api key (maps / reverse geocode)
   google_api_key: "{{ vault_google_api_key }}"
+
+  # google email creds
+  google_email_creds_file: "{{ external_site_dir }}/google-creds/www_emailer.json"
