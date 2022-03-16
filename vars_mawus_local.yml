@@ -50,6 +50,7 @@ mawus_config:
   port_www: 5021
 
   upload_dir: "{{ external_site_dir }}/maw-uploads"
+  dataprotection_dir: "{{ external_site_dir }}/dataprotection"
 
   pg_backup_host_dir: "{{ external_root }}/db_backups"
   pg_backup_roles: "roles.sql"
