@@ -7,4 +7,10 @@
     state: directory
   loop: "{{ asset_dirs }}"
 
+- name: ensure maw-uploads directory exists
+  ansible.builtin.file:
+    path: "{{ mawus_config.upload_dir }}"
+    state: directory
+  when: mawus_config.env == 'local'
+
 # todo: copy files for prod
