@@ -75,6 +75,7 @@ mawus_config:
   podman_image_api: ""
   podman_image_www: ""
   podman_image_gateway: ""
+  podman_image_cache_sync: "docker.io/aerisg222/maw-cache-sync:latest"
   podman_publish_ports:
     - 8983:8983  # solr
     - 5432:5432  # postgres

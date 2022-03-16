@@ -72,6 +72,22 @@
 - name: include maw_postgres_init.yml
   ansible.builtin.include_tasks: maw_postgres_init.yml
 
+- name: maw-cache-sync container
+  containers.podman.podman_container:
+    name: "{{ mawus_config.env }}-maw-cache-sync"
+    pod: "{{ mawus_config.podman_podname }}"
+    image: "{{ mawus_config.podman_image_cache_sync }}"
+    env_file: "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env"
+    state: started
+    label:
+      io.containers.autoupdate: image
+  register: cache_sync_container
+
+- name: wait for maw-cache-sync container
+  ansible.builtin.include_tasks: wait_for_container_to_start.yml
+  vars:
+    container_name: "{{ cache_sync_container.container.Name }}"
+
 - name: maw-solr container
   containers.podman.podman_container:
     name: "{{ mawus_config.env }}-maw-solr"
@@ -265,9 +281,9 @@
     - unitfile: "container-{{ mawus_config.env }}-maw-photos.service"
       before: "container-{{ mawus_config.env }}-maw-gateway.service"
     - unitfile: "container-{{ mawus_config.env }}-maw-postgres.service"
-      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-auth.service container-{{ mawus_config.env }}-maw-www.service"
+      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-auth.service container-{{ mawus_config.env }}-maw-www.service container-{{ mawus_config.env }}-maw-cache-sync.service"
     - unitfile: "container-{{ mawus_config.env }}-maw-redis.service"
-      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service"
+      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service container-{{ mawus_config.env }}-maw-cache-sync.service"
     - unitfile: "container-{{ mawus_config.env }}-maw-solr.service"
       before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service"
     - unitfile: "container-{{ mawus_config.env }}-maw-www.service"
