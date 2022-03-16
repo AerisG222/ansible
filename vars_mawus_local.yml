@@ -78,6 +78,7 @@ mawus_config:
   podman_publish_ports:
     - 8983:8983  # solr
     - 5432:5432  # postgres
+    - 6379:6379  # redis
     #- 80:80
     #- 443:443
 
