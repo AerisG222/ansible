@@ -79,3 +79,12 @@
       - tmux
       - vdpauinfo
       - vlc
+
+- name: configure sysctl for workstations
+  become: yes
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+  loop:
+    - { key: "fs.inotify.max_user_instances", value: "1024" }
