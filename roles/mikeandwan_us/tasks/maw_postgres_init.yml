@@ -57,113 +57,17 @@
     - username: svc_solr
       password: "{{ mawus_config.sql_solr_password }}"
 
-- name: test if idsrv exists
-  containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-idsrv-test"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: psql -h 127.0.0.1 -U postgres -d idsrv -c 'SELECT 1;'
-    state: started
-  ignore_errors: yes
-
-- name: get idsrv test result
-  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
+- name: restore idsrv if needed
+  ansible.builtin.include_tasks: maw_postgres_restore_db.yml
   vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-idsrv-test"
-    exit_code_varname: idsrv_test_result
+    db_name: idsrv
+    backup_file: "{{ mawus_config.pg_backup_idsrv }}"
 
-- name: restore idsrv database
-  containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-idsrv-restore"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: "pg_restore -h 127.0.0.1 -U postgres -C -d postgres /postgres_init/{{ mawus_config.pg_backup_idsrv }}"
-    state: started
-    interactive: yes
-    rm: yes
-    volume:
-      - "{{ pginit_dir }}:/postgres_init:rw,Z"
-  when: idsrv_test_result | int == 2
-
-- name: wait for idsrv restore
-  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
+- name: restore maw_website if needed
+  ansible.builtin.include_tasks: maw_postgres_restore_db.yml
   vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-idsrv-restore"
-  when: idsrv_test_result | int == 2
-
-- name: optimize idsrv database
-  containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-idsrv-optimize"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: psql -h 127.0.0.1 -U postgres -d idsrv -c 'VACUUM ANALYZE;'
-    state: started
-    interactive: yes
-    rm: yes
-  when: idsrv_test_result | int == 2
-
-- name: wait for idsrv optimization
-  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
-  vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-idsrv-optimize"
-  when: idsrv_test_result | int == 2
-
-- name: test if maw_website exists
-  containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-mawwebsite-test"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: psql -h 127.0.0.1 -U postgres -d maw_website -c 'SELECT 1;'
-    state: started
-  ignore_errors: yes
-
-- name: get maw_website test result
-  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
-  vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-mawwebsite-test"
-    exit_code_varname: maw_website_test_result
-
-- name: restore maw_website database
-  containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-mawwebsite-restore"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: "pg_restore -h 127.0.0.1 -U postgres -C -d postgres /postgres_init/{{ mawus_config.pg_backup_www }}"
-    state: started
-    interactive: yes
-    rm: yes
-    volume:
-      - "{{ pginit_dir }}:/postgres_init:rw,Z"
-  when: maw_website_test_result | int == 2
-
-- name: wait for maw_website restore
-  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
-  vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-mawwebsite-restore"
-  when: maw_website_test_result | int == 2
-
-- name: optimize maw_website database
-  containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-mawwebsite-optimize"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: psql -h 127.0.0.1 -U postgres -d maw_website -c 'VACUUM ANALYZE;'
-    state: started
-    interactive: yes
-    rm: yes
-  when: maw_website_test_result | int == 2
-
-- name: wait for maw_website optimization
-  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
-  vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-mawwebsite-optimize"
-  when: maw_website_test_result | int == 2
+    db_name: maw_website
+    backup_file: "{{ mawus_config.pg_backup_www }}"
 
 - name: "remove temp {{ pginit_dir }} directory for remote connections"
   ansible.builtin.file:
