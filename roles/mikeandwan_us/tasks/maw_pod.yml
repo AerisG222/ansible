@@ -105,6 +105,9 @@
   vars:
     container_name: "{{ solr_container.container.Name }}"
 
+- name: include maw_solr_init.yml
+  ansible.builtin.include_tasks: maw_solr_init.yml
+
 - name: auth container block
   block:
 
