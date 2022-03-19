@@ -7,6 +7,21 @@
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} solr config -c multimedia-categories -p 8983 -action set-user-property -property update.autoCreateFields -value false"
 
+- name: prepare source file path
+  ansible.builtin.set_fact:
+    src_path: "{{ role_path }}/files/solr_synonyms.txt"
+
+- name: configure synonyms
+  ansible.builtin.include_role:
+    name: podman_copy_to_volume
+  vars:
+    volume_name: "{{ solr_volume.volume.Name }}"
+    dest_relative_path: data/multimedia-categories/conf/synonyms.txt
+
+- name: reload core for synonyms to take effect
+  ansible.builtin.command:
+    cmd: "podman exec -it {{ solr_container.container.Name }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
+
 - name: add fields to schema
   ansible.builtin.include_tasks: solr_define_field.yml
   loop_control:
