@@ -6,3 +6,217 @@
 - name: disable data driven schema
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} solr config -c multimedia-categories -p 8983 -action set-user-property -property update.autoCreateFields -value false"
+
+- name: add fields to schema
+  ansible.builtin.include_tasks: solr_define_field.yml
+  loop_control:
+    label: "{{ item.name }}"
+  loop:
+    - name: camera_makes
+      type: strings
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: camera_models
+      type: strings
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: comment_entry_dates
+      type: pdates
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: comment_messages
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: gps_coordinate
+      type: location
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: gps_latitude
+      type: pfloat
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: gps_longitude
+      type: pfloat
+      uninvertible: true
+      indexed: true
+      stored: true
+    # TODO: change indexed to false and type to pint?
+    - name: id
+      type: string
+      uninvertible: false
+      indexed: true
+      stored: true
+      required: true
+    - name: allowed_roles
+      type: strings
+      uninvertible: true
+      indexed: true
+      stored: true
+      required: true
+    - name: name
+      type: text_en_splitting
+      uninvertible: true
+      indexed: true
+      stored: true
+      required: true
+    - name: poi_names
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: poi_types
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_administrative_area_level_1
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_administrative_area_level_2
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_administrative_area_level_3
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_country
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_formatted_address
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_locality
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_neighborhood
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_postal_code
+      type: strings
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_postal_code_suffix
+      type: strings
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_premise
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_route
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_street_number
+      type: strings
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_sub_locality_level_1
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_sub_locality_level_2
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: rg_sub_premise
+      type: text_en_splitting
+      multiValued: true
+      uninvertible: true
+      indexed: true
+      stored: true
+    - name: solr_id
+      type: string
+      uninvertible: true
+      indexed: true
+      stored: true
+      required: true
+    - name: teaser_photo_height
+      type: pint
+      uninvertible: false
+      indexed: false
+      stored: true
+      required: true
+    - name: teaser_photo_path
+      type: string
+      uninvertible: false
+      indexed: false
+      stored: true
+      required: true
+    - name: teaser_photo_sq_height
+      type: pint
+      uninvertible: false
+      indexed: false
+      stored: true
+      required: true
+    - name: teaser_photo_sq_path
+      type: string
+      uninvertible: false
+      indexed: false
+      stored: true
+      required: true
+    - name: teaser_photo_sq_width
+      type: pint
+      uninvertible: false
+      indexed: false
+      stored: true
+      required: true
+    - name: teaser_photo_width
+      type: pint
+      uninvertible: false
+      indexed: false
+      stored: true
+      required: true
+    - name: type
+      type: string
+      uninvertible: false
+      indexed: false
+      stored: true
+      required: true
+    - name: year
+      type: pint
+      uninvertible: true
+      indexed: true
+      stored: true
+      required: true
