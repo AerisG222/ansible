@@ -22,6 +22,22 @@
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
 
+- name: add / update unique key
+  ansible.builtin.include_tasks: solr_define_field.yml
+  loop_control:
+    label: "{{ item.name }}"
+  loop:
+    - name: solr_id
+      type: string
+      uninvertible: true
+      indexed: true
+      stored: true
+      required: true
+
+- name: redefine unique key
+  ansible.builtin.command:
+    cmd: "podman exec -it {{ solr_container.container.Name }} sed -i -E 's/<uniqueKey>id<\\/uniqueKey>/<uniqueKey>solr_id<\\/uniqueKey>/' /var/solr/data/multimedia-categories/conf/managed-schema"
+
 - name: add fields to schema
   ansible.builtin.include_tasks: solr_define_field.yml
   loop_control:
@@ -63,11 +79,10 @@
       uninvertible: true
       indexed: true
       stored: true
-    # TODO: change indexed to false and type to pint?
     - name: id
-      type: string
+      type: pint
       uninvertible: false
-      indexed: true
+      indexed: false
       stored: true
       required: true
     - name: allowed_roles
@@ -181,12 +196,6 @@
       uninvertible: true
       indexed: true
       stored: true
-    - name: solr_id
-      type: string
-      uninvertible: true
-      indexed: true
-      stored: true
-      required: true
     - name: teaser_photo_height
       type: pint
       uninvertible: false
