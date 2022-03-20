@@ -1,0 +1,9 @@
+---
+- name: Test updating file via sed
+  hosts: localhost
+
+  tasks:
+
+    - name: redefine unique key
+      ansible.builtin.command:
+        cmd: "podman exec -it local-maw-solr sed -i -E 's/(<uniqueKey>)id(<.uniqueKey>)/\\1solr_id\\2/' /var/solr/data/multimedia-categories/conf/managed-schema"
