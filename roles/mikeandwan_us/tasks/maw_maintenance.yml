@@ -8,21 +8,21 @@
 - name: define common service and timers
   ansible.builtin.set_fact:
     services:
-      - reverse-geocode.service
       - solr-indexer.service
     timers:
-      - reverse-geocode.timer
       - solr-indexer.timer
     services_prod:
       - certbot-renew.service
       - postgres-maintenance.service
       - remote-archive-daily.service
       - remote-archive-monthly.service
+      - reverse-geocode.service
     timers_prod:
       - certbot-renew.timer
       - postgres-maintenance.timer
       - remote-archive-daily.timer
       - remote-archive-monthly.timer
+      - reverse-geocode.timer
 
 - name: Merge services and timers
   ansible.builtin.set_fact:
@@ -34,7 +34,7 @@
   ansible.builtin.template:
     backup: yes
     src: "systemd/{{ item }}.j2"
-    dest: ".config/systemd/user/{{ item }}"
+    dest: "{{ home }}/.config/systemd/user/{{ item }}"
     mode: u+rw
   loop: "{{ services + timers }}"
 

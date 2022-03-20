@@ -323,3 +323,10 @@
 - name: reload core for good measure
   ansible.builtin.command:
     cmd: "podman exec -it local-maw-solr curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
+
+- name: run indexer
+  ansible.builtin.systemd:
+    name: solr-indexer.service
+    enabled: no
+    state: started
+    scope: user

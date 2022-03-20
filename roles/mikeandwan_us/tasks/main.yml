@@ -44,7 +44,6 @@
 
 - name: Include maw_maintenance.yml
   ansible.builtin.include_tasks: maw_maintenance.yml
-  when: mawus_config.env == 'prod'
 
 - name: Initialize environment
   ansible.builtin.include_tasks: maw_init.yml
