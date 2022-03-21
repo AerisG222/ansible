@@ -1,0 +1,8 @@
+[Unit]
+Description=Run postgres backup for database {{ db_name }} once a day
+
+[Timer]
+OnCalendar={{ calendar }}
+
+[Install]
+WantedBy=timers.target

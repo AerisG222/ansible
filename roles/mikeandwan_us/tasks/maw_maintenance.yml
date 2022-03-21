@@ -1,7 +1,7 @@
 ---
 - name: Create user systemd directory if necessary
   ansible.builtin.file:
-    path: .config/systemd/user
+    path: "{{ home }}/.config/systemd/user"
     recurse: yes
     state: directory
 
@@ -46,3 +46,25 @@
     scope: user
     daemon_reload: yes
   loop: "{{ timers }}"
+
+- name: Configure Postgres Backups
+  ansible.builtin.include_role:
+    name: postgres_backup
+  loop:
+    - db_name: maw_website
+      service_name: "{{ mawus_config.env }}-postgres-backup-mawus"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      volume_name: "{{ postgres_backup_volume.volume.Name }}"
+      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+      postgres_version: "{{ mawus_config.version_postgres }}"
+      calendar: 01:00:00
+
+    - db_name: idsrv
+      service_name: "{{ mawus_config.env }}-postgres-backup-idsrv"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      volume_name: "{{ postgres_backup_volume.volume.Name }}"
+      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+      postgres_version: "{{ mawus_config.version_postgres }}"
+      calendar: 01:05:00

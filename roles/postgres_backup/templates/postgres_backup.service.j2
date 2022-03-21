@@ -1,0 +1,6 @@
+[Unit]
+Description=PostgreSQL backup job for {{ db_name }} database
+
+[Service]
+Type=oneshot
+ExecStart=podman run -it --rm --pod {{ pod_name }} --volume {{ volume_name }}:/pg_backup:rw,z --env-file {{ env_file }} docker.io/postgres:{{ postgres_version }} /bin/bash -c "pg_dump -h localhost -U postgres -Fc {{ db_name }} > /pg_backup/{{ db_name }}.$(date +%%Y%%m%%d).dump"
