@@ -49,18 +49,20 @@
   ansible.builtin.include_role:
     name: postgres_backup_roles
   vars:
-    db_name: maw_website
-    service_name: "{{ mawus_config.env }}-postgres-backup-roles"
-    systemd_dir: "{{ home }}/.config/systemd/user"
-    pod_name: "{{ mawus_config.podman_podname }}"
-    volume_name: "{{ postgres_backup_volume.volume.Name }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    postgres_version: "{{ mawus_config.version_postgres }}"
-    calendar: 00:55:00
+    pg_backup_roles_ctx:
+      service_name: "{{ mawus_config.env }}-postgres-backup-roles"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      volume_name: "{{ postgres_backup_volume.volume.Name }}"
+      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+      postgres_version: "{{ mawus_config.version_postgres }}"
+      calendar: 00:55:00
 
 - name: Configure Postgres Backups
   ansible.builtin.include_role:
     name: postgres_backup_database
+  loop_control:
+    loop_var: pg_backupdb_ctx
   loop:
     - db_name: maw_website
       service_name: "{{ mawus_config.env }}-postgres-backup-mawus"
@@ -83,6 +85,8 @@
 - name: Configure Postgres Optimizations
   ansible.builtin.include_role:
     name: postgres_optimize
+  loop_control:
+    loop_var: pg_optimize_ctx
   loop:
     - db_name: maw_website
       service_name: "{{ mawus_config.env }}-postgres-optimize-mawus"
@@ -104,9 +108,10 @@
   ansible.builtin.include_role:
     name: postgres_backup_cleanup
   vars:
-    service_name: "{{ mawus_config.env }}-postgres-cleanup"
-    systemd_dir: "{{ home }}/.config/systemd/user"
-    pod_name: "{{ mawus_config.podman_podname }}"
-    volume_name: "{{ postgres_backup_volume.volume.Name }}"
-    postgres_version: "{{ mawus_config.version_postgres }}"
-    calendar: 01:20:00
+    pg_cleanup_ctx:
+      service_name: "{{ mawus_config.env }}-postgres-cleanup"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      volume_name: "{{ postgres_backup_volume.volume.Name }}"
+      postgres_version: "{{ mawus_config.version_postgres }}"
+      calendar: 01:20:00
