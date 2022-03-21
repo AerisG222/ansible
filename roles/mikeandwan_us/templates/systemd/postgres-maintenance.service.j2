@@ -1,6 +1,0 @@
-[Unit]
-Description=PostgreSQL backup and optimization jobs for mikeandwan.us databases
-
-[Service]
-Type=oneshot
-ExecStart=podman run -it --rm --pull always --pod {{ mawus_config.podman_podname }} --volume {{ postgres_backup_volume.volume.Name }}:/pg_backup:rw,z --env-file {{ mawus_config.podman_env_dir }}/maw-postgres.env docker.io/aerisg222/maw-postgres-maintenance:latest

@@ -13,13 +13,11 @@
       - solr-indexer.timer
     services_prod:
       - certbot-renew.service
-      - postgres-maintenance.service
       - remote-archive-daily.service
       - remote-archive-monthly.service
       - reverse-geocode.service
     timers_prod:
       - certbot-renew.timer
-      - postgres-maintenance.timer
       - remote-archive-daily.timer
       - remote-archive-monthly.timer
       - reverse-geocode.timer
