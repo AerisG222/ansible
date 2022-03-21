@@ -4,11 +4,11 @@
   vars:
     namelist:
       - name: namea
-        use: yes
+        use: true
       - name: nameb
         use: no
       - name: namec
-        use: yes
+        use: true
       - name: named
         use: no
 

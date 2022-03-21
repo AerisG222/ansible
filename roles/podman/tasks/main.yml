@@ -1,13 +1,13 @@
 ---
 - name: Install Packages
-  become: yes
+  become: true
   ansible.builtin.dnf:
     state: present
     name:
       - podman
 
 - name: Configure subuid and subgid
-  become: yes
+  become: true
   ansible.builtin.command:
     argv:
       - usermod
@@ -21,7 +21,7 @@
   loop: "{{ podman_users if podman_users is iterable else [] }}"
 
 - name: Enable linger for rootless containers
-  become: yes
+  become: true
   ansible.builtin.command:
     cmd: loginctl enable-linger {{ item.username }}
   when: item.enable_linger

@@ -1,16 +1,16 @@
 ---
 - name: install sshguard
-  become: yes
+  become: true
   ansible.builtin.dnf:
     name: sshguard
     state: latest
   tags: skip_ansible_lint
 
 - name: enable sshguard whitelist
-  become: yes
+  become: true
   ansible.builtin.lineinfile:
     path: "/etc/sshguard.conf"
-    backup: yes
+    backup: true
     regex: "^(#)?{{ item }}"
     line: "{{ item }}"
     state: present
@@ -18,18 +18,18 @@
     - "WHITELIST_FILE=/etc/sshguard.whitelist"
 
 - name: whitelist some addresses in sshguard
-  become: yes
+  become: true
   ansible.builtin.lineinfile:
     path: "/etc/sshguard.whitelist"
-    backup: yes
+    backup: true
     regex: "^(#)?{{ item }}"
     line: "{{ item }}"
     state: present
   loop: "{{ sshd_sshguard_whitelist if sshd_sshguard_whitelist is iterable else [] }}"
 
 - name: start and enable sshguard
-  become: yes
+  become: true
   ansible.builtin.service:
     name: sshguard
-    enabled: yes
+    enabled: true
     state: started

@@ -1,8 +1,8 @@
 ---
 - name: Install Azure Data Studio
-  become: yes
+  become: true
   ansible.builtin.dnf:
     state: present
-    disable_gpg_check: yes
+    disable_gpg_check: true
     name:
       - https://go.microsoft.com/fwlink/?linkid=2168271

@@ -1,7 +1,7 @@
 ---
 # https://github.com/containers/podman/blob/main/rootless.md
 - name: permit rootless users to listen on low ports
-  become: yes
+  become: true
   ansible.posix.sysctl:
     name: net.ipv4.ip_unprivileged_port_start
     value: 80

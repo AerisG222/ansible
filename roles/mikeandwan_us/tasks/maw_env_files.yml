@@ -12,7 +12,7 @@
 
 - name: Prepare environment files
   ansible.builtin.template:
-    backup: yes
+    backup: true
     src: "maw_env/{{ item }}.j2"
     dest: "{{ mawus_config.podman_env_dir }}/{{ item }}"
     mode: u+rw

@@ -24,7 +24,7 @@
     enabled: no
     state: stopped
     scope: user
-  ignore_errors: yes # nothing to stop if it doesn't exist
+  ignore_errors: true # nothing to stop if it doesn't exist
 
 - name: "create {{ mawus_config.podman_podname }} pod"
   containers.podman.podman_pod:
@@ -295,7 +295,7 @@
 
 - name: Start and/or Enable mawus via systemd
   ansible.builtin.systemd:
-    daemon_reload: yes
+    daemon_reload: true
     name: "pod-{{ mawus_config.podman_podname }}"
     enabled: "{{ mawus_config.env == 'prod' }}"
     state: started

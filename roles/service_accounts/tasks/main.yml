@@ -1,6 +1,6 @@
 ---
 - name: Add Service Accounts
-  become: yes
+  become: true
   ansible.builtin.user:
     name: "{{ item.username }}"
     groups: "{{ item.groups }}"

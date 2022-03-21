@@ -2,7 +2,7 @@
 - name: Create user systemd directory if necessary
   ansible.builtin.file:
     path: "{{ home }}/.config/systemd/user"
-    recurse: yes
+    recurse: true
     state: directory
 
 - name: define common service and timers
@@ -30,7 +30,7 @@
 
 - name: Prepare systemd service and timer files
   ansible.builtin.template:
-    backup: yes
+    backup: true
     src: "systemd/{{ item }}.j2"
     dest: "{{ home }}/.config/systemd/user/{{ item }}"
     mode: u+rw
@@ -39,10 +39,10 @@
 - name: Enable timers
   ansible.builtin.systemd:
     name: "{{ item }}"
-    enabled: yes
+    enabled: true
     state: started
     scope: user
-    daemon_reload: yes
+    daemon_reload: true
   loop: "{{ timers }}"
 
 - name: Configure Postgres Role Backup

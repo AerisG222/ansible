@@ -2,7 +2,7 @@
 - name: Create user systemd directory if necessary
   ansible.builtin.file:
     path: "{{ systemd_dir }}"
-    recurse: yes
+    recurse: true
     state: directory
 
 - name: "Create systemd service file for {{ service_name }} job"
@@ -20,7 +20,7 @@
 - name: Enable job timer
   ansible.builtin.systemd:
     name: "{{ service_name }}.timer"
-    enabled: yes
+    enabled: true
     state: started
     scope: user
-    daemon_reload: yes
+    daemon_reload: true

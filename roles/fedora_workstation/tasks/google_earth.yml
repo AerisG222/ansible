@@ -1,16 +1,16 @@
 ---
 - name: Add Google Earth repo
-  become: yes
+  become: true
   ansible.builtin.yum_repository:
     name: google-earth
     description: Google Earth repo
     baseurl: https://dl.google.com/linux/earth/rpm/stable/x86_64
-    gpgcheck: yes
+    gpgcheck: true
     gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
   notify: update_package_cache
 
 - name: Install Google Earth
-  become: yes
+  become: true
   ansible.builtin.dnf:
     state: present
     name:

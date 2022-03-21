@@ -1,13 +1,13 @@
 ---
 hostname: vmwstest
 
-update_packages: yes
-android_studio: yes
-aws_cli: yes
-azure_cli: yes
+update_packages: true
+android_studio: true
+aws_cli: true
+azure_cli: true
 azure_data_studio: no
-google_chrome: yes
-google_earth: yes
-ms_teams: yes
-powershell: yes
-vscode: yes
+google_chrome: true
+google_earth: true
+ms_teams: true
+powershell: true
+vscode: true

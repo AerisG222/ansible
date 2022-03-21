@@ -30,8 +30,8 @@
     image: docker.io/aerisg222/maw-certs:latest
     command: "{{ mawus_config.env }} {{ cert_fqdn_prefix }}"
     state: started
-    interactive: yes
-    rm: yes
+    interactive: true
+    rm: true
     volume:
       - "{{ cert_vol }}:/maw-certs:rw,z"
   register: certs_container
@@ -43,7 +43,7 @@
 
 # todo: evaluate dev (certs that are generated in managed volume) support
 - name: Add ca cert(s) to trusted sources
-  become: yes
+  become: true
   ansible.builtin.copy:
     dest: "/usr/share/pki/ca-trust-source/anchors/maw_local_{{ item | basename }}"
     src: "{{ item }}"
@@ -52,7 +52,7 @@
   when: mawus_config.env == 'local'
 
 - name: Make the system aware of the new ca certs
-  become: yes
+  become: true
   ansible.builtin.command:
     cmd: update-ca-trust
   when: mawus_config.env == 'local'

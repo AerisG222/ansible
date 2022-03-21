@@ -36,7 +36,7 @@
     enabled: no
     state: stopped
     scope: user
-  ignore_errors: yes # nothing to stop if it doesn't exist
+  ignore_errors: true # nothing to stop if it doesn't exist
 
 - name: Create ddclient-pod
   containers.podman.podman_pod:
@@ -57,16 +57,16 @@
   containers.podman.podman_pod:
     name: "{{ ddclient_pod_name }}"
     generate_systemd:
-      new: yes
+      new: true
       path: .config/systemd/user
 
 - name: Enable ddclient via systemd
   ansible.builtin.systemd:
     name: "pod-{{ ddclient_pod_name }}"
-    enabled: yes
+    enabled: true
     state: started
     scope: user
-    daemon_reload: yes
+    daemon_reload: true
 
 - name: "Reset SSH username to {{ orig_ansible_user }}"
   ansible.builtin.set_fact:

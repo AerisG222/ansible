@@ -1,6 +1,6 @@
 ---
 - name: Install Android Studio Dependencies
-  become: yes
+  become: true
   ansible.builtin.dnf:
     state: present
     name:
@@ -9,7 +9,7 @@
       - bzip2-libs.i686
 
 - name: Install VM acceleration dependencies for Android Emulator
-  become: yes
+  become: true
   ansible.builtin.dnf:
     state: present
     name:
@@ -19,10 +19,10 @@
       - qemu-kvm
 
 - name: Start and Enable libvirtd
-  become: yes
+  become: true
   ansible.builtin.service:
     state: started
-    enabled: yes
+    enabled: true
     name: libvirtd
 
 # You may need to enable VT-D or VT-x or SVM in your bios - you should see that /dev/kvm exists

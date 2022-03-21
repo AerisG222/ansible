@@ -1,16 +1,16 @@
 ---
 - name: Add Powershell Repo
-  become: yes
+  become: true
   ansible.builtin.yum_repository:
     name: powershell
     description: Powershell
     baseurl: https://packages.microsoft.com/rhel/7/prod/
-    gpgcheck: yes
+    gpgcheck: true
     gpgkey: https://packages.microsoft.com/keys/microsoft.asc
   notify: update_package_cache
 
 - name: Install Powershell
-  become: yes
+  become: true
   ansible.builtin.dnf:
     state: present
     name:

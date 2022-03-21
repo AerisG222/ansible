@@ -1,21 +1,21 @@
 ---
 - name: check if (ipv4) hostname is already set in hosts file
-  become: yes
+  become: true
   ansible.builtin.command:
     argv:
       - grep
       - -E
       - '^127\.0\.0\.1.*\b{{ item }}\b.*$'
       - /etc/hosts
-  ignore_errors: yes
+  ignore_errors: true
   register: grep_hosts
 
 - name: add host to hosts file
-  become: yes
+  become: true
   ansible.builtin.lineinfile:
     path: /etc/hosts
-    backup: yes
-    backrefs: yes
+    backup: true
+    backrefs: true
     regex: "^127\\.0\\.0\\.1\\s+(.*)$"
     line: "127.0.0.1 \\1 {{ item }}"
     state: present

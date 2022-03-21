@@ -9,7 +9,7 @@
 
   tasks:
     - name: Install Prerequisites
-      become: yes
+      become: true
       ansible.builtin.dnf:
         state: present
         name:

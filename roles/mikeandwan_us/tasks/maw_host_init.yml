@@ -1,9 +1,9 @@
 ---
 - name: ensure asset directories exist
-  become: yes
+  become: true
   ansible.builtin.file:
     path: "{{ item }}"
-    #recurse: yes
+    #recurse: true
     state: directory
   loop: "{{ asset_dirs }}"
 

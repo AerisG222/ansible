@@ -40,16 +40,16 @@
   when: vscode
 
 - name: Add RPM Fusion repos
-  become: yes
+  become: true
   dnf:
-    disable_gpg_check: yes
+    disable_gpg_check: true
     state: present
     name:
       - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
       - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm
 
 - name: Install Packages
-  become: yes
+  become: true
   dnf:
     state: present
     name:
@@ -81,7 +81,7 @@
       - vlc
 
 - name: configure sysctl for workstations
-  become: yes
+  become: true
   ansible.posix.sysctl:
     name: "{{ item.key }}"
     value: "{{ item.value }}"

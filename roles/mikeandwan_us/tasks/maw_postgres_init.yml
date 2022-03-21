@@ -35,8 +35,8 @@
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
     command: psql -h 127.0.0.1 -U postgres -f /postgres_init/roles.sql
     state: started
-    interactive: yes
-    rm: yes
+    interactive: true
+    rm: true
     volume:
       - "{{ pginit_dir }}:/postgres_init:rw,Z"
 

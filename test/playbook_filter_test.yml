@@ -6,7 +6,7 @@
       containers:
         - name: a
           state:
-            started: yes
+            started: true
         - name: b
           state:
             started: no

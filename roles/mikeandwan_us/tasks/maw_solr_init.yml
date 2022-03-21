@@ -1,7 +1,7 @@
 - name: create multimedia-categories core
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} solr create_core -c multimedia-categories"
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: disable data driven schema
   ansible.builtin.command:

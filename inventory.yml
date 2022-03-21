@@ -12,5 +12,5 @@ all:
       hosts:
         barett:
           ansible_connection: local
-          has_nvidia_gpu: yes
+          has_nvidia_gpu: true
           hostname: barett

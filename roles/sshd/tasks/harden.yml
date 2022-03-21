@@ -2,10 +2,10 @@
 # https://www.digitalocean.com/community/tutorials/how-to-harden-openssh-on-ubuntu-18-04
 # https://www.cyberciti.biz/tips/linux-unix-bsd-openssh-server-best-practices.html
 - name: harden ssh
-  become: yes
+  become: true
   ansible.builtin.lineinfile:
     path: "/etc/ssh/sshd_config"
-    backup: yes
+    backup: true
     regex: "^(#)?{{ item.key }}"
     line: "{{ item.key }} {{ item.value }}"
     state: present

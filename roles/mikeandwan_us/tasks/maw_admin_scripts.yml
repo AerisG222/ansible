@@ -6,7 +6,7 @@
 
 - name: Prepare scripts
   ansible.builtin.template:
-    backup: yes
+    backup: true
     src: "admin_scripts/{{ item }}.j2"
     dest: "admin_scripts/{{ item }}"
     mode: u+rwx

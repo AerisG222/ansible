@@ -2,7 +2,7 @@
 # base
 hostname: vmtest
 update_packages: no
-maw_is_stage: yes
+maw_is_stage: true
 
 # ddclient
 ddclient_config:
@@ -12,7 +12,7 @@ ddclient_config:
     groups:
     subuid: 200000-265536
     subgid: 200000-265536
-    enable_linger: yes
+    enable_linger: true
   namecheap_password: "{{ vault_namecheap_password }}"
 
 # mikeandwan.us
@@ -23,7 +23,7 @@ mawus_config:
     password: "{{ vault_password_vmtest_svc_www_maw }}"
     subuid: 300000-365536
     subgid: 300000-365536
-    enable_linger: yes
+    enable_linger: true
   is_prod: no
   sql_username: svc_www_maw
   sql_password: "{{ vault_password_vmtest_sql_svc_www_maw }}"

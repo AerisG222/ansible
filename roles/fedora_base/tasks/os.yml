@@ -1,15 +1,15 @@
 ---
 - name: update metadata and packages
-  become: yes
+  become: true
   ansible.builtin.dnf:
-    update_cache: yes
+    update_cache: true
     name: '*'
     state: latest
   tags: skip_ansible_lint
   when: update_packages
 
 - name: Install Packages
-  become: yes
+  become: true
   ansible.builtin.dnf:
     state: present
     name:
@@ -19,7 +19,7 @@
 # https://www.cyberciti.biz/cloud-computing/increase-your-linux-server-internet-speed-with-tcp-bbr-congestion-control/
 # https://www.bufferbloat.net/projects/codel/wiki/
 - name: configure sysctl
-  become: yes
+  become: true
   ansible.posix.sysctl:
     name: "{{ item.key }}"
     value: "{{ item.value }}"

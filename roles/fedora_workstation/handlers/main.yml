@@ -1,6 +1,6 @@
 ---
 - name: update_package_cache
-  become: yes
+  become: true
   ansible.builtin.dnf:
-    update_cache: yes
+    update_cache: true
     state: present
