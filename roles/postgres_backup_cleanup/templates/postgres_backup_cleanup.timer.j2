@@ -1,0 +1,8 @@
+[Unit]
+Description=Run delete old postgres backups
+
+[Timer]
+OnCalendar={{ calendar }}
+
+[Install]
+WantedBy=timers.target

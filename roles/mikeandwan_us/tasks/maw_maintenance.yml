@@ -68,3 +68,34 @@
       env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
       postgres_version: "{{ mawus_config.version_postgres }}"
       calendar: 01:05:00
+
+- name: Configure Postgres Optimizations
+  ansible.builtin.include_role:
+    name: postgres_optimize
+  loop:
+    - db_name: maw_website
+      service_name: "{{ mawus_config.env }}-postgres-optimize-mawus"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+      postgres_version: "{{ mawus_config.version_postgres }}"
+      calendar: 01:10:00
+
+    - db_name: idsrv
+      service_name: "{{ mawus_config.env }}-postgres-optimize-idsrv"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+      postgres_version: "{{ mawus_config.version_postgres }}"
+      calendar: 01:15:00
+
+- name: Configure Postgres Backup Cleanup
+  ansible.builtin.include_role:
+    name: postgres_backup_cleanup
+  vars:
+    service_name: "{{ mawus_config.env }}-postgres-cleanup"
+    systemd_dir: "{{ home }}/.config/systemd/user"
+    pod_name: "{{ mawus_config.podman_podname }}"
+    volume_name: "{{ postgres_backup_volume.volume.Name }}"
+    postgres_version: "{{ mawus_config.version_postgres }}"
+    calendar: 01:20:00
