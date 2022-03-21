@@ -4,6 +4,6 @@
     service_template: "{{ role_path }}/templates/postgres_optimize.service.j2"
     timer_template: "{{ role_path }}/templates/postgres_optimize.timer.j2"
 
-- name: Configure systemd job for database backup
+- name: Configure systemd job to optimize database
   ansible.builtin.include_role:
     name: systemd_job
