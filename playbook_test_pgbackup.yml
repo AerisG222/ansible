@@ -1,8 +1,6 @@
 ---
 - name: Postgres Backup Test
   hosts: localhost
-  vars:
-    roles_path: ..
 
   tasks:
     - name: test postgres backup role
