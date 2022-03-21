@@ -1,0 +1,8 @@
+[Unit]
+Description=Run postgres role backup
+
+[Timer]
+OnCalendar={{ calendar }}
+
+[Install]
+WantedBy=timers.target

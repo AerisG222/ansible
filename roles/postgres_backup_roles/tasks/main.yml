@@ -1,0 +1,9 @@
+---
+- name: Set facts for systemd_job role
+  ansible.builtin.set_fact:
+    service_template: "{{ role_path }}/templates/postgres_backup_roles.service.j2"
+    timer_template: "{{ role_path }}/templates/postgres_backup_roles.timer.j2"
+
+- name: Configure systemd job for postgres role backup
+  ansible.builtin.include_role:
+    name: systemd_job

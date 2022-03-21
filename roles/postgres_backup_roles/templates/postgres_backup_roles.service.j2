@@ -1,0 +1,6 @@
+[Unit]
+Description=PostgreSQL backup roles
+
+[Service]
+Type=oneshot
+ExecStart=podman run -it --rm --pod {{ pod_name }} --volume {{ volume_name }}:/pg_backup:rw,z --env-file {{ env_file }} docker.io/postgres:{{ postgres_version }} /bin/bash -c "pg_dumpall -h localhost -U postgres --roles-only --no-role-passwords > /pg_backup/roles.$(date +%%Y%%m%%d).dump"

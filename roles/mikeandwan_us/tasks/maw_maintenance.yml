@@ -45,6 +45,19 @@
     daemon_reload: yes
   loop: "{{ timers }}"
 
+- name: Configure Postgres Role Backup
+  ansible.builtin.include_role:
+    name: postgres_backup_roles
+  vars:
+    db_name: maw_website
+    service_name: "{{ mawus_config.env }}-postgres-backup-roles"
+    systemd_dir: "{{ home }}/.config/systemd/user"
+    pod_name: "{{ mawus_config.podman_podname }}"
+    volume_name: "{{ postgres_backup_volume.volume.Name }}"
+    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    postgres_version: "{{ mawus_config.version_postgres }}"
+    calendar: 00:55:00
+
 - name: Configure Postgres Backups
   ansible.builtin.include_role:
     name: postgres_backup_database
