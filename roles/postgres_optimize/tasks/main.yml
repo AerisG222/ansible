@@ -1,26 +1,9 @@
 ---
-- name: Create user systemd directory if necessary
-  ansible.builtin.file:
-    path: "{{ systemd_dir }}"
-    recurse: yes
-    state: directory
+- name: Set facts for systemd_job role
+  ansible.builtin.set_fact:
+    service_template: "{{ role_path }}/templates/postgres_optimize.service.j2"
+    timer_template: "{{ role_path }}/templates/postgres_optimize.timer.j2"
 
-- name: "Create systemd service file for {{ db_name }} database optimization job"
-  ansible.builtin.template:
-    src: postgres_optimization.service.j2
-    dest: "{{ systemd_dir }}/{{ service_name }}.service"
-    mode: u+rw
-
-- name: "Create systemd timer file for {{ db_name }} database optimization job"
-  ansible.builtin.template:
-    src: postgres_optimization.timer.j2
-    dest: "{{ systemd_dir }}/{{ service_name }}.timer"
-    mode: u+rw
-
-- name: Enable job timer
-  ansible.builtin.systemd:
-    name: "{{ service_name }}.timer"
-    enabled: yes
-    state: started
-    scope: user
-    daemon_reload: yes
+- name: Configure systemd job for database backup
+  ansible.builtin.include_role:
+    name: systemd_job
