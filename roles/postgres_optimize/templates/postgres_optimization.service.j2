@@ -1,0 +1,6 @@
+[Unit]
+Description=PostgreSQL optimizer job for {{ db_name }} database
+
+[Service]
+Type=oneshot
+ExecStart=podman run -it --rm --pod {{ pod_name }} --env-file {{ env_file }} docker.io/postgres:{{ postgres_version }} vacuumdb -h localhost -U postgres --dbname {{ db_name }} --analyze

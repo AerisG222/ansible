@@ -1,0 +1,8 @@
+[Unit]
+Description=Run vacuumdb with analyze for database {{ db_name }}
+
+[Timer]
+OnCalendar={{ calendar }}
+
+[Install]
+WantedBy=timers.target
