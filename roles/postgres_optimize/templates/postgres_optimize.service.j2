@@ -1,6 +1,6 @@
 [Unit]
-Description=PostgreSQL optimizer job for {{ db_name }} database
+Description=PostgreSQL optimizer job for {{ pg_optimize_ctx.db_name }} database
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pod {{ pod_name }} --env-file {{ env_file }} docker.io/postgres:{{ postgres_version }} vacuumdb -h localhost -U postgres --dbname {{ db_name }} --analyze
+ExecStart=podman run -it --rm --pod {{ pg_optimize_ctx.pod_name }} --env-file {{ pg_optimize_ctx.env_file }} docker.io/postgres:{{ pg_optimize_ctx.postgres_version }} vacuumdb -h localhost -U postgres --dbname {{ pg_optimize_ctx.db_name }} --analyze

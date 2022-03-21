@@ -7,3 +7,9 @@
 - name: Configure systemd job for database backup cleanup
   ansible.builtin.include_role:
     name: systemd_job
+  vars:
+    systemd_job_ctx:
+      systemd_dir: "{{ pg_cleanup_ctx.systemd_dir }}"
+      service_name: "{{ pg_cleanup_ctx.service_name }}"
+      service_template: "{{ service_template }}"
+      timer_template: "{{ timer_template }}"

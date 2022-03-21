@@ -1,8 +1,8 @@
 [Unit]
-Description=Run postgres backup for database {{ db_name }}
+Description=Run postgres backup for database {{ pg_backupdb_ctx.db_name }}
 
 [Timer]
-OnCalendar={{ calendar }}
+OnCalendar={{ pg_backupdb_ctx.calendar }}
 
 [Install]
 WantedBy=timers.target

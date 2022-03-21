@@ -3,4 +3,4 @@ Description=Delete old postgres backups
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pod {{ pod_name }} --volume {{ volume_name }}:/pg_backup:rw,z docker.io/postgres:{{ postgres_version }} find /pg_backup -type f -mtime +5 -not -iname *01.dump -delete
+ExecStart=podman run -it --rm --pod {{ pg_cleanup_ctx.pod_name }} --volume {{ pg_cleanup_ctx.volume_name }}:/pg_backup:rw,z docker.io/postgres:{{ pg_cleanup_ctx.postgres_version }} find /pg_backup -type f -mtime +5 -not -iname *01.dump -delete

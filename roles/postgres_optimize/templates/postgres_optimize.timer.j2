@@ -1,8 +1,8 @@
 [Unit]
-Description=Run vacuumdb with analyze for database {{ db_name }}
+Description=Run vacuumdb with analyze for database {{ pg_optimize_ctx.db_name }}
 
 [Timer]
-OnCalendar={{ calendar }}
+OnCalendar={{ pg_optimize_ctx.calendar }}
 
 [Install]
 WantedBy=timers.target

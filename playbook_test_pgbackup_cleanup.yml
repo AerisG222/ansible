@@ -7,9 +7,10 @@
       ansible.builtin.include_role:
         name: postgres_backup_cleanup
       vars:
-        service_name: "test-postgres-backup-cleanup"
-        systemd_dir: "/home/mmorano/.config/systemd/user"
-        pod_name: "local-maw-pod"
-        volume_name: "local-maw-postgres-14"
-        postgres_version: "14"
-        calendar: 01:00:00
+        pg_cleanup_ctx:
+          service_name: "test-postgres-backup-cleanup"
+          systemd_dir: "/home/mmorano/.config/systemd/user"
+          pod_name: "local-maw-pod"
+          volume_name: "local-maw-postgres-14"
+          postgres_version: "14"
+          calendar: 01:00:00

@@ -2,7 +2,7 @@
 Description=Run postgres role backup
 
 [Timer]
-OnCalendar={{ calendar }}
+OnCalendar={{ pg_backup_roles_ctx.calendar }}
 
 [Install]
 WantedBy=timers.target

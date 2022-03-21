@@ -7,3 +7,9 @@
 - name: Configure systemd job for postgres role backup
   ansible.builtin.include_role:
     name: systemd_job
+  vars:
+    systemd_job_ctx:
+      systemd_dir: "{{ pg_backup_roles_ctx.systemd_dir }}"
+      service_name: "{{ pg_backup_roles_ctx.service_name }}"
+      service_template: "{{ service_template }}"
+      timer_template: "{{ timer_template }}"
