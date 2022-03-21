@@ -3,9 +3,9 @@
   hosts: localhost
 
   tasks:
-    - name: test postgres backup role
+    - name: test postgres backup database role
       ansible.builtin.include_role:
-        name: postgres_backup
+        name: postgres_backup_database
       vars:
         db_name: maw_website
         service_name: "test-postgres-backup-mawus"

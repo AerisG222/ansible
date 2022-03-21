@@ -7,13 +7,13 @@
 
 - name: "Create systemd service file for {{ db_name }} database backup job"
   ansible.builtin.template:
-    src: postgres_backup.service.j2
+    src: postgres_backup_database.service.j2
     dest: "{{ systemd_dir }}/{{ service_name }}.service"
     mode: u+rw
 
 - name: "Create systemd timer file for {{ db_name }} database backup job"
   ansible.builtin.template:
-    src: postgres_backup.timer.j2
+    src: postgres_backup_database.timer.j2
     dest: "{{ systemd_dir }}/{{ service_name }}.timer"
     mode: u+rw
 
