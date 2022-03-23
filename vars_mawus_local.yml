@@ -94,6 +94,7 @@ mawus_config:
   sql_password: "{{ vault_password_sql_svc_www_maw }}"
   sql_postgres_password: "{{ vault_password_sql_postgres }}"
   sql_idsrv_password: "{{ vault_password_sql_idsrv }}"
+  sql_solr_username: svc_solr
   sql_solr_password: "{{ vault_password_sql_solr }}"
 
   # auth secrets

@@ -1,6 +1,0 @@
-[Unit]
-Description=Solr indexer job for mikeandwan.us
-
-[Service]
-Type=oneshot
-ExecStart=podman run -it --rm --pull always --pod {{ mawus_config.podman_podname }} docker.io/aerisg222/maw-solr-indexer:latest 'Server=127.0.0.1;Port=5432;Database=maw_website;User Id={{ mawus_config.sql_username }};Password={{ mawus_config.sql_password }}' http://127.0.0.1:8983/solr/multimedia-categories/update/?commit=true

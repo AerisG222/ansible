@@ -1,8 +1,8 @@
 [Unit]
-Description=Run certbot_renew twice a day
+Description=certbot_renew timer
 
 [Timer]
-OnCalendar=0/12:00:00
+OnCalendar={{ certbot_ctx.calendar }}
 RandomizedDelaySec=1h
 
 [Install]

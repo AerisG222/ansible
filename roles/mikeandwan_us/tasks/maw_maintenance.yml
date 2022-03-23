@@ -1,45 +1,46 @@
 ---
-- name: Create user systemd directory if necessary
-  ansible.builtin.file:
-    path: "{{ home }}/.config/systemd/user"
-    recurse: true
-    state: directory
-
-- name: define common service and timers
-  ansible.builtin.set_fact:
-    services:
-      - solr-indexer.service
-    timers:
-      - solr-indexer.timer
-    services_prod:
-      - certbot-renew.service
-      - reverse-geocode.service
-    timers_prod:
-      - certbot-renew.timer
-      - reverse-geocode.timer
-
-- name: Merge services and timers
-  ansible.builtin.set_fact:
-    services: "{{ services + services_prod }}"
-    timers: "{{ timers + timers_prod }}"
+- name: Configure Certbot Renew
+  ansible.builtin.include_role:
+    name: certbot_renew
+  vars:
+    certbot_ctx:
+      service_name: "{{ mawus_config.env }}-certbot-renew"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      start_job: false
+      enable_job: "{{ mawus_config.env == 'prod' }}"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      validation_volume_name: "{{ certbot_validation_volume.volume.Name }}"
+      certs_volume_name: "{{ certbot_certs_volume.volume.Name }}"
+      calendar: 0/12:00:00
   when: mawus_config.env == 'prod'
 
-- name: Prepare systemd service and timer files
-  ansible.builtin.template:
-    backup: true
-    src: "systemd/{{ item }}.j2"
-    dest: "{{ home }}/.config/systemd/user/{{ item }}"
-    mode: u+rw
-  loop: "{{ services + timers }}"
+- name: Configure Reverse Geocoder
+  ansible.builtin.include_role:
+    name: reverse_geocoder
+  vars:
+    reverse_geocode_ctx:
+      service_name: "{{ mawus_config.env }}-reverse-geocoder"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      start_job: false
+      enable_job: "{{ mawus_config.env == 'prod' }}"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      volume_name: "{{ reverse_geocode_volume.volume.Name }}"
+      env_file: "{{ mawus_config.podman_env_dir }}/maw-reverse-geocode.env"
+      calendar: 00:45:00
 
-- name: Enable timers
-  ansible.builtin.systemd:
-    name: "{{ item }}"
-    enabled: true
-    state: started
-    scope: user
-    daemon_reload: true
-  loop: "{{ timers }}"
+- name: Configure Solr Indexer
+  ansible.builtin.include_role:
+    name: solr_indexer
+  vars:
+    solr_indexer_ctx:
+      service_name: "{{ mawus_config.env }}-solr-indexer"
+      systemd_dir: "{{ home }}/.config/systemd/user"
+      start_job: false
+      enable_job: "{{ mawus_config.env == 'prod' }}"
+      pod_name: "{{ mawus_config.podman_podname }}"
+      sql_username: "{{ mawus_config.sql_solr_username }}"
+      sql_password: "{{ mawus_config.sql_solr_password }}"
+      calendar: 00:50:00
 
 - name: Configure Postgres Role Backup
   ansible.builtin.include_role:

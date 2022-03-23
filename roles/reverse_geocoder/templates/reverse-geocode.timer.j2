@@ -1,0 +1,8 @@
+[Unit]
+Description=Reverse Geocode Timer
+
+[Timer]
+OnCalendar={{ reverse_geocode_ctx.calendar }}
+
+[Install]
+WantedBy=timers.target

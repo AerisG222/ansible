@@ -2,7 +2,7 @@
 Description=Run solr-indexer once a day
 
 [Timer]
-OnCalendar=02:30:00
+OnCalendar={{ solr_indexer_ctx.calendar }}
 
 [Install]
 WantedBy=timers.target

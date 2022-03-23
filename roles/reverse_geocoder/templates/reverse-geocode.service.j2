@@ -1,0 +1,6 @@
+[Unit]
+Description=Reverse Geocode job for mikeandwan.us
+
+[Service]
+Type=oneshot
+ExecStart=podman run -it --rm --pull always --pod {{ reverse_geocode_ctx.pod_name }} --volume {{ reverse_geocode_ctx.volume_name }}:/results:rw,z --env-file {{ reverse_geocode_ctx.env_file }} docker.io/aerisg222/maw-reverse-geocode:latest
