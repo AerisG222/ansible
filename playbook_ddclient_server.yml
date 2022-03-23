@@ -22,9 +22,9 @@
           - "{{ ansible_user }}"
           - "{{ ddclient_config.service_account.username }}"
 
-    - name: Configure podman
+    - name: Initialize podman
       ansible.builtin.include_role:
-        name: podman
+        name: podman_init
       vars:
         podman_users:
           - "{{ ddclient_config.service_account }}"
