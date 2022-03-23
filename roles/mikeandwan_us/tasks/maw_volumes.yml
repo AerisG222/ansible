@@ -21,7 +21,6 @@
   containers.podman.podman_volume:
     name: "{{ mawus_config.env }}-maw-postgres-backup"
     state: present
-  when: mawus_config.env == 'prod'
   register: postgres_backup_volume
 
 - name: create solr volume
@@ -71,11 +70,16 @@
   when: mawus_config.env != 'local'
   register: google_creds_volume
 
+- name: create maw-gdrive-creds volume
+  containers.podman.podman_volume:
+    name: "{{ mawus_config.env }}-maw-gdrive-creds"
+    state: present
+  register: gdrive_creds_volume
+
 - name: create maw-reverse-geocode volume
   containers.podman.podman_volume:
     name: "{{ mawus_config.env }}-maw-reverse-geocode"
     state: present
-  when: mawus_config.env != 'local'
   register: reverse_geocode_volume
 
 - name: create maw-certbot-validation volume
@@ -91,10 +95,3 @@
     state: present
   when: mawus_config.env == 'prod'
   register: certbot_certs_volume
-
-- name: create maw-gdrive-creds volume
-  containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-gdrive-creds"
-    state: present
-  when: mawus_config.env == 'prod'
-  register: gdrive_creds_volume

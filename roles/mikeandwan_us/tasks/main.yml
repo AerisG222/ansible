@@ -35,10 +35,6 @@
 - name: Include maw_env_files.yml
   ansible.builtin.include_tasks: maw_env_files.yml
 
-- name: Include maw_systemd_scripts.yml
-  ansible.builtin.include_tasks: maw_systemd_scripts.yml
-  when: mawus_config.env == 'prod'
-
 - name: Include maw_volumes.yml
   ansible.builtin.include_tasks: maw_volumes.yml
 

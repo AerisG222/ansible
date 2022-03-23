@@ -1,0 +1,15 @@
+---
+- name: Set facts for systemd_job role
+  ansible.builtin.set_fact:
+    service_template: "{{ role_path }}/templates/postgres_gdrive_archive.service.j2"
+    timer_template: "{{ role_path }}/templates/postgres_gdrive_archive.timer.j2"
+
+- name: Configure systemd job to remotely archive postgres files to google drive
+  ansible.builtin.include_role:
+    name: systemd_job
+  vars:
+    systemd_job_ctx:
+      systemd_dir: "{{ postgres_gdrive_archive_ctx.systemd_dir }}"
+      service_name: "{{ postgres_gdrive_archive_ctx.service_name }}"
+      service_template: "{{ service_template }}"
+      timer_template: "{{ timer_template }}"

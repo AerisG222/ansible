@@ -1,0 +1,6 @@
+[Unit]
+Description=Google Drive Archive job
+
+[Service]
+Type=oneshot
+ExecStart=bash -c "podman run -it --rm --pod {{ postgres_gdrive_archive_ctx.pod_name }} --volume {{ postgres_gdrive_archive_ctx.files_to_archive_volume }}:/files:ro,z --volume {{ postgres_gdrive_archive_ctx.creds_volume }}:/app/secrets:ro,z docker.io/d0whc3r/gdrive:latest -b /files/\*.$(date +%%Y%%m%%d).dump -f {{ postgres_gdrive_archive_ctx.archive_folder }} -d {{ postgres_gdrive_archive_ctx.archive_folder }}={{ postgres_gdrive_archive_ctx.retain_archive_duration }}"

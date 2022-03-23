@@ -1,0 +1,8 @@
+[Unit]
+Description=Run gdrive archive
+
+[Timer]
+OnCalendar={{ postgres_gdrive_archive_ctx.calendar }}
+
+[Install]
+WantedBy=timers.target
