@@ -11,5 +11,7 @@
     systemd_job_ctx:
       systemd_dir: "{{ pg_backup_roles_ctx.systemd_dir }}"
       service_name: "{{ pg_backup_roles_ctx.service_name }}"
+      start_job: "{{ pg_backup_roles_ctx.start_job }}"
+      enable_job: "{{ pg_backup_roles_ctx.enable_job }}"
       service_template: "{{ service_template }}"
       timer_template: "{{ timer_template }}"

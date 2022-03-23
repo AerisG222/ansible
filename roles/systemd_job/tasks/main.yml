@@ -20,7 +20,7 @@
 - name: Enable job timer
   ansible.builtin.systemd:
     name: "{{ systemd_job_ctx.service_name }}.timer"
-    enabled: true
-    state: started
+    enabled: "{{ systemd_job_ctx.enable_job | default('false', true) }}"
+    state: "{{ systemd_job_ctx.start_job | default('false', true) | ternary('started', 'stopped') }}"
     scope: user
     daemon_reload: true
