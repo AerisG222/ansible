@@ -28,7 +28,6 @@ mawus_config:
   sql_username: svc_www_maw
   sql_password: "{{ vault_password_vmtest_sql_svc_www_maw }}"
   sql_postgres_password: "{{ vault_password_vmtest_sql_postgres }}"
-  sql_idsrv_password: "{{ vault_password_vmtest_sql_idsrv }}"
   sql_solr_password: "{{ vault_password_vmtest_sql_solr }}"
   www_client_secret: "{{ vault_client_secret_www }}"
   google_plus_client_id: "{{ vault_google_plus_client_id }}"

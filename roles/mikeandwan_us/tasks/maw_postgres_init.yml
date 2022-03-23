@@ -52,9 +52,7 @@
   loop:
     - username: "{{ mawus_config.sql_username }}"
       password: "{{ mawus_config.sql_password }}"
-    - username: idsrv
-      password: "{{ mawus_config.sql_idsrv_password }}"
-    - username: svc_solr
+    - username: "{{ mawus_config.sql_solr_username }}"
       password: "{{ mawus_config.sql_solr_password }}"
 
 - name: restore idsrv if needed
