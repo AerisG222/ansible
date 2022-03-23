@@ -8,5 +8,6 @@ google_earth: no
 ms_teams: no
 powershell: no
 vscode: no
+piper: no
 nvidia: false
 nvidia_container: false

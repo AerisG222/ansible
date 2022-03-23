@@ -80,6 +80,13 @@
       - vdpauinfo
       - vlc
 
+- name: Install piper
+  become: true
+  dnf:
+    state: present
+    name: piper
+  when: piper
+
 - name: configure sysctl for workstations
   become: true
   ansible.posix.sysctl:
