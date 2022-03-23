@@ -149,7 +149,7 @@
           - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
           - "{{ api_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
           - "{{ uploads_volume.volume.Name }}:/maw-uploads:rw,z"
-          - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
+          - "{{ mawus_config.asset_dir_images }}:/srv/www/website_assets/images:ro"
         label:
           io.containers.autoupdate: image
       register: api_container
@@ -177,8 +177,8 @@
           - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
           - "{{ www_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
           - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
-          - "{{ host_assets_dir_images }}:/srv/www/website_assets/images:ro"
-          - "{{ host_assets_dir_movies }}:/srv/www/website_assets/movies:ro"
+          - "{{ mawus_config.asset_dir_images }}:/srv/www/website_assets/images:ro"
+          - "{{ mawus_config.asset_dir_movies }}:/srv/www/website_assets/movies:ro"
         label:
           io.containers.autoupdate: image
       register: www_container

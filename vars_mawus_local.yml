@@ -85,7 +85,7 @@ mawus_config:
 
   gateway_volumes:
     #- "{{ maw_cert_volume.volume.Name }}:/maw-certs:ro,z"
-    #- "{{ host_assets_dir }}:/assets:ro"
+    #- "{{ asset_dir_root }}:/assets:ro"
     #- "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
     #- "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
 

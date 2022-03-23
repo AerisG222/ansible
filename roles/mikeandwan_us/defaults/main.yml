@@ -1,4 +1,0 @@
----
-host_assets_dir: /srv/www/website_assets
-host_assets_dir_images: "{{ host_assets_dir }}/images"
-host_assets_dir_movies: "{{ host_assets_dir }}/movies"
