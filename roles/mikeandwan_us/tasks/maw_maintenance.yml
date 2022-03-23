@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     services: "{{ services + services_prod }}"
     timers: "{{ timers + timers_prod }}"
-  when: maw_env == 'prod'
+  when: mawus_config.env == 'prod'
 
 - name: Prepare systemd service and timer files
   ansible.builtin.template:
