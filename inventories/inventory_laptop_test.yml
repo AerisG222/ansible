@@ -5,8 +5,6 @@ all:
     servers:
       hosts:
         lvmtest:
-          ansible_host: 192.168.122.138
-          ansible_user: mmorano
 
     workstations:
       hosts:
