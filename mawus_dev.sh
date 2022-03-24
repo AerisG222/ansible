@@ -14,4 +14,8 @@ showheader() {
 #pip install --user ansible ansible-lint
 
 #showheader '2: run playbook for local development'
-ansible-playbook --ask-become-pass playbook_mawus_local.yml
+ansible-playbook \
+    --ask-become-pass \
+    --inventory inventories/inventory_dev_machine.yml \
+    --limit $(hostname --short) \
+    playbook_mawus_local.yml

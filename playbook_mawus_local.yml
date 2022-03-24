@@ -1,10 +1,7 @@
 ---
 - name: Configure local mikeandwan.us environment
-  hosts: localhost
-  vars:
-    ansible_connection: local
+  hosts: mawus_local_dev
   vars_files:
-    - vars_mawus_local.yml
     - "{{ external_vars_file }}"
 
   tasks:

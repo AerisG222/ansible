@@ -1,0 +1,15 @@
+---
+all:
+  children:
+
+    workstations:
+      hosts:
+        barett:
+        aeris:
+        vincent:
+
+    mawus_local_dev:
+      hosts:
+        barett:
+        aeris:
+        vincent:
