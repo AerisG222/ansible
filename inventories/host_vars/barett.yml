@@ -1,1 +1,4 @@
 ansible_connection: local
+
+# workstation variables
+has_nvidia_gpu: true
