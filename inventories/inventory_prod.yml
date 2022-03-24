@@ -1,0 +1,9 @@
+---
+all:
+  children:
+
+    servers:
+      hosts:
+        tifa:
+          hostname: tifa
+          ansible_user: mmorano
