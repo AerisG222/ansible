@@ -5,11 +5,7 @@ all:
     servers:
       hosts:
         vmtest:
-          ansible_host: 192.168.122.43
-          ansible_user: mmorano
 
     workstations:
       hosts:
         vmwstest:
-          ansible_host: 192.168.122.247
-          ansible_user: mmorano
