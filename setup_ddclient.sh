@@ -1,6 +1,9 @@
 #!/bin/bash
+. ./_shared.sh
+
+INVENTORY_FILE=$(get_file 'Inventory File: ' "$1")
 
 ansible-playbook \
     --ask-become-pass \
-    --inventory inventories/inventory_test.yml \
+    --inventory "${INVENTORY_FILE}" \
     playbook_ddclient.yml
