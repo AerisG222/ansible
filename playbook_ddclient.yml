@@ -1,6 +1,8 @@
 ---
-- name: Configure Servers
-  hosts: servers
+- name: Configure ddclient Servers
+  hosts: ddclient
+  vars_files:
+    - "{{ ddclient_secrets_file }}"
 
   tasks:
     - name: Configure Base

@@ -1,8 +1,8 @@
 ---
-- name: "Temporarily set SSH username to {{ ddclient_svc_account }}"
+- name: "Temporarily set SSH username to {{ ddclient_config.service_account.username }}"
   ansible.builtin.set_fact:
     orig_ansible_user: "{{ ansible_user }}"
-    ansible_user: "{{ ddclient_svc_account }}"
+    ansible_user: "{{ ddclient_config.service_account.username }}"
   changed_when: false
   delegate_to: localhost
 
@@ -30,39 +30,39 @@
     state: absent
 
 # stop pod via systemd, otherwise systemd and podman fight
-- name: "Disable {{ ddclient_pod_name }} via systemd"
+- name: "Disable {{ ddclient_config.podman_podname }} via systemd"
   ansible.builtin.systemd:
-    name: "pod-{{ ddclient_pod_name }}"
-    enabled: no
+    name: "pod-{{ ddclient_config.systemd_pod_service }}"
+    enabled: false
     state: stopped
     scope: user
   ignore_errors: true # nothing to stop if it doesn't exist
 
-- name: Create ddclient-pod
+- name: "Create pod {{ ddclient_config.podman_podname }}"
   containers.podman.podman_pod:
-    name: "{{ ddclient_pod_name }}"
+    name: "{{ ddclient_config.podman_podname }}"
     state: started
 
-- name: Create ddclient-container
+- name: "Create container {{ ddclient_config.podman_container_name }}"
   containers.podman.podman_container:
-    name: "{{ ddclient_container_name }}"
+    name: "{{ ddclient_config.podman_container_name }}"
     image: docker.io/linuxserver/ddclient
-    pod: "{{ ddclient_pod_name }}"
-    volume: ddclient_config:/config
+    pod: "{{ ddclient_config.podman_podname }}"
+    volume: "{{ ddclient_volume.volume.Name }}:/config"
     state: started
     label:
       io.containers.autoupdate: image
 
 - name: Create systemd unit files
   containers.podman.podman_pod:
-    name: "{{ ddclient_pod_name }}"
+    name: "{{ ddclient_config.podman_podname }}"
     generate_systemd:
       new: true
       path: .config/systemd/user
 
 - name: Enable ddclient via systemd
   ansible.builtin.systemd:
-    name: "pod-{{ ddclient_pod_name }}"
+    name: "pod-{{ ddclient_config.podman_podname }}"
     enabled: true
     state: started
     scope: user

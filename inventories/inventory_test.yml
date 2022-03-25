@@ -9,3 +9,7 @@ all:
     workstations:
       hosts:
         vmwstest:
+
+    ddclient:
+      hosts:
+        vmtest:

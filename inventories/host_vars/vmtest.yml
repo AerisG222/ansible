@@ -5,7 +5,9 @@ ansible_user: mmorano
 # base
 hostname: vmtest
 update_packages: no
-maw_is_stage: true
+
+external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/{{ hostname }}"
+ddclient_secrets_file: "{{ external_vars_root }}/ddclient_secrets.yml"
 
 # ddclient
 ddclient_config:
@@ -16,6 +18,8 @@ ddclient_config:
     subuid: 200000-265536
     subgid: 200000-265536
     enable_linger: true
+  podman_podname: ddclient-pod
+  podman_container_name: ddclient-container
   namecheap_password: "{{ vault_namecheap_password }}"
 
 # mikeandwan.us

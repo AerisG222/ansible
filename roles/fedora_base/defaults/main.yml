@@ -1,4 +1,4 @@
 ---
 hostname: ""
 domain: ""
-update_packages: no
+update_packages: false

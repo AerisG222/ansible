@@ -22,7 +22,7 @@ daemon=600                              # check every 300 seconds
 syslog=yes                              # log update msgs to syslog
 #mail=root                              # mail all msgs to root
 mail-failure=root                       # mail failed update msgs to root
-pid=/var/run/ddclient/ddclient.pid              # record PID in file.
+pid=/var/run/ddclient/ddclient.pid      # record PID in file.
 ssl=yes                                 # use ssl-support.  Works with
                                         # ssl-library
 
@@ -43,5 +43,5 @@ use=web                                         # via web
 protocol=namecheap,                             \
 server=dynamicdns.park-your-domain.com,         \
 login=mikeandwan.us,                            \
-password={{ ddclient_namecheap_password }}      \
+password={{ ddclient_config.namecheap_password }}      \
 www,@,api,auth,photos,files
