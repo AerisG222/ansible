@@ -6,16 +6,8 @@
     name:
       - podman
 
-- name: Configure subuid and subgid
-  become: true
-  ansible.builtin.command:
-    argv:
-      - usermod
-      - --add-subuids
-      - "{{ item.subuid }}"
-      - --add-subgids
-      - "{{ item.subgid }}"
-      - "{{ item.username }}"
+- name: Set subuid/subgid if needed
+  ansible.builtin.include_tasks: set_subids.yml
   loop_control:
     label: "{{ item.username }}"
   loop: "{{ podman_users if podman_users is iterable else [] }}"

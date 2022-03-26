@@ -1,0 +1,25 @@
+---
+- name: check if user is already in subuid (this can automatically be added when creating user)
+  become: true
+  ansible.builtin.command:
+    argv:
+      - grep
+      - -E
+      - '^{{ item.username }}:.*$'
+      - /etc/subuid
+  ignore_errors: true
+  register: grep_subuid
+
+- name: Configure subuid and subgid
+  become: true
+  ansible.builtin.command:
+    argv:
+      - usermod
+      - --add-subuids
+      - "{{ item.subuid }}"
+      - --add-subgids
+      - "{{ item.subgid }}"
+      - "{{ item.username }}"
+  loop_control:
+    label: "{{ item.username }}"
+  loop: "{{ podman_users if podman_users is iterable else [] }}"
