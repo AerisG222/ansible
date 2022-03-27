@@ -2,8 +2,6 @@
 all:
   children:
 
-    servers:
+    ddclient:
       hosts:
         tifa:
-          hostname: tifa
-          ansible_user: mmorano
