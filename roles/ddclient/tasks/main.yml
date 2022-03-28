@@ -45,6 +45,7 @@
 
 - name: stop pod if running
   containers.podman.podman_pod:
+    name: "{{ ddclient_config.podman_podname }}"
     state: stopped
   when: (podinfo.pods | length > 0) and (podinfo.pods[0].State == 'Running')
 
