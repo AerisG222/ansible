@@ -7,8 +7,9 @@ all:
         barett:
         aeris:
         vincent:
+        lvmwstest:
 
-    mawus_local_dev:
+    mawus_dev:
       hosts:
         barett:
         aeris:

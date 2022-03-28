@@ -1,6 +1,7 @@
 get_value() {
     local prompt=$1
     local secure=$2
+    local default=$3
     local val=
 
     while [ "${val}" = "" ]
@@ -9,6 +10,10 @@ get_value() {
             read -e -r -s -p "${prompt}" val
         else
             read -e -r -p "${prompt}" val
+        fi
+
+        if [ "${val}" = "" -a "${default}" != "" ]; then
+            val="${default}"
         fi
     done
 

@@ -1,6 +1,6 @@
 ---
 - name: Configure local mikeandwan.us environment
-  hosts: mawus_local_dev
+  hosts: mawus_dev
   vars_files:
     - "{{ external_vars_file }}"
 
