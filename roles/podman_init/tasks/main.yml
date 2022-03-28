@@ -9,7 +9,8 @@
 - name: Set subuid/subgid if needed
   ansible.builtin.include_tasks: set_subids.yml
   loop_control:
-    label: "{{ item.username }}"
+    loop_var: podman_user
+    label: "{{ podman_user.username }}"
   loop: "{{ podman_users if podman_users is iterable else [] }}"
 
 - name: Enable linger for rootless containers

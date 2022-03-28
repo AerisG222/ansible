@@ -5,7 +5,7 @@
     argv:
       - grep
       - -E
-      - '^{{ item.username }}:.*$'
+      - '^{{ podman_user.username }}:.*$'
       - /etc/subuid
   ignore_errors: true
   register: grep_subuid
@@ -16,10 +16,7 @@
     argv:
       - usermod
       - --add-subuids
-      - "{{ item.subuid }}"
+      - "{{ podman_user.subuid }}"
       - --add-subgids
-      - "{{ item.subgid }}"
-      - "{{ item.username }}"
-  loop_control:
-    label: "{{ item.username }}"
-  loop: "{{ podman_users if podman_users is iterable else [] }}"
+      - "{{ podman_user.subgid }}"
+      - "{{ podman_user.username }}"
