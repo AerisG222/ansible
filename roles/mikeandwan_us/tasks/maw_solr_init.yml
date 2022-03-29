@@ -307,22 +307,22 @@
 
 - name: see if custom request handler is defined
   ansible.builtin.command:
-    cmd: "podman exec -it local-maw-solr curl 'http://localhost:8983/solr/multimedia-categories/config/requestHandler?componentName=/maw-photos-query'"
+    cmd: "podman exec -it {{ solr_container.container.Name }} curl 'http://localhost:8983/solr/multimedia-categories/config/requestHandler?componentName=/maw-photos-query'"
   register: solr_handler_exists_result
 
 - name: add handler if it does not exist
   ansible.builtin.command:
-    cmd: "podman exec -it local-maw-solr curl -X POST -H 'Content-type:application/json' --data-binary '{ \"add-requesthandler\": {{ maw_request_handler_definition | to_json }} }' 'http://localhost:8983/solr/multimedia-categories/config'"
+    cmd: "podman exec -it {{ solr_container.container.Name }} curl -X POST -H 'Content-type:application/json' --data-binary '{ \"add-requesthandler\": {{ maw_request_handler_definition | to_json }} }' 'http://localhost:8983/solr/multimedia-categories/config'"
   when: not (solr_handler_exists_result.stdout | from_json).config.requestHandler['/maw-photos-query']
 
 - name: update handler if different
   ansible.builtin.command:
-    cmd: "podman exec -it local-maw-solr curl -X POST -H 'Content-type:application/json' --data-binary '{ \"update-requesthandler\": {{ maw_request_handler_definition | to_json }} }' 'http://localhost:8983/solr/multimedia-categories/config'"
+    cmd: "podman exec -it {{ solr_container.container.Name }} curl -X POST -H 'Content-type:application/json' --data-binary '{ \"update-requesthandler\": {{ maw_request_handler_definition | to_json }} }' 'http://localhost:8983/solr/multimedia-categories/config'"
   when: (solr_handler_exists_result.stdout | from_json).config.requestHandler['/maw-photos-query'] and maw_request_handler_definition != (solr_handler_exists_result.stdout | from_json).config.requestHandler['/maw-photos-query']
 
 - name: reload core for good measure
   ansible.builtin.command:
-    cmd: "podman exec -it local-maw-solr curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
+    cmd: "podman exec -it {{ solr_container.container.Name }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
 
 - name: run indexer
   ansible.builtin.systemd:
