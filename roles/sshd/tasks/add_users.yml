@@ -17,7 +17,8 @@
       - -E
       - '^AllowUsers.*\b{{ username }}\b.*$'
       - /etc/ssh/sshd_config
-  ignore_errors: true
+  changed_when: false
+  failed_when: grep_allowusers.rc != 0 and grep_allowusers.rc != 1
   register: grep_allowusers
 
 - name: add user to sshd AllowUsers
