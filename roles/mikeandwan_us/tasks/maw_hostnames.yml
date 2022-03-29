@@ -7,7 +7,8 @@
       - -E
       - '^127\.0\.0\.1.*\b{{ item }}\b.*$'
       - /etc/hosts
-  ignore_errors: true
+  changed_when: false
+  failed_when: grep_hosts.rc != 0 and grep_hosts.rc != 1
   register: grep_hosts
 
 - name: add host to hosts file
