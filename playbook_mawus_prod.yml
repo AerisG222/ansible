@@ -1,6 +1,8 @@
 ---
-- name: Configure Servers
-  hosts: servers
+- name: Configure mikeandwan.us prod environment
+  hosts: mawus_prod
+  vars_files:
+    - "{{ external_vars_file }}"
 
   tasks:
     - name: Configure Base
@@ -12,7 +14,7 @@
         name: service_accounts
       vars:
         service_accounts:
-          - "{{ mawus_config.service_account }}"
+          - "{{ mawus_config_prod.service_account }}"
 
     - name: Configure firewall
       ansible.builtin.include_role:
@@ -28,17 +30,17 @@
       vars:
         sshd_allow_users:
           - "{{ ansible_user }}"
-          - "{{ mawus_config.service_account.username }}"
+          - "{{ mawus_config_prod.service_account.username }}"
 
     - name: Initialize podman
       ansible.builtin.include_role:
         name: podman_init
       vars:
         podman_users:
-          - "{{ mawus_config.service_account }}"
+          - "{{ mawus_config_prod.service_account }}"
 
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:
         name: mikeandwan_us
       vars:
-        mawus_svc_account: "{{ mawus_config.service_account.username }}"
+        mawus_config: "{{ mawus_config_prod }}"

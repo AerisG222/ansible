@@ -2,10 +2,8 @@
 all:
   children:
 
-    workstations:
+    mawus_test:
       hosts:
         barett:
         aeris:
         vincent:
-        lvmwstest:
-        vmwstest:

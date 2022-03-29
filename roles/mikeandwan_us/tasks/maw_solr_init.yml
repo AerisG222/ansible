@@ -305,9 +305,10 @@
   ansible.builtin.set_fact:
     maw_request_handler_definition: "{{ lookup('file', 'solr_request_handler.json') }}"
 
-- name: see if custom request handler is defined
+- name: check if custom request handler is defined
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} curl 'http://localhost:8983/solr/multimedia-categories/config/requestHandler?componentName=/maw-photos-query'"
+  changed_when: false
   register: solr_handler_exists_result
 
 - name: add handler if it does not exist
@@ -326,7 +327,7 @@
 
 - name: run indexer
   ansible.builtin.systemd:
-    name: solr-indexer.service
+    name: "{{ mawus_config.env }}-solr-indexer"
     enabled: no
     state: started
     scope: user

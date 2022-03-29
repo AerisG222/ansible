@@ -1,4 +1,4 @@
-# local home
+# dev home
 home: "{{ lookup('env', 'HOME') }}"
 
 # git root
@@ -8,12 +8,12 @@ git_root: "{{ home }}/git"
 asset_dir_root: /srv/www/website_assets
 
 # where to store supporting files outside project / site
-external_root: "{{ home }}/_maw"
-external_site_dir: "{{ external_root }}/local"
+external_root: "{{ home }}/ansible/apps/mikeandwan.us"
+external_site_dir: "{{ external_root }}/dev"
 external_vars_file: "{{ external_site_dir }}/ansible/secret-vars.yml"
 
-mawus_config:
-  env: local
+mawus_config_dev:
+  env: dev
 
   # os level account that will run the site
   service_account:
@@ -24,18 +24,18 @@ mawus_config:
 
   bash_profile: "{{ home }}/.bash_profile"
 
-  fqdn_naked: local.mikeandwan.us
-  fqdn_api: local.api.mikeandwan.us
-  fqdn_auth: local.auth.mikeandwan.us
-  fqdn_files: local.files.mikeandwan.us
-  fqdn_photos: local.photos.mikeandwan.us
-  fqdn_www: local.www.mikeandwan.us
+  fqdn_naked: dev.mikeandwan.us
+  fqdn_api: dev.api.mikeandwan.us
+  fqdn_auth: dev.auth.mikeandwan.us
+  fqdn_files: dev.files.mikeandwan.us
+  fqdn_photos: dev.photos.mikeandwan.us
+  fqdn_www: dev.www.mikeandwan.us
 
-  url_api: https://local.api.mikeandwan.us:5011
-  url_auth: https://local.auth.mikeandwan.us:5001
-  url_files: http://local.files.mikeandwan.us:4300
-  url_photos: http://local.photos.mikeandwan.us:4200
-  url_www: https://local.www.mikeandwan.us:5021
+  url_api: https://dev.api.mikeandwan.us:5011
+  url_auth: https://dev.auth.mikeandwan.us:5001
+  url_files: http://dev.files.mikeandwan.us:4300
+  url_photos: http://dev.photos.mikeandwan.us:4200
+  url_www: https://dev.www.mikeandwan.us:5021
 
   pfx_api: "{{ external_site_dir }}/certs/api/api.pfx"
   pfx_auth: "{{ external_site_dir }}/certs/auth/auth.pfx"
@@ -67,7 +67,7 @@ mawus_config:
   version_postgres: 14
   version_solr: 8
 
-  podman_podname: local-maw-pod
+  podman_podname: dev-maw-pod
   podman_env_dir: "{{ external_site_dir }}/podman-env"
   podman_image_photos: ""
   podman_image_files: ""

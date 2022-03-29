@@ -8,7 +8,7 @@
   ansible.builtin.file:
     path: "{{ mawus_config.dataprotection_dir }}"
     state: directory
-  when: mawus_config.env == 'local'
+  when: mawus_config.env == 'dev'
 
 - name: Prepare environment files
   ansible.builtin.template:
@@ -41,4 +41,4 @@
       [ -f "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env"
 
       set +o allexport
-  when: mawus_config.env == 'local'
+  when: mawus_config.env == 'dev'

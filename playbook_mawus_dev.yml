@@ -1,5 +1,5 @@
 ---
-- name: Configure local mikeandwan.us environment
+- name: Configure mikeandwan.us dev environment
   hosts: mawus_dev
   vars_files:
     - "{{ external_vars_file }}"
@@ -20,7 +20,7 @@
         name: podman_init
       vars:
         podman_users:
-          - "{{ mawus_config.service_account }}"
+          - "{{ mawus_config_dev.service_account }}"
 
     - name: Ensure git directory exists
       ansible.builtin.file:
@@ -44,8 +44,10 @@
     #   - build client assets (www/auth)
     #   - build client apps
     #   - build dotnet application
-      # - ...
+    #   - ...
 
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:
         name: mikeandwan_us
+      vars:
+        mawus_config: "{{ mawus_config_dev }}"

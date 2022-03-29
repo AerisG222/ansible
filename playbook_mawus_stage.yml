@@ -1,0 +1,20 @@
+---
+- name: Configure mikeandwan.us stage environment
+  hosts: mawus_stage
+  vars_files:
+    - "{{ external_vars_file }}"
+
+  tasks:
+
+    - name: Initialize podman
+      ansible.builtin.include_role:
+        name: podman_init
+      vars:
+        podman_users:
+          - "{{ mawus_config_stage.service_account }}"
+
+    - name: Configure mikeandwan.us
+      ansible.builtin.include_role:
+        name: mikeandwan_us
+      vars:
+        mawus_config: "{{ mawus_config_stage }}"
