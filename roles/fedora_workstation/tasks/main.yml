@@ -74,6 +74,7 @@
       - nodejs
       - perl-Image-ExifTool
       - podman
+      - postgresql
       - python3-ansible-lint
       - rawtherapee
       - tmux
