@@ -2,7 +2,7 @@ ansible_user: mmorano
 
 hostname: tifa
 
-external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/{{ hostname }}"
+external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/hosts/{{ hostname }}"
 ddclient_secrets_file: "{{ external_vars_root }}/ddclient_secrets.yml"
 
 # -------------------------------------
