@@ -2,12 +2,14 @@
 ## https://raw.githubusercontent.com/ddclient/ddclient/develop/ddclient.conf.in
 ## ##################################################################
 daemon=600                              # check every 300 seconds
-syslog=yes                              # log update msgs to syslog
+syslog=no                               # log update msgs to syslog
 #mail=root                              # mail all msgs to root
 mail-failure=root                       # mail failed update msgs to root
 pid=/var/run/ddclient/ddclient.pid      # record PID in file.
 ssl=yes                                 # use ssl-support.  Works with ssl-library
 use=web
+web=ifconfig.me/ip
+#verbose=yes
 
 ##
 ## NameCheap (namecheap.com)
