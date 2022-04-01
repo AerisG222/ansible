@@ -1,19 +1,16 @@
-# dev home
+# test home
 home: "{{ lookup('env', 'HOME') }}"
-
-# git root
-git_root: "{{ home }}/git"
 
 # asset directory root
 asset_dir_root: /srv/www/website_assets
 
 # where to store supporting files outside project / site
 external_root: "{{ home }}/ansible/apps/mikeandwan.us"
-external_site_dir: "{{ external_root }}/dev"
+external_site_dir: "{{ external_root }}/test"
 external_vars_file: "{{ external_site_dir }}/ansible/secret-vars.yml"
 
-mawus_config_dev:
-  env: dev
+mawus_config_test:
+  env: test
 
   # os level account that will run the site
   service_account:
@@ -24,23 +21,23 @@ mawus_config_dev:
 
   bash_profile: "{{ home }}/.bash_profile"
 
-  fqdn_naked: dev.mikeandwan.us
-  fqdn_api: dev.api.mikeandwan.us
-  fqdn_auth: dev.auth.mikeandwan.us
-  fqdn_files: dev.files.mikeandwan.us
-  fqdn_photos: dev.photos.mikeandwan.us
-  fqdn_www: dev.www.mikeandwan.us
+  fqdn_naked: test.mikeandwan.us
+  fqdn_api: test.api.mikeandwan.us
+  fqdn_auth: test.auth.mikeandwan.us
+  fqdn_files: test.files.mikeandwan.us
+  fqdn_photos: test.photos.mikeandwan.us
+  fqdn_www: test.www.mikeandwan.us
 
-  url_api: https://dev.api.mikeandwan.us:5011
-  url_auth: https://dev.auth.mikeandwan.us:5001
-  url_files: http://dev.files.mikeandwan.us:4300
-  url_photos: http://dev.photos.mikeandwan.us:4200
-  url_www: https://dev.www.mikeandwan.us:5021
+  url_api: https://test.api.mikeandwan.us:5011
+  url_auth: https://test.auth.mikeandwan.us:5001
+  url_files: http://test.files.mikeandwan.us:4300
+  url_photos: http://test.photos.mikeandwan.us:4200
+  url_www: https://test.www.mikeandwan.us:5021
 
-  pfx_api: "{{ external_site_dir }}/certs/api/api.pfx"
-  pfx_auth: "{{ external_site_dir }}/certs/auth/auth.pfx"
-  pfx_signing: "{{ external_site_dir }}/certs/signing/signing.pfx"
-  pfx_www: "{{ external_site_dir }}/certs/www/www.pfx"
+  pfx_api: "/certs/api/api.pfx"
+  pfx_auth: "/certs/auth/auth.pfx"
+  pfx_signing: "/certs/signing/signing.pfx"
+  pfx_www: "/certs/www/www.pfx"
 
   allow_low_ports: no
   port_api: 5001
@@ -49,9 +46,10 @@ mawus_config_dev:
   port_files: 4300
   port_www: 5021
 
+  # certs written to dir to simplify adding ca cert to host
   certs_dir: "{{ external_site_dir }}/certs"
-  dataprotection_dir: "{{ external_site_dir }}/dataprotection"
-  upload_dir: "{{ external_site_dir }}/maw-uploads"
+  dataprotection_dir: ""
+  upload_dir: ""
 
   systemd_dir: "{{ home }}/.config/systemd/user"
   asset_dir_images: "{{ asset_dir_root }}/images"
@@ -67,21 +65,19 @@ mawus_config_dev:
   version_postgres: 14
   version_solr: 8
 
-  podman_podname: dev-maw-pod
+  podman_podname: test-maw-pod
   podman_env_dir: "{{ external_site_dir }}/podman-env"
   podman_image_photos: ""
   podman_image_files: ""
-  podman_image_auth: ""
-  podman_image_api: ""
-  podman_image_www: ""
+  podman_image_auth: "localhost/maw-auth-dev"
+  podman_image_api: "localhost/maw-api-dev"
+  podman_image_www: "localhost/maw-www-dev"
   podman_image_gateway: ""
   podman_image_cache_sync: "docker.io/aerisg222/maw-cache-sync:latest"
   podman_publish_ports:
-    - 8983:8983  # solr
-    - 5432:5432  # postgres
-    - 6379:6379  # redis
-    #- 80:80
-    #- 443:443
+    - 5001:5001
+    - 5011:5011
+    - 5021:5021
 
   gateway_volumes:
     #- "{{ maw_cert_volume.volume.Name }}:/maw-certs:ro,z"
@@ -116,5 +112,5 @@ mawus_config_dev:
   google_api_key: "{{ vault_google_api_key }}"
 
   # google email creds
-  google_email_creds_dir: "{{ external_site_dir }}/google-creds"
+  google_email_creds_dir: ""
   google_email_creds_file: "{{ external_site_dir }}/google-creds/www_emailer.json"

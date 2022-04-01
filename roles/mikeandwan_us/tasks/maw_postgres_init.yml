@@ -2,28 +2,28 @@
 - name: remote preparation (copy files to remote if needed)
   block:
 
-    - name: set init dir
+    - name: set backup dir
       ansible.builtin.set_fact:
-        pginit_dir: ./postgres_init
+        pg_backup_dir: ./postgres_backups
 
-    - name: "prepare {{ pginit_dir }} directory"
+    - name: "prepare {{ pg_backup_dir }} directory"
       ansible.builtin.file:
-        path: "{{ pginit_dir }}"
+        path: "{{ pg_backup_dir }}"
         state: directory
 
     - name: copy backup files
       ansible.builtin.copy:
         src: "{{ mawus_config.pg_backup_host_dir }}"
-        dest: "{{ pginit_dir }}"
+        dest: "{{ pg_backup_dir }}"
 
   when: ansible_connection != 'local'
 
 - name: local preparation
   block:
 
-    - name: set init dir
+    - name: set backup dir
       ansible.builtin.set_fact:
-        pginit_dir: "{{ mawus_config.pg_backup_host_dir }}"
+        pg_backup_dir: "{{ mawus_config.pg_backup_host_dir }}"
 
   when: ansible_connection == 'local'
 
@@ -33,12 +33,12 @@
     pod: "{{ mawus_config.podman_podname }}"
     image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: psql -h 127.0.0.1 -U postgres -f /postgres_init/roles.sql
+    command: psql -h 127.0.0.1 -U postgres -f /postgres_backup/roles.sql
     state: started
     interactive: true
     rm: true
     volume:
-      - "{{ pginit_dir }}:/postgres_init:rw,Z"
+      - "{{ pg_backup_dir }}:/postgres_backup:rw,Z"
 
 - name: wait for create roles container
   ansible.builtin.include_tasks: wait_for_container_to_exit.yml
@@ -67,8 +67,8 @@
     db_name: maw_website
     backup_file: "{{ mawus_config.pg_backup_www }}"
 
-- name: "remove temp {{ pginit_dir }} directory for remote connections"
+- name: "remove temp {{ pg_backup_dir }} directory for remote connections"
   ansible.builtin.file:
-    path: "{{ pginit_dir }}"
+    path: "{{ pg_backup_dir }}"
     state: absent
   when: ansible_connection != 'local'

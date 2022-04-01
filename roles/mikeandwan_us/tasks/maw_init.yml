@@ -1,29 +1,17 @@
 ---
-- name: set the volume source (local / non-container)
+- name: set the cert dir / volume name and fqdn prefix
   ansible.builtin.set_fact:
-    cert_vol: "{{ mawus_config.certs_dir }}"
-  when: mawus_config.env == 'dev'
-
-- name: set the volume source (not local - container)
-  ansible.builtin.set_fact:
-    cert_vol: "{{ maw_cert_volume.volume.Name }}"
-  when: mawus_config.env != 'dev'
-
-- name: set cert fqdn prefix
-  ansible.builtin.set_fact:
-    cert_fqdn_prefix: "{{ mawus_config.env }}"
-  when: mawus_config.env != 'prod'
-
-- name: set cert fqdn prefix
-  ansible.builtin.set_fact:
-    cert_fqdn_prefix: ""
-  when: mawus_config.env == 'prod'
+    cert_vol: "{{ (maw_cert_volume.volume is defined) | ternary(maw_cert_volume.volume.Name, mawus_config.certs_dir) }}"
+    cert_fqdn_prefix: "{{ (mawus_config.env == 'prod') | ternary('', mawus_config.env) }}"
 
 - name: ensure cert dir exists for local projects
   ansible.builtin.file:
     path: "{{ mawus_config.certs_dir }}"
     state: directory
+  when: mawus_config.certs_dir | length > 0
 
+# if you add a new environment, you may need to update the maw-certs image to be able to generate certs for the new env
+# todo: add logic to maw-certs to dynamically accept new env name
 - name: initialize internal certs
   containers.podman.podman_container:
     name: maw-certs
@@ -49,10 +37,10 @@
     src: "{{ item }}"
   with_fileglob:
     - "{{ mawus_config.certs_dir }}/ca/ca_*.crt"
-  when: mawus_config.env == 'dev' or mawus_config.env == 'test'
+  when: mawus_config.certs_dir | length > 0
 
 - name: Make the system aware of the new ca certs
   become: true
   ansible.builtin.command:
     cmd: update-ca-trust
-  when: mawus_config.env == 'dev' or mawus_config.env == 'test'
+  when: mawus_config.certs_dir | length > 0

@@ -8,7 +8,7 @@
   ansible.builtin.file:
     path: "{{ mawus_config.dataprotection_dir }}"
     state: directory
-  when: mawus_config.env == 'dev'
+  when: mawus_config.dataprotection_dir | length > 0
 
 - name: Prepare environment files
   ansible.builtin.template:
@@ -24,7 +24,7 @@
     - maw-reverse-geocode.env
     - maw-www.env
 
-- name: Add env files to .bash_profile for local env
+- name: Add env files to .bash_profile for dev
   ansible.builtin.blockinfile:
     path: "{{ mawus_config.bash_profile }}"
     block: |

@@ -29,12 +29,12 @@
     pod: "{{ mawus_config.podman_podname }}"
     image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: "pg_restore -h 127.0.0.1 -U postgres -C -d postgres /postgres_init/{{ backup_file }}"
+    command: "pg_restore -h 127.0.0.1 -U postgres -C -d postgres /postgres_backup/{{ backup_file }}"
     state: started
     interactive: true
     rm: true
     volume:
-      - "{{ pginit_dir }}:/postgres_init:rw,Z"
+      - "{{ pg_backup_dir }}:/postgres_backup:rw,Z"
   when: sql_test_result | int == 2
 
 - name: "wait for {{ db_name }} restore"

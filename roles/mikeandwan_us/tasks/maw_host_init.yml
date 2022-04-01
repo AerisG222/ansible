@@ -11,6 +11,6 @@
   ansible.builtin.file:
     path: "{{ mawus_config.upload_dir }}"
     state: directory
-  when: mawus_config.env == 'dev'
+  when: mawus_config.upload_dir | length > 0
 
 # todo: copy files for prod

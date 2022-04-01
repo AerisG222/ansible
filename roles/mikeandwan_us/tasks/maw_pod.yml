@@ -119,6 +119,15 @@
 - name: include maw_solr_init.yml
   ansible.builtin.include_tasks: maw_solr_init.yml
 
+- name: set the dir / volume variables
+  ansible.builtin.set_fact:
+    cert_vol: "{{ maw_cert_volume.volume is defined | ternary(maw_cert_volume.volume.Name, mawus_config.certs_dir) }}"
+    auth_dataprotection_vol: "{{ auth_dataprotection_volume.volume is defined | ternary(auth_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
+    api_dataprotection_vol: "{{ api_dataprotection_volume.volume is defined | ternary(api_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
+    www_dataprotection_vol: "{{ www_dataprotection_volume.volume is defined | ternary(www_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
+    google_creds_vol: "{{ google_creds_volume.volume is defined | ternary(google_creds_volume.volume.Name, mawus_config.google_email_creds_dir) }}"
+    uploads_vol: "{{ uploads_volume.volume is defined | ternary(uploads_volume.volume.Name, mawus_config.upload_dir) }}"
+
 - name: auth container block
   block:
 
@@ -130,9 +139,9 @@
         state: started
         env_file: "{{ mawus_config.podman_env_dir }}/maw-auth.env"
         volume:
-          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-          - "{{ auth_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
-          - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
+          - "{{ cert_vol }}:/certs:ro,z"
+          - "{{ auth_dataprotection_vol }}:/dataprotection:rw,Z"
+          - "{{ google_creds_vol }}:/google-creds:ro,z"
         label:
           io.containers.autoupdate: image
       register: auth_container
@@ -157,9 +166,9 @@
         security_opt:
           - label=disable
         volume:
-          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-          - "{{ api_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
-          - "{{ uploads_volume.volume.Name }}:/maw-uploads:rw,z"
+          - "{{ cert_vol }}:/certs:ro,z"
+          - "{{ api_dataprotection_vol }}:/dataprotection:rw,Z"
+          - "{{ uploads_vol }}:/maw-uploads:rw,z"
           - "{{ mawus_config.asset_dir_images }}:/srv/www/website_assets/images:ro"
         label:
           io.containers.autoupdate: image
@@ -185,9 +194,9 @@
         security_opt:
           - label=disable
         volume:
-          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
-          - "{{ www_dataprotection_volume.volume.Name }}:/dataprotection:rw,Z"
-          - "{{ google_creds_volume.volume.Name }}:/google-creds:ro,z"
+          - "{{ cert_vol }}:/certs:ro,z"
+          - "{{ www_dataprotection_vol }}:/dataprotection:rw,Z"
+          - "{{ google_creds_vol }}:/google-creds:ro,z"
           - "{{ mawus_config.asset_dir_images }}:/srv/www/website_assets/images:ro"
           - "{{ mawus_config.asset_dir_movies }}:/srv/www/website_assets/movies:ro"
         label:
@@ -211,7 +220,7 @@
         image: "{{ mawus_config.podman_image_files }}"
         state: started
         volume:
-          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+          - "{{ cert_vol }}:/certs:ro,z"
         label:
           io.containers.autoupdate: image
       register: files_container
@@ -233,7 +242,7 @@
         image: "{{ mawus_config.podman_image_photos }}"
         state: started
         volume:
-          - "{{ maw_cert_volume.volume.Name }}:/certs:ro,z"
+          - "{{ cert_vol }}:/certs:ro,z"
         label:
           io.containers.autoupdate: image
       register: photos_container
@@ -302,7 +311,7 @@
       before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service"
     - unitfile: "container-{{ mawus_config.env }}-maw-www.service"
       before: "container-{{ mawus_config.env }}-maw-gateway.service"
-  when: mawus_config.env != 'dev'
+  when: mawus_config.env == 'prod'
 
 - name: Start and/or Enable mawus via systemd
   ansible.builtin.systemd:
