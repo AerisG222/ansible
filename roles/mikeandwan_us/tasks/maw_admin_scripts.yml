@@ -6,7 +6,7 @@
 
 - name: Prepare scripts
   ansible.builtin.template:
-    backup: true
+    backup: "{{ mawus_config.env == 'prod' }}"
     src: "admin_scripts/{{ item }}.j2"
     dest: "admin_scripts/{{ item }}"
     mode: u+rwx
