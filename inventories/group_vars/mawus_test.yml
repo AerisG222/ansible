@@ -11,6 +11,7 @@ external_vars_file: "{{ external_site_dir }}/ansible/secret-vars.yml"
 
 mawus_config_test:
   env: test
+  aspnet_env: test
 
   # os level account that will run the site
   service_account:
@@ -69,9 +70,9 @@ mawus_config_test:
   podman_env_dir: "{{ external_site_dir }}/podman-env"
   podman_image_photos: ""
   podman_image_files: ""
-  podman_image_auth: "localhost/maw-auth-dev"
-  podman_image_api: "localhost/maw-api-dev"
-  podman_image_www: "localhost/maw-www-dev"
+  podman_image_auth: "localhost/maw-auth-test"
+  podman_image_api: "localhost/maw-api-test"
+  podman_image_www: "localhost/maw-www-test"
   podman_image_gateway: ""
   podman_image_cache_sync: "docker.io/aerisg222/maw-cache-sync:latest"
   podman_publish_ports:

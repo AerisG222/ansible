@@ -14,6 +14,7 @@ external_vars_file: "{{ external_site_dir }}/ansible/secret-vars.yml"
 
 mawus_config_dev:
   env: dev
+  aspnet_env: development
 
   # os level account that will run the site
   service_account:
