@@ -29,12 +29,6 @@ mawus_config_test:
   fqdn_photos: test.photos.mikeandwan.us
   fqdn_www: test.www.mikeandwan.us
 
-  url_api: https://test.api.mikeandwan.us:5011
-  url_auth: https://test.auth.mikeandwan.us:5001
-  url_files: http://test.files.mikeandwan.us:4300
-  url_photos: http://test.photos.mikeandwan.us:4200
-  url_www: https://test.www.mikeandwan.us:5021
-
   pfx_api: "/certs/api/api.pfx"
   pfx_auth: "/certs/auth/auth.pfx"
   pfx_signing: "/certs/signing/signing.pfx"
@@ -68,8 +62,8 @@ mawus_config_test:
 
   podman_podname: test-maw-pod
   podman_env_dir: "{{ external_site_dir }}/podman-env"
-  podman_image_photos: ""
-  podman_image_files: ""
+  podman_image_photos: "localhost/maw-photos-test"
+  podman_image_files: "localhost/maw-files-test"
   podman_image_auth: "localhost/maw-auth-test"
   podman_image_api: "localhost/maw-api-test"
   podman_image_www: "localhost/maw-www-test"

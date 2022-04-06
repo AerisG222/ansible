@@ -32,12 +32,6 @@ mawus_config_dev:
   fqdn_photos: dev.photos.mikeandwan.us
   fqdn_www: dev.www.mikeandwan.us
 
-  url_api: https://dev.api.mikeandwan.us:5011
-  url_auth: https://dev.auth.mikeandwan.us:5001
-  url_files: http://dev.files.mikeandwan.us:4300
-  url_photos: http://dev.photos.mikeandwan.us:4200
-  url_www: https://dev.www.mikeandwan.us:5021
-
   pfx_api: "{{ external_site_dir }}/certs/api/api.pfx"
   pfx_auth: "{{ external_site_dir }}/certs/auth/auth.pfx"
   pfx_signing: "{{ external_site_dir }}/certs/signing/signing.pfx"
