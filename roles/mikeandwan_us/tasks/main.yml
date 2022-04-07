@@ -32,9 +32,6 @@
   ansible.builtin.include_tasks: maw_admin_scripts.yml
   when: ansible_connection != 'local'
 
-- name: Include maw_env_files.yml
-  ansible.builtin.include_tasks: maw_env_files.yml
-
 - name: Include maw_volumes.yml
   ansible.builtin.include_tasks: maw_volumes.yml
 
@@ -43,6 +40,9 @@
 
 - name: Initialize environment
   ansible.builtin.include_tasks: maw_init.yml
+
+- name: Include maw_env_files.yml
+  ansible.builtin.include_tasks: maw_env_files.yml
 
 - name: Include maw_pod.yml
   ansible.builtin.include_tasks: maw_pod.yml

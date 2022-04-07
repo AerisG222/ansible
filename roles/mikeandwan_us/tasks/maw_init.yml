@@ -44,3 +44,16 @@
   ansible.builtin.command:
     cmd: update-ca-trust
   when: mawus_config.certs_dir | length > 0
+
+- name: load cert pwds into variables for subsequent steps
+  ansible.builtin.set_fact:
+    mawus_config_pfx_pwd_updates:
+      pfx_pwd_api: "{{ lookup('file', external_site_dir + '/certs/api/api.pfx.pwd') }}"
+      pfx_pwd_auth: "{{ lookup('file', external_site_dir + '/certs/auth/auth.pfx.pwd') }}"
+      pfx_pwd_www: "{{ lookup('file', external_site_dir + '/certs/www/www.pfx.pwd') }}"
+
+# todo: this does not work, apparently due to the scoping of mawus_config -
+#       is there a way to update this variable so everything can live under mawus_config?
+#- name: update mawus_config with pwd values did not work, so lets first set a temp var
+#  ansible.builtin.set_fact:
+#    mawus_config: "{{ mawus_config | combine(mawus_config_updates, recursive=True) }}"
