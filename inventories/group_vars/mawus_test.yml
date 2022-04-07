@@ -73,6 +73,8 @@ mawus_config_test:
     - 5001:5001
     - 5011:5011
     - 5021:5021
+    - 4200:4200
+    - 4300:4300
 
   gateway_volumes:
     #- "{{ maw_cert_volume.volume.Name }}:/maw-certs:ro,z"
