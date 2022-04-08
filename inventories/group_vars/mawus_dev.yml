@@ -38,11 +38,6 @@ mawus_config_dev:
   pfx_www: "{{ external_site_dir }}/certs/www/www.pfx"
 
   allow_low_ports: no
-  port_api: 5001
-  port_auth: 5011
-  port_photos: 4200
-  port_files: 4300
-  port_www: 5021
 
   certs_dir: "{{ external_site_dir }}/certs"
   dataprotection_dir: "{{ external_site_dir }}/dataprotection"
@@ -75,14 +70,6 @@ mawus_config_dev:
     - 8983:8983  # solr
     - 5432:5432  # postgres
     - 6379:6379  # redis
-    #- 80:80
-    #- 443:443
-
-  gateway_volumes:
-    #- "{{ maw_cert_volume.volume.Name }}:/maw-certs:ro,z"
-    #- "{{ asset_dir_root }}:/assets:ro"
-    #- "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
-    #- "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
 
   # postgres sql accounts for site
   sql_username: svc_www_maw

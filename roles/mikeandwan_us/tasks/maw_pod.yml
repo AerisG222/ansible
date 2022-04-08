@@ -257,13 +257,31 @@
 - name: gateway container block
   block:
 
+    - name: define common volumes for gateway
+      ansible.builtin.set_fact:
+        gateway_volumes:
+          - "{{ cert_vol }}:/certs:ro,z"
+          - "{{ asset_dir_root }}:/assets:ro"
+
+    - name: define prod only volumes for gateway (letsencrypt)
+      ansible.builtin.set_fact:
+        gateway_volumes_prod:
+          - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
+          - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
+      when: mawus_config.env == 'prod'
+
+    - name: merge all volumes needed for gateway
+      ansible.builtin.set_fact:
+        gateway_volumes: "{{ gateway_volumes + gateway_volumes_prod }}"
+      when: mawus_config.env == 'prod'
+
     - name: maw-gateway container
       containers.podman.podman_container:
         name: "{{ mawus_config.env }}-maw-gateway"
         pod: "{{ mawus_config.podman_podname }}"
         image: "{{ mawus_config.podman_image_gateway }}"
         state: started
-        volume: "{{ mawus_config.gateway_volumes }}"
+        volume: "{{ gateway_volumes }}"
         security_opt:
           - label=disable
         label:
