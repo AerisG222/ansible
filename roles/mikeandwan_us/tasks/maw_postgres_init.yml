@@ -1,4 +1,21 @@
 ---
+- name: copy roles backup so we can edit
+  ansible.builtin.copy:
+    src: "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}"
+    dest: "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+    force: true
+  delegate_to: localhost
+
+- name: make the role backup script more tolerant of existing users
+  ansible.builtin.command:
+    argv:
+      - sed
+      - -i
+      - -E
+      - "s/CREATE ROLE (.+);/\\nDO \\$\\$\\nBEGIN\\nCREATE ROLE \\1;\\nEXCEPTION WHEN duplicate_object THEN RAISE NOTICE '%, skipping', SQLERRM USING ERRCODE = SQLSTATE;\\nEND\\n\\$\\$;\\n/g"
+      - "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+  delegate_to: localhost
+
 - name: remote preparation (copy files to remote if needed)
   block:
 
@@ -33,17 +50,24 @@
     pod: "{{ mawus_config.podman_podname }}"
     image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: psql -h 127.0.0.1 -U postgres -f /postgres_backup/roles.sql
+    command: "psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /postgres_backup/{{ mawus_config.pg_backup_roles }}.safer.sql"
     state: started
     interactive: true
-    rm: true
+    security_opt:
+      - label=disable
     volume:
-      - "{{ pg_backup_dir }}:/postgres_backup:rw,Z"
+      - "{{ pg_backup_dir }}:/postgres_backup:ro"
 
-- name: wait for create roles container
-  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
+- name: get create_roles result
+  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
   vars:
     container_name: "{{ mawus_config.env }}-maw-pginit-roles"
+    exit_code_varname: create_roles_result
+
+- name: fail if roles not created
+  ansible.builtin.fail:
+    msg: roles were not successfully created
+  failed_when: create_roles_result | int != 0
 
 - name: set role passwords block
   ansible.builtin.include_tasks: maw_postgres_set_role_password.yml
@@ -72,3 +96,9 @@
     path: "{{ pg_backup_dir }}"
     state: absent
   when: ansible_connection != 'local'
+
+- name: clean safer role script file
+  ansible.builtin.file:
+    path: "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+    state: absent
+  delegate_to: localhost

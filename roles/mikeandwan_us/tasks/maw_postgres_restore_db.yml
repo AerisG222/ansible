@@ -33,8 +33,10 @@
     state: started
     interactive: true
     rm: true
+    security_opt:
+      - label=disable
     volume:
-      - "{{ pg_backup_dir }}:/postgres_backup:rw,Z"
+      - "{{ pg_backup_dir }}:/postgres_backup:ro"
   when: sql_test_result | int == 2
 
 - name: "wait for {{ db_name }} restore"

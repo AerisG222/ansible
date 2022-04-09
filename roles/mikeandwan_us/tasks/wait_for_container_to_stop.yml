@@ -6,6 +6,11 @@
   retries: 24
   until: not wait_container_info.containers[0].State.Running
 
+- name: print container details
+  debug:
+    msg: "{{ wait_container_info }}"
+  when: ansible_verbosity > 0
+
 - name: set exit code variable
   ansible.builtin.set_fact:
     "{{ exit_code_varname }}": "{{ wait_container_info.containers[0].State.ExitCode }}"
