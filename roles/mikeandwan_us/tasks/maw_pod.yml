@@ -332,7 +332,7 @@
       before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service"
     - unitfile: "container-{{ mawus_config.env }}-maw-www.service"
       before: "container-{{ mawus_config.env }}-maw-gateway.service"
-  when: mawus_config.env == 'prod'
+  when: (mawus_config.env == 'prod') or (mawus_config.env == 'test')
 
 - name: Start and/or Enable mawus via systemd
   ansible.builtin.systemd:
