@@ -13,8 +13,8 @@
   ansible.builtin.include_tasks: port_mapping.yml
   when: mawus_config.allow_low_ports
 
-- name: Initialize host
-  ansible.builtin.include_tasks: maw_host_init.yml
+- name: Initialize host directories
+  ansible.builtin.include_tasks: maw_host_directories.yml
   vars:
     asset_dirs:
       - "{{ mawus_config.asset_dir_images }}"
@@ -38,8 +38,8 @@
 - name: Include maw_maintenance.yml
   ansible.builtin.include_tasks: maw_maintenance.yml
 
-- name: Initialize environment
-  ansible.builtin.include_tasks: maw_init.yml
+- name: Initialize self signed certificates
+  ansible.builtin.include_tasks: maw_certs.yml
 
 - name: Include maw_env_files.yml
   ansible.builtin.include_tasks: maw_env_files.yml
