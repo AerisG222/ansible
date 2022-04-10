@@ -3,6 +3,7 @@
   ansible.builtin.file:
     path: aws_cli
     state: directory
+    mode: u+rwx
 
 - name: Download AWS CLI
   ansible.builtin.uri:
@@ -16,10 +17,14 @@
     src: aws_cli/awscliv2.zip
     dest: aws_cli
 
+# todo: deal with install vs upgrade
 - name: Install AWS CLI
   become: true
   ansible.builtin.command:
     cmd: aws_cli/aws/install
+  ignore_errors: true # this will fail if already installed
+  tags: skip_ansible_lint
+  changed_when: true
 
 - name: Clean temp directory
   ansible.builtin.file:

@@ -8,7 +8,7 @@ update_packages: true
 android_studio: true
 aws_cli: true
 azure_cli: true
-azure_data_studio: no
+azure_data_studio: false
 google_chrome: true
 google_earth: true
 ms_teams: true

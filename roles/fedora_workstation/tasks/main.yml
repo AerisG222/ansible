@@ -41,7 +41,7 @@
 
 - name: Add RPM Fusion repos
   become: true
-  dnf:
+  ansible.builtin.dnf:
     disable_gpg_check: true
     state: present
     name:
@@ -50,7 +50,7 @@
 
 - name: Install Packages
   become: true
-  dnf:
+  ansible.builtin.dnf:
     state: present
     name:
       - blender
@@ -83,7 +83,7 @@
 
 - name: Install piper
   become: true
-  dnf:
+  ansible.builtin.dnf:
     state: present
     name: piper
   when: piper
