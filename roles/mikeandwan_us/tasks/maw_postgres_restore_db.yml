@@ -24,6 +24,10 @@
     container_name: "{{ mawus_config.env }}-maw-pginit-restore-test"
     exit_code_varname: sql_test_result
 
+- name: set variable to determine if restore steps should be executed
+  ansible.builtin.set_fact:
+    do_restore_steps: "{{ sql_test_result | int == 2 }}"
+
 - name: "restore {{ db_name }} database"
   containers.podman.podman_container:
     name: "{{ mawus_config.env }}-maw-pginit-restore"
@@ -33,18 +37,24 @@
     command: "pg_restore -h 127.0.0.1 -U postgres -C -d postgres /postgres_backup/{{ backup_file }}"
     state: started
     interactive: true
-    rm: true
     security_opt:
       - label=disable
     volume:
       - "{{ pg_backup_dir }}:/postgres_backup:ro"
-  when: sql_test_result | int == 2
+  when: do_restore_steps
 
 - name: "wait for {{ db_name }} restore"
-  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
+  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
   vars:
     container_name: "{{ mawus_config.env }}-maw-pginit-restore"
-  when: sql_test_result | int == 2
+    exit_code_varname: restore_result
+  when: do_restore_steps
+
+- name: fail if restore failed
+  ansible.builtin.fail:
+    msg: "failed to restore database {{ db_name }}"
+  failed_when: restore_result | int != 0
+  when: do_restore_steps
 
 - name: "optimize {{ db_name }} database"
   containers.podman.podman_container:
@@ -64,11 +74,17 @@
       - VACUUM ANALYZE;
     state: started
     interactive: true
-    rm: true
-  when: sql_test_result | int == 2
+  when: do_restore_steps
 
 - name: wait for idsrv optimization
-  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
+  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
   vars:
     container_name: "{{ mawus_config.env }}-maw-pginit-optimize"
-  when: sql_test_result | int == 2
+    exit_code_varname: optimize_result
+  when: do_restore_steps
+
+- name: fail if optimization failed
+  ansible.builtin.fail:
+    msg: "failed to optimize database {{ db_name }}"
+  failed_when: optimize_result | int != 0
+  when: do_restore_steps
