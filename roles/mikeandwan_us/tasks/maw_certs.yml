@@ -20,15 +20,20 @@
     command: "{{ mawus_config.env }} {{ cert_fqdn_prefix }}"
     state: started
     interactive: true
-    rm: true
     volume:
       - "{{ cert_vol }}:/maw-certs:rw,z"
   register: certs_container
 
 - name: wait for cert initialization to complete
-  ansible.builtin.include_tasks: wait_for_container_to_exit.yml
+  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
   vars:
     container_name: maw-certs
+    exit_code_varname: certs_result
+
+- name: fail if certs not created
+  ansible.builtin.fail:
+    msg: certs were not successfully created
+  failed_when: certs_result | int != 0
 
 # todo: evaluate dev (certs that are generated in managed volume) support
 - name: Add ca cert(s) to trusted sources
