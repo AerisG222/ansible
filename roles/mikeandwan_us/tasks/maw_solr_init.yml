@@ -1,11 +1,14 @@
 - name: create multimedia-categories core
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} solr create_core -c multimedia-categories"
+  changed_when: true
   ignore_errors: true
+  tags: skip_ansible_lint
 
 - name: disable data driven schema
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} solr config -c multimedia-categories -p 8983 -action set-user-property -property update.autoCreateFields -value false"
+  changed_when: true
 
 - name: prepare source file path
   ansible.builtin.set_fact:
@@ -21,6 +24,7 @@
 - name: reload core for synonyms to take effect
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
+  changed_when: true
 
 - name: add / update unique key
   ansible.builtin.include_tasks: solr_define_field.yml
@@ -37,10 +41,12 @@
 - name: redefine unique key
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} sed -i -E 's/(<uniqueKey>)id(<.uniqueKey>)/\\1solr_id\\2/' /var/solr/data/multimedia-categories/conf/managed-schema"
+  changed_when: true
 
 - name: reload core so we don't loose the edit of updating the unique key
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
+  changed_when: true
 
 - name: add fields to schema
   ansible.builtin.include_tasks: solr_define_field.yml
@@ -324,10 +330,11 @@
 - name: reload core for good measure
   ansible.builtin.command:
     cmd: "podman exec -it {{ solr_container.container.Name }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
+  changed_when: true
 
 - name: run indexer
   ansible.builtin.systemd:
     name: "{{ mawus_config.env }}-solr-indexer"
-    enabled: no
+    enabled: false
     state: started
     scope: user

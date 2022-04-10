@@ -8,6 +8,7 @@
   ansible.builtin.file:
     path: "{{ mawus_config.certs_dir }}"
     state: directory
+    mode: u+rwx
   when: mawus_config.certs_dir | length > 0
 
 # if you add a new environment, you may need to update the maw-certs image to be able to generate certs for the new env
@@ -35,6 +36,7 @@
   ansible.builtin.copy:
     dest: "/usr/share/pki/ca-trust-source/anchors/maw_{{ mawus_config.env }}_{{ item | basename }}"
     src: "{{ item }}"
+    mode: u+rw,go+r
   with_fileglob:
     - "{{ mawus_config.certs_dir }}/ca/ca_*.crt"
   when: mawus_config.certs_dir | length > 0
@@ -54,6 +56,6 @@
 
 # todo: this does not work, apparently due to the scoping of mawus_config -
 #       is there a way to update this variable so everything can live under mawus_config?
-#- name: update mawus_config with pwd values did not work, so lets first set a temp var
-#  ansible.builtin.set_fact:
-#    mawus_config: "{{ mawus_config | combine(mawus_config_updates, recursive=True) }}"
+# - name: update mawus_config with pwd values did not work, so lets first set a temp var
+#   ansible.builtin.set_fact:
+#     mawus_config: "{{ mawus_config | combine(mawus_config_updates, recursive=True) }}"

@@ -4,6 +4,7 @@
     src: "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}"
     dest: "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
     force: true
+    mode: u+rw
   delegate_to: localhost
 
 - name: make the role backup script more tolerant of existing users
@@ -15,6 +16,8 @@
       - "s/CREATE ROLE (.+);/\\nDO \\$\\$\\nBEGIN\\nCREATE ROLE \\1;\\nEXCEPTION WHEN duplicate_object THEN RAISE NOTICE '%, skipping', SQLERRM USING ERRCODE = SQLSTATE;\\nEND\\n\\$\\$;\\n/g"
       - "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
   delegate_to: localhost
+  changed_when: true
+  tags: skip_ansible_lint
 
 - name: remote preparation (copy files to remote if needed)
   block:
@@ -27,11 +30,13 @@
       ansible.builtin.file:
         path: "{{ pg_backup_dir }}"
         state: directory
+        mode: u+rwx
 
     - name: copy backup files
       ansible.builtin.copy:
         src: "{{ mawus_config.pg_backup_host_dir }}"
         dest: "{{ pg_backup_dir }}"
+        mode: u+rw
 
   when: ansible_connection != 'local'
 

@@ -16,6 +16,7 @@
       - SELECT 1;
     state: started
   ignore_errors: true
+  tags: skip_ansible_lint
 
 - name: "get {{ db_name }} exists test result"
   ansible.builtin.include_tasks: wait_for_container_to_stop.yml

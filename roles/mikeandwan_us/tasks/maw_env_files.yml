@@ -3,11 +3,13 @@
   ansible.builtin.file:
     path: "{{ mawus_config.podman_env_dir }}"
     state: directory
+    mode: u+rwx
 
 - name: Make sure dataprotection dir exists for local site as it doesn't use managed volume
   ansible.builtin.file:
     path: "{{ mawus_config.dataprotection_dir }}"
     state: directory
+    mode: u+rwx
   when: mawus_config.dataprotection_dir | length > 0
 
 - name: Prepare environment files

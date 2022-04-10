@@ -3,6 +3,7 @@
   ansible.builtin.file:
     path: admin_scripts
     state: directory
+    mode: u+rwx
 
 - name: Prepare scripts
   ansible.builtin.template:

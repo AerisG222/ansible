@@ -21,10 +21,11 @@
 - name: Disable mawus via systemd
   ansible.builtin.systemd:
     name: "pod-{{ mawus_config.podman_podname }}"
-    enabled: no
+    enabled: false
     state: stopped
     scope: user
   ignore_errors: true # nothing to stop if it doesn't exist
+  tags: skip_ansible_lint
 
 - name: get pod info
   containers.podman.podman_pod_info:
@@ -299,6 +300,7 @@
   ansible.builtin.file:
     path: "{{ mawus_config.systemd_dir }}"
     state: directory
+    mode: u+rwx
 
 # manually creating these as containers.podman.podman_pod generate_systemd was not
 # producing the individual container service files for some reason
@@ -306,6 +308,7 @@
   ansible.builtin.command:
     cmd: "podman generate systemd -f -n --new {{ mawus_config.podman_podname }}"
     chdir: "{{ mawus_config.systemd_dir }}"
+  changed_when: true
 
 - name: Configure container order
   ansible.builtin.lineinfile:

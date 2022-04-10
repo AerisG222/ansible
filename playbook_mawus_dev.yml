@@ -26,6 +26,7 @@
       ansible.builtin.file:
         path: "{{ git_root }}"
         state: directory
+        mode: u+rwx
 
     - name: Get status of mikeandwan.us git directory
       ansible.builtin.stat:

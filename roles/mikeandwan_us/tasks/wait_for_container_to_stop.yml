@@ -7,7 +7,7 @@
   until: not wait_container_info.containers[0].State.Running
 
 - name: print container details
-  debug:
+  ansible.builtin.debug:
     msg: "{{ wait_container_info }}"
   when: ansible_verbosity > 0
 
