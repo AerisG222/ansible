@@ -37,9 +37,9 @@ get_mawus_env() {
 
     while [ "${env}" = "" ]
     do
-        env=$(get_value 'Enter environment for mawus [dev | test | stage | prod]: ' 'n')
+        env=$(get_value 'Enter environment for mawus [dev | test | prod]: ' 'n')
 
-        if [ "${env}" != "dev" -a "${env}" != "test" -a "${env}" != "stage" -a "${env}" != "prod" ]; then
+        if [ "${env}" != "dev" -a "${env}" != "test" -a "${env}" != "prod" ]; then
             env=
         fi
     done

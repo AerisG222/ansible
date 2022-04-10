@@ -1,7 +1,0 @@
----
-all:
-  children:
-
-    mawus_stage:
-      hosts:
-        vmtest:
