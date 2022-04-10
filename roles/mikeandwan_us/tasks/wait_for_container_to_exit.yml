@@ -1,7 +1,0 @@
-- name: wait for container to exit (rm should be specified when starting container)
-  containers.podman.podman_container_info:
-    name: "{{ container_name }}"
-  register: wait_container_info
-  delay: 10
-  retries: 24
-  until: wait_container_info.containers | length == 0
