@@ -16,6 +16,7 @@
   ansible.builtin.template:
     src: ddclient.conf.j2
     dest: ddclient.conf
+    mode: u+rw
 
 - name: Copy ddclient.conf to volume
   ansible.builtin.include_role:
@@ -32,11 +33,13 @@
 # stop pod via systemd, otherwise systemd and podman fight
 - name: "Disable {{ ddclient_config.podman_podname }} via systemd"
   ansible.builtin.systemd:
-    name: "pod-{{ ddclient_config.podman_podname }}"
+    name: "pod-{{ ddclient_config.podman_podname }}xx"
     enabled: false
     state: stopped
     scope: user
+  register: sysctl_result
   ignore_errors: true # nothing to stop if it doesn't exist
+  tags: skip_ansible_lint
 
 - name: get pod info
   containers.podman.podman_pod_info:

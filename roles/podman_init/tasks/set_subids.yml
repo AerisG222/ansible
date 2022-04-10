@@ -21,3 +21,4 @@
       - --add-subgids
       - "{{ podman_user.subgid }}"
       - "{{ podman_user.username }}"
+  when: grep_subuid.rc == 1
