@@ -16,17 +16,3 @@ ddclient_config:
     subgid: 200000-265536
     enable_linger: true
   namecheap_password: "{{ vault_namecheap_password }}"
-
-# mikeandwan.us
-mawus_config:
-  service_account:
-    username: svc_www_maw
-    groups:
-    password: "{{ vault_password_lvmtest_svc_www_maw }}"
-    subuid: 300000-365536
-    subgid: 300000-365536
-    enable_linger: true
-
-# subuid / subgid hopefully coming to user module eventually
-# https://github.com/ansible/ansible/issues/68199
-# https://github.com/ansible/ansible/pull/73741
