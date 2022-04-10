@@ -6,7 +6,7 @@ ansible_user: mmorano
 hostname: vmtest
 update_packages: no
 
-external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/{{ hostname }}"
+external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/hosts/{{ hostname }}"
 ddclient_secrets_file: "{{ external_vars_root }}/ddclient_secrets.yml"
 
 # ddclient
