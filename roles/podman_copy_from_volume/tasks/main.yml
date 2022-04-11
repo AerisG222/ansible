@@ -1,0 +1,22 @@
+---
+# https://stackoverflow.com/questions/52668990/ansible-copy-files-to-docker-volume
+- name: create temporary data-only container
+  containers.podman.podman_container:
+    name: temp_data_container
+    image: docker.io/tianon/true
+    state: present
+    volumes:
+    - "{{ volume_name }}:/data"
+
+- name: copy file(s) from volume
+  ansible.builtin.command:
+    argv:
+      - podman
+      - cp
+      - "temp_data_container:/data/{{ src_path }}"
+      - "{{ dest_relative_path }}"
+
+- name: stop data only container
+  containers.podman.podman_container:
+    name: temp_data_container
+    state: absent
