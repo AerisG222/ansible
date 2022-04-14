@@ -2,19 +2,21 @@
 - name: Prepare postgres init script
   ansible.builtin.template:
     src: postgres_init/configure_pg_hba.sh.j2
-    dest: configure_pg_hba.sh
+    dest: "{{ remote_home_dir }}/configure_pg_hba.sh"
     mode: u+x
 
 - name: Copy init script to volume
   ansible.builtin.include_role:
     name: podman_copy_to_volume
   vars:
-    volume_name: "{{ postgres_volume_init.volume.Name }}"
-    src_path: configure_pg_hba.sh
+    podman_copy_remote_src: true
+    podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
+    podman_copy_volume_name: "{{ postgres_volume_init.volume.Name }}"
+    podman_copy_src_path: "{{ remote_home_dir }}/configure_pg_hba.sh"
 
 - name: Delete temp file
   ansible.builtin.file:
-    path: configure_pg_hba.sh
+    path: "{{ remote_home_dir }}/configure_pg_hba.sh"
     state: absent
 
 # stop pod via systemd, otherwise systemd and podman fight
@@ -48,7 +50,7 @@
   containers.podman.podman_container:
     name: "{{ mawus_config.env }}-maw-redis"
     pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/redis:{{ mawus_config.version_redis }}-alpine"
+    image: "{{ mawus_config.podman_image_redis }}"
     command: redis-server --save 60 1
     state: started
     volume:
@@ -66,7 +68,7 @@
   containers.podman.podman_container:
     name: "{{ mawus_config.env }}-maw-postgres"
     pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/postgres:{{ mawus_config.version_postgres }}-alpine"
+    image: "{{ mawus_config.podman_image_postgres }}"
     state: started
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
     volume:
@@ -104,7 +106,7 @@
   containers.podman.podman_container:
     name: "{{ mawus_config.env }}-maw-solr"
     pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/solr:{{ mawus_config.version_solr }}"
+    image: "{{ mawus_config.podman_image_solr }}"
     state: started
     volume:
       - "{{ solr_volume.volume.Name }}:/var/solr:rw,z"
@@ -126,7 +128,7 @@
     auth_dataprotection_vol: "{{ auth_dataprotection_volume.volume is defined | ternary(auth_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
     api_dataprotection_vol: "{{ api_dataprotection_volume.volume is defined | ternary(api_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
     www_dataprotection_vol: "{{ www_dataprotection_volume.volume is defined | ternary(www_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
-    google_creds_vol: "{{ google_creds_volume.volume is defined | ternary(google_creds_volume.volume.Name, mawus_config.google_email_creds_dir) }}"
+    google_creds_vol: "{{ google_creds_volume.volume.Name }}"
     uploads_vol: "{{ uploads_volume.volume is defined | ternary(uploads_volume.volume.Name, mawus_config.upload_dir) }}"
 
 - name: auth container block

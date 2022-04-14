@@ -1,0 +1,6 @@
+ansible_host: 192.168.122.245
+ansible_user: mmorano
+
+# base
+hostname: vmtest2
+update_packages: no

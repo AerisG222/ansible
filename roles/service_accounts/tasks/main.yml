@@ -3,7 +3,7 @@
   become: true
   ansible.builtin.user:
     name: "{{ item.username }}"
-    groups: "{{ item.groups }}"
+    groups: "{{ item.groups is defined | ternary(item.groups, '') }}"
     password: "{{ item.password | password_hash('sha512') }}"
     update_password: always
     state: present

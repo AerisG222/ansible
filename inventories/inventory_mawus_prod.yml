@@ -5,3 +5,4 @@ all:
     mawus_prod:
       hosts:
         tifa:
+        vmtest2:

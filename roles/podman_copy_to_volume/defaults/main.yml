@@ -1,1 +1,5 @@
-dest_relative_path: ""
+podman_copy_remote_temp_dir: "please_specify_remote_temp_dir"
+podman_copy_remote_src: false
+podman_copy_src_path: "please_specify_src_path"
+podman_copy_dest_relative_path: ""
+podman_copy_volume_name: "please_specify_volume_name"

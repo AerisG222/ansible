@@ -1,30 +1,10 @@
 ---
-- name: copy roles backup so we can edit
-  ansible.builtin.copy:
-    src: "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}"
-    dest: "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
-    force: true
-    mode: u+rw
-  delegate_to: localhost
-
-- name: make the role backup script more tolerant of existing users
-  ansible.builtin.command:
-    argv:
-      - sed
-      - -i
-      - -E
-      - "s/CREATE ROLE (.+);/\\nDO \\$\\$\\nBEGIN\\nCREATE ROLE \\1;\\nEXCEPTION WHEN duplicate_object THEN RAISE NOTICE '%, skipping', SQLERRM USING ERRCODE = SQLSTATE;\\nEND\\n\\$\\$;\\n/g"
-      - "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
-  delegate_to: localhost
-  changed_when: true
-  tags: skip_ansible_lint
-
 - name: remote preparation (copy files to remote if needed)
   block:
 
     - name: set backup dir
       ansible.builtin.set_fact:
-        pg_backup_dir: ./postgres_backups
+        pg_backup_dir: "{{ remote_home_dir }}/tmp_postgres_backups"
 
     - name: "prepare {{ pg_backup_dir }} directory"
       ansible.builtin.file:
@@ -32,9 +12,10 @@
         state: directory
         mode: u+rwx
 
+    # trailing slash indicates parent dir itself is not copied - only contents
     - name: copy backup files
       ansible.builtin.copy:
-        src: "{{ mawus_config.pg_backup_host_dir }}"
+        src: "{{ mawus_config.pg_backup_host_dir }}/"
         dest: "{{ pg_backup_dir }}"
         mode: u+rw
 
@@ -49,11 +30,30 @@
 
   when: ansible_connection == 'local'
 
+- name: copy roles backup so we can safely edit
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ pg_backup_dir }}/{{ mawus_config.pg_backup_roles }}"
+    dest: "{{ pg_backup_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+    force: true
+    mode: u+rw
+
+- name: make the role backup script more tolerant of existing users
+  ansible.builtin.command:
+    argv:
+      - sed
+      - -i
+      - -E
+      - "s/CREATE ROLE (.+);/\\nDO \\$\\$\\nBEGIN\\nCREATE ROLE \\1;\\nEXCEPTION WHEN duplicate_object THEN RAISE NOTICE '%, skipping', SQLERRM USING ERRCODE = SQLSTATE;\\nEND\\n\\$\\$;\\n/g"
+      - "{{ pg_backup_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+  changed_when: true
+  tags: skip_ansible_lint
+
 - name: create roles
   containers.podman.podman_container:
     name: "{{ mawus_config.env }}-maw-pginit-roles"
     pod: "{{ mawus_config.podman_podname }}"
-    image: "docker.io/postgres:{{ mawus_config.version_postgres }}"
+    image: "{{ mawus_config.podman_image_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
     command: "psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /postgres_backup/{{ mawus_config.pg_backup_roles }}.safer.sql"
     state: started
@@ -104,6 +104,6 @@
 
 - name: clean safer role script file
   ansible.builtin.file:
-    path: "{{ mawus_config.pg_backup_host_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+    path: "{{ pg_backup_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
     state: absent
-  delegate_to: localhost
+  when: ansible_connection == 'local'

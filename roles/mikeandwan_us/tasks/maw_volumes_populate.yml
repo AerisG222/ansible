@@ -1,0 +1,18 @@
+---
+- name: copy google email credentials to volume
+  ansible.builtin.include_role:
+    name: podman_copy_to_volume
+  vars:
+    podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
+    podman_copy_src_path: "{{ item }}"
+    podman_copy_volume_name: "{{ google_creds_volume.volume.Name }}"
+  with_fileglob: "{{ mawus_config.google_email_creds_dir }}/*"
+
+- name: copy google drive credentials to volume
+  ansible.builtin.include_role:
+    name: podman_copy_to_volume
+  vars:
+    podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
+    podman_copy_src_path: "{{ item }}"
+    podman_copy_volume_name: "{{ gdrive_creds_volume.volume.Name }}"
+  with_fileglob: "{{ mawus_config.gdrive_creds_dir }}/*"

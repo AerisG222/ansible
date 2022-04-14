@@ -1,47 +1,50 @@
 controller_home_dir: "{{ lookup('env', 'HOME') }}"
 controller_mawus_root: "{{ controller_home_dir }}/ansible/apps/mikeandwan.us"
-controller_mawus_env_root: "{{ controller_mawus_root }}/test"
+controller_mawus_env_root: "{{ controller_mawus_root }}/prod"
 controller_secrets_file: "{{ controller_mawus_env_root }}/ansible/secret-vars.yml"
 
-remote_home_dir: "{{ controller_home_dir }}"
-remote_mawus_root: "{{ remote_home_dir }}/mawus_test"
+remote_home_dir: /home/svc_www_maw
+remote_mawus_root: "{{ remote_home_dir }}/mawus"
+
+# git root
+git_root: "{{ controller_home_dir }}/git"
 
 # asset directory root
 asset_dir_root: /srv/www/website_assets
 
-mawus_config_test:
-  env: test
-  aspnet_env: test
+mawus_config_prod:
+  env: prod
+  aspnet_env: production
 
   # os level account that will run the site
   service_account:
-    username: "{{ ansible_user_id }}"
-    subuid: 100000-165535
-    subgid: 100000-165535
-    enable_linger: false
+    username: svc_www_maw
+    subuid: 200000-265535
+    subgid: 200000-265535
+    enable_linger: true
+    password: "{{ vault_os_svc_www_maw }}"
 
   bash_profile: "{{ controller_home_dir }}/.bash_profile"
 
-  fqdn_naked: test.mikeandwan.us
-  fqdn_api: test.api.mikeandwan.us
-  fqdn_auth: test.auth.mikeandwan.us
-  fqdn_files: test.files.mikeandwan.us
-  fqdn_photos: test.photos.mikeandwan.us
-  fqdn_www: test.www.mikeandwan.us
+  fqdn_naked: mikeandwan.us
+  fqdn_api: api.mikeandwan.us
+  fqdn_auth: auth.mikeandwan.us
+  fqdn_files: files.mikeandwan.us
+  fqdn_photos: photos.mikeandwan.us
+  fqdn_www: www.mikeandwan.us
 
   pfx_api: /certs/api/api.pfx
   pfx_auth: /certs/auth/auth.pfx
   pfx_signing: /certs/signing/signing.pfx
   pfx_www: /certs/www/www.pfx
 
-  gdrive_creds_dir: ""
+  gdrive_creds_dir: "{{ controller_mawus_env_root }}/gdrive-creds"
   google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
   google_email_creds_file: /google-creds/www_emailer.json
 
-  allow_low_ports: false
+  allow_low_ports: true
 
-  # certs written to dir to simplify adding ca cert to host
-  certs_dir: "{{ remote_mawus_root }}/certs"
+  certs_dir: ""
   dataprotection_dir: ""
   upload_dir: ""
 
@@ -63,23 +66,23 @@ mawus_config_test:
   podman_image_postgres: docker.io/postgres:14-alpine
   podman_image_solr: docker.io/solr:8
 
-  podman_podname: test-maw-pod
+  podman_podname: prod-maw-pod
   podman_env_dir: "{{ remote_mawus_root }}/podman-env"
-  podman_image_photos: localhost/maw-photos-test
-  podman_image_files: localhost/maw-files-test
-  podman_image_auth: localhost/maw-auth-test
-  podman_image_api: localhost/maw-api-test
-  podman_image_www: localhost/maw-www-test
-  podman_image_gateway: localhost/maw-gateway-test
+  podman_image_photos: docker.io/aerisg222/maw-photos:latest
+  podman_image_files: docker.io/aerisg222/maw-files:latest
+  podman_image_auth: docker.io/aerisg222/maw-auth:latest
+  podman_image_api: docker.io/aerisg222/maw-api:latest
+  podman_image_www: docker.io/aerisg222/maw-www:latest
+  podman_image_gateway: docker.io/aerisg222/maw-gateway:latest
   podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
-  podman_image_certbot: ""
+  podman_image_certbot: docker.io/certbot/certbot:latest
   podman_image_cache_sync: docker.io/aerisg222/maw-cache-sync:latest
   podman_image_solr_indexer: docker.io/aerisg222/maw-solr-indexer:latest
   podman_image_reverse_geocode: docker.io/aerisg222/maw-reverse-geocode:latest
-  podman_image_gdrive: ""
+  podman_image_gdrive: docker.io/d0whc3r/gdrive:latest
   podman_publish_ports:
-    - 8080:8080
-    - 8443:8443
+    - 80:80
+    - 443:443
 
   # postgres sql accounts for site
   sql_username: svc_www_maw

@@ -16,7 +16,7 @@
 - name: initialize internal certs
   containers.podman.podman_container:
     name: maw-certs
-    image: docker.io/aerisg222/maw-certs:latest
+    image: "{{ mawus_config.podman_image_maw_certs }}"
     command: "{{ mawus_config.env }} {{ cert_fqdn_prefix }}"
     state: started
     interactive: true
@@ -35,29 +35,82 @@
     msg: certs were not successfully created
   failed_when: certs_result | int != 0
 
-# todo: evaluate dev (certs that are generated in managed volume) support
-- name: Add ca cert(s) to trusted sources
-  become: true
-  ansible.builtin.copy:
-    dest: "/usr/share/pki/ca-trust-source/anchors/maw_{{ mawus_config.env }}_{{ item | basename }}"
-    src: "{{ item }}"
-    mode: u+rw,go+r
-  with_fileglob:
-    - "{{ mawus_config.certs_dir }}/ca/ca_*.crt"
+- name: make system aware of self signed certificate authority
+  block:
+
+    # todo: evaluate dev (certs that are generated in managed volume) support
+    - name: Add ca cert(s) to trusted sources
+      become_user: root
+      become: true
+      ansible.builtin.copy:
+        dest: "/usr/share/pki/ca-trust-source/anchors/maw_{{ mawus_config.env }}_{{ item | basename }}"
+        src: "{{ item }}"
+        mode: u+rw,go+r
+      with_fileglob:
+        - "{{ mawus_config.certs_dir }}/ca/ca_*.crt"
+
+    - name: Make the system aware of the new ca certs
+      become_user: root
+      become: true
+      ansible.builtin.command:
+        cmd: update-ca-trust
+
+    - name: load cert pwds into variables for subsequent steps
+      ansible.builtin.set_fact:
+        mawus_config_pfx_pwd_updates:
+          pfx_pwd_api: "{{ lookup('file', remote_mawus_root + '/certs/api/api.pfx.pwd') }}"
+          pfx_pwd_auth: "{{ lookup('file', remote_mawus_root + '/certs/auth/auth.pfx.pwd') }}"
+          pfx_pwd_www: "{{ lookup('file', remote_mawus_root + '/certs/www/www.pfx.pwd') }}"
+
   when: mawus_config.certs_dir | length > 0
 
-- name: Make the system aware of the new ca certs
-  become: true
-  ansible.builtin.command:
-    cmd: update-ca-trust
-  when: mawus_config.certs_dir | length > 0
+- name: get cert pwds from volume
+  block:
 
-- name: load cert pwds into variables for subsequent steps
-  ansible.builtin.set_fact:
-    mawus_config_pfx_pwd_updates:
-      pfx_pwd_api: "{{ lookup('file', external_site_dir + '/certs/api/api.pfx.pwd') }}"
-      pfx_pwd_auth: "{{ lookup('file', external_site_dir + '/certs/auth/auth.pfx.pwd') }}"
-      pfx_pwd_www: "{{ lookup('file', external_site_dir + '/certs/www/www.pfx.pwd') }}"
+    - name: copy certificate files from volume to server/host
+      ansible.builtin.include_role:
+        name: podman_copy_from_volume
+      vars:
+        volume_name: "{{ cert_vol }}"
+        src_path: "{{ item }}"
+        dest_relative_path: "{{ remote_home_dir }}"
+      loop:
+        - api/api.pfx.pwd
+        - auth/auth.pfx.pwd
+        - www/www.pfx.pwd
+
+    - name: get api cert pwd
+      ansible.builtin.slurp:
+        src: "{{ remote_home_dir }}/api.pfx.pwd"
+      register: api_pwd
+
+    - name: get auth cert pwd
+      ansible.builtin.slurp:
+        src: "{{ remote_home_dir }}/auth.pfx.pwd"
+      register: auth_pwd
+
+    - name: get www cert pwd
+      ansible.builtin.slurp:
+        src: "{{ remote_home_dir }}/www.pfx.pwd"
+      register: www_pwd
+
+    - name: set cert pwd variables
+      ansible.builtin.set_fact:
+        mawus_config_pfx_pwd_updates:
+          pfx_pwd_api: "{{ api_pwd.content | b64decode }}"
+          pfx_pwd_auth: "{{ auth_pwd.content | b64decode }}"
+          pfx_pwd_www: "{{ www_pwd.content | b64decode }}"
+
+    - name: delete temp files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ remote_home_dir }}/api.pfx.pwd"
+        - "{{ remote_home_dir }}/auth.pfx.pwd"
+        - "{{ remote_home_dir }}/www.pfx.pwd"
+
+  when: mawus_config.certs_dir | length == 0
 
 # todo: this does not work, apparently due to the scoping of mawus_config -
 #       is there a way to update this variable so everything can live under mawus_config?

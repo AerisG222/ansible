@@ -2,7 +2,7 @@
 - name: Configure mikeandwan.us test environment
   hosts: mawus_test
   vars_files:
-    - "{{ external_vars_file }}"
+    - "{{ controller_secrets_file }}"
 
   tasks:
 

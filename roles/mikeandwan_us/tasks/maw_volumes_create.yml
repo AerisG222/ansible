@@ -68,7 +68,6 @@
   containers.podman.podman_volume:
     name: "{{ mawus_config.env }}-maw-google-creds"
     state: present
-  when: mawus_config.google_email_creds_dir | length == 0
   register: google_creds_volume
 
 - name: create maw-gdrive-creds volume

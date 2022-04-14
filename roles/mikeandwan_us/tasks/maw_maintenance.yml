@@ -4,8 +4,9 @@
     name: certbot_renew
   vars:
     certbot_ctx:
+      container_image: "{{ mawus_config.podman_image_certbot }}"
       service_name: "{{ mawus_config.env }}-certbot-renew"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -19,8 +20,9 @@
     name: reverse_geocoder
   vars:
     reverse_geocode_ctx:
+      container_image: "{{ mawus_config.podman_image_reverse_geocode }}"
       service_name: "{{ mawus_config.env }}-reverse-geocoder"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -33,8 +35,9 @@
     name: solr_indexer
   vars:
     solr_indexer_ctx:
+      container_image: "{{ mawus_config.podman_image_solr_indexer }}"
       service_name: "{{ mawus_config.env }}-solr-indexer"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -47,8 +50,9 @@
     name: postgres_backup_roles
   vars:
     pg_backup_roles_ctx:
+      container_image: "{{ mawus_config.podman_image_postgres }}"
       service_name: "{{ mawus_config.env }}-postgres-backup-roles"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -64,8 +68,9 @@
     loop_var: pg_backupdb_ctx
   loop:
     - db_name: maw_website
+      container_image: "{{ mawus_config.podman_image_postgres }}"
       service_name: "{{ mawus_config.env }}-postgres-backup-mawus"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -75,8 +80,9 @@
       calendar: 01:00:00
 
     - db_name: idsrv
+      container_image: "{{ mawus_config.podman_image_postgres }}"
       service_name: "{{ mawus_config.env }}-postgres-backup-idsrv"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -92,8 +98,9 @@
     loop_var: pg_optimize_ctx
   loop:
     - db_name: maw_website
+      container_image: "{{ mawus_config.podman_image_postgres }}"
       service_name: "{{ mawus_config.env }}-postgres-optimize-mawus"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -102,8 +109,9 @@
       calendar: 01:10:00
 
     - db_name: idsrv
+      container_image: "{{ mawus_config.podman_image_postgres }}"
       service_name: "{{ mawus_config.env }}-postgres-optimize-idsrv"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -116,8 +124,9 @@
     name: postgres_backup_cleanup
   vars:
     pg_cleanup_ctx:
+      container_image: "{{ mawus_config.podman_image_postgres }}"
       service_name: "{{ mawus_config.env }}-postgres-cleanup"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       start_job: false
       enable_job: "{{ mawus_config.env == 'prod' }}"
       pod_name: "{{ mawus_config.podman_podname }}"
@@ -130,8 +139,9 @@
     name: postgres_gdrive_archive
   vars:
     postgres_gdrive_archive_ctx:
+      container_image: "{{ mawus_config.podman_image_gdrive }}"
       service_name: "{{ mawus_config.env }}-postgres-archive-daily"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       pod_name: "{{ mawus_config.podman_podname }}"
       files_to_archive_volume: "{{ postgres_backup_volume.volume.Name }}"
       creds_volume: "{{ gdrive_creds_volume.volume.Name }}"
@@ -144,8 +154,9 @@
     name: postgres_gdrive_archive
   vars:
     postgres_gdrive_archive_ctx:
+      container_image: "{{ mawus_config.podman_image_gdrive }}"
       service_name: "{{ mawus_config.env }}-postgres-archive-monthly"
-      systemd_dir: "{{ home }}/.config/systemd/user"
+      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
       pod_name: "{{ mawus_config.podman_podname }}"
       files_to_archive_volume: "{{ postgres_backup_volume.volume.Name }}"
       creds_volume: "{{ gdrive_creds_volume.volume.Name }}"

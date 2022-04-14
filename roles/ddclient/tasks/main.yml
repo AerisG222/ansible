@@ -22,8 +22,9 @@
   ansible.builtin.include_role:
     name: podman_copy_to_volume
   vars:
-    volume_name: ddclient_config
-    src_path: ddclient.conf
+    podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
+    podman_copy_volume_name: ddclient_config
+    podman_copy_src_path: ddclient.conf
 
 - name: Delete temp file
   ansible.builtin.file:

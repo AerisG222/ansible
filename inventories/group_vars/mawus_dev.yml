@@ -1,16 +1,16 @@
-# dev home
-home: "{{ lookup('env', 'HOME') }}"
+controller_home_dir: "{{ lookup('env', 'HOME') }}"
+controller_mawus_root: "{{ controller_home_dir }}/ansible/apps/mikeandwan.us"
+controller_mawus_env_root: "{{ controller_mawus_root }}/dev"
+controller_secrets_file: "{{ controller_mawus_env_root }}/ansible/secret-vars.yml"
+
+remote_home_dir: "{{ controller_home_dir }}"
+remote_mawus_root: "{{ remote_home_dir }}/mawus_dev"
 
 # git root
-git_root: "{{ home }}/git"
+git_root: "{{ controller_home_dir }}/git"
 
 # asset directory root
 asset_dir_root: /srv/www/website_assets
-
-# where to store supporting files outside project / site
-external_root: "{{ home }}/ansible/apps/mikeandwan.us"
-external_site_dir: "{{ external_root }}/dev"
-external_vars_file: "{{ external_site_dir }}/ansible/secret-vars.yml"
 
 mawus_config_dev:
   env: dev
@@ -21,9 +21,9 @@ mawus_config_dev:
     username: "{{ ansible_user_id }}"
     subuid: 100000-165535
     subgid: 100000-165535
-    enable_linger: no
+    enable_linger: false
 
-  bash_profile: "{{ home }}/.bash_profile"
+  bash_profile: "{{ controller_home_dir }}/.bash_profile"
 
   fqdn_naked: dev.mikeandwan.us
   fqdn_api: dev.api.mikeandwan.us
@@ -32,40 +32,53 @@ mawus_config_dev:
   fqdn_photos: dev.photos.mikeandwan.us
   fqdn_www: dev.www.mikeandwan.us
 
-  pfx_api: "{{ external_site_dir }}/certs/api/api.pfx"
-  pfx_auth: "{{ external_site_dir }}/certs/auth/auth.pfx"
-  pfx_signing: "{{ external_site_dir }}/certs/signing/signing.pfx"
-  pfx_www: "{{ external_site_dir }}/certs/www/www.pfx"
+  pfx_api: "{{ remote_mawus_root }}/certs/api/api.pfx"
+  pfx_auth: "{{ remote_mawus_root }}/certs/auth/auth.pfx"
+  pfx_signing: "{{ remote_mawus_root }}/certs/signing/signing.pfx"
+  pfx_www: "{{ remote_mawus_root }}/certs/www/www.pfx"
 
-  allow_low_ports: no
+  gdrive_creds_dir: ""  # not needed for dev
+  google_email_creds_dir: "{{ remote_mawus_root }}/google-creds"
+  google_email_creds_file: "{{ remote_mawus_root }}/google-creds/www_emailer.json"
 
-  certs_dir: "{{ external_site_dir }}/certs"
-  dataprotection_dir: "{{ external_site_dir }}/dataprotection"
-  upload_dir: "{{ external_site_dir }}/maw-uploads"
+  allow_low_ports: false
 
-  systemd_dir: "{{ home }}/.config/systemd/user"
+  certs_dir: "{{ remote_mawus_root }}/certs"
+  dataprotection_dir: "{{ remote_mawus_root }}/dataprotection"
+  upload_dir: "{{ remote_mawus_root }}/maw-uploads"
+
+  systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
   asset_dir_images: "{{ asset_dir_root }}/images"
   asset_dir_movies: "{{ asset_dir_root }}/movies"
 
-  pg_backup_host_dir: "{{ external_root }}/db_backups"
-  pg_backup_roles: "roles.sql"
-  pg_backup_idsrv: "idsrv.20220307.dump"
-  pg_backup_www: "maw_website.20220307.dump"
+  pg_backup_host_dir: "{{ controller_mawus_root }}/db_backups"
+  pg_backup_roles: roles.sql
+  pg_backup_idsrv: idsrv.20220307.dump
+  pg_backup_www: maw_website.20220307.dump
 
   # dependency versions
   version_redis: 6
   version_postgres: 14
   version_solr: 8
 
+  podman_image_redis: docker.io/redis:6-alpine
+  podman_image_postgres: docker.io/postgres:14-alpine
+  podman_image_solr: docker.io/solr:8
+
   podman_podname: dev-maw-pod
-  podman_env_dir: "{{ external_site_dir }}/podman-env"
+  podman_env_dir: "{{ remote_mawus_root }}/podman-env"
   podman_image_photos: ""
   podman_image_files: ""
   podman_image_auth: ""
   podman_image_api: ""
   podman_image_www: ""
   podman_image_gateway: ""
-  podman_image_cache_sync: "docker.io/aerisg222/maw-cache-sync:latest"
+  podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
+  podman_image_certbot: docker.io/certbot/certbot:latest
+  podman_image_cache_sync: docker.io/aerisg222/maw-cache-sync:latest
+  podman_image_solr_indexer: docker.io/aerisg222/maw-solr-indexer:latest
+  podman_image_reverse_geocode: ""
+  podman_image_gdrive: ""
   podman_publish_ports:
     - 8983:8983  # solr
     - 5432:5432  # postgres
@@ -96,7 +109,3 @@ mawus_config_dev:
 
   # google api key (maps / reverse geocode)
   google_api_key: "{{ vault_google_api_key }}"
-
-  # google email creds
-  google_email_creds_dir: "{{ external_site_dir }}/google-creds"
-  google_email_creds_file: "{{ external_site_dir }}/google-creds/www_emailer.json"

@@ -10,16 +10,24 @@
     cmd: "podman exec -it {{ solr_container.container.Name }} solr config -c multimedia-categories -p 8983 -action set-user-property -property update.autoCreateFields -value false"
   changed_when: true
 
-- name: prepare source file path
+- name: set synonym path (relative to this role - otherwise looks in podman_copy_to_volume if specified in that step)
   ansible.builtin.set_fact:
-    src_path: "{{ role_path }}/files/solr_synonyms.txt"
+    local_synonym_path: "{{ role_path }}/files/solr_synonyms.txt"
 
 - name: configure synonyms
   ansible.builtin.include_role:
     name: podman_copy_to_volume
   vars:
-    volume_name: "{{ solr_volume.volume.Name }}"
-    dest_relative_path: data/multimedia-categories/conf/synonyms.txt
+    podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
+    podman_copy_volume_name: "{{ solr_volume.volume.Name }}"
+    podman_copy_src_path: "{{ local_synonym_path }}"
+    podman_copy_dest_relative_path: data/multimedia-categories/conf/synonyms.txt
+
+- name: cleanup remote temp dir
+  ansible.builtin.file:
+    path: "{{ remote_home_dir}}/tmp_solr"
+    state: absent
+  when: ansible_connection != 'local'
 
 - name: reload core for synonyms to take effect
   ansible.builtin.command:

@@ -2,7 +2,7 @@
 - name: Configure mikeandwan.us prod environment
   hosts: mawus_prod
   vars_files:
-    - "{{ external_vars_file }}"
+    - "{{ controller_secrets_file }}"
 
   tasks:
     - name: Configure Base

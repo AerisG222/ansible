@@ -20,36 +20,59 @@
       - "{{ mawus_config.asset_dir_images }}"
       - "{{ mawus_config.asset_dir_movies }}"
 
-- name: "Temporarily set SSH username to {{ mawus_config.service_account.username }}"
-  ansible.builtin.set_fact:
-    orig_ansible_user: "{{ ansible_user }}"
-    ansible_user: "{{ mawus_config.service_account.username }}"
-  when: ansible_connection != 'local'
-  changed_when: false
-  delegate_to: localhost
-
 - name: Include maw_admin_scripts.yml
-  ansible.builtin.include_tasks: maw_admin_scripts.yml
+  ansible.builtin.include_tasks:
+    file: maw_admin_scripts.yml
+    apply:
+      become: true
+      become_user: "{{ mawus_config.service_account.username }}"
   when: ansible_connection != 'local'
 
-- name: Include maw_volumes.yml
-  ansible.builtin.include_tasks: maw_volumes.yml
+- name: Include maw_volumes_create.yml
+  ansible.builtin.include_tasks:
+    file: maw_volumes_create.yml
+    apply:
+      become: true
+      become_user: "{{ mawus_config.service_account.username }}"
+
+- name: Include maw_pull_images.yml
+  ansible.builtin.include_tasks:
+    file: maw_pull_images.yml
+    apply:
+      become: true
+      become_user: "{{ mawus_config.service_account.username }}"
+
+- name: Include maw_volumes_populate.yml
+  ansible.builtin.include_tasks:
+    file: maw_volumes_populate.yml
+    apply:
+      become: true
+      become_user: "{{ mawus_config.service_account.username }}"
 
 - name: Include maw_maintenance.yml
-  ansible.builtin.include_tasks: maw_maintenance.yml
+  ansible.builtin.include_tasks:
+    file: maw_maintenance.yml
+    apply:
+      become: true
+      become_user: "{{ mawus_config.service_account.username }}"
 
 - name: Initialize self signed certificates
-  ansible.builtin.include_tasks: maw_certs.yml
+  ansible.builtin.include_tasks:
+    file: maw_certs.yml
+    apply:
+      become: true
+      become_user: "{{ mawus_config.service_account.username }}"
 
 - name: Include maw_env_files.yml
-  ansible.builtin.include_tasks: maw_env_files.yml
+  ansible.builtin.include_tasks:
+    file: maw_env_files.yml
+    apply:
+      become: true
+      become_user: "{{ mawus_config.service_account.username }}"
 
 - name: Include maw_pod.yml
-  ansible.builtin.include_tasks: maw_pod.yml
-
-- name: "Reset SSH username to {{ orig_ansible_user }}"
-  ansible.builtin.set_fact:
-    ansible_user: "{{ orig_ansible_user }}"
-  when: ansible_connection != 'local'
-  changed_when: false
-  delegate_to: localhost
+  ansible.builtin.include_tasks:
+    file: maw_pod.yml
+    apply:
+      become: true
+      become_user: "{{ mawus_config.service_account.username }}"
