@@ -25,7 +25,7 @@
 
 - name: cleanup remote temp dir
   ansible.builtin.file:
-    path: "{{ remote_home_dir}}/tmp_solr"
+    path: "{{ remote_home_dir }}/tmp_solr"
     state: absent
   when: ansible_connection != 'local'
 
