@@ -1,0 +1,1 @@
+migvol_command: cp -R /src/. /dest

@@ -1,0 +1,15 @@
+---
+- name: determine if original/legacy volume exists
+  containers.podman.podman_volume_info:
+    name: "{{ migvol_orig_volume_name }}"
+  register: migvol_orig
+
+- name: copy data if original volume exists
+  ansible.builtin.include_role:
+    name: podman_alpine
+  when: migvol_orig.volumes | length > 0
+  vars:
+    alpine_command: "{{ migvol_command }}"
+    alpine_volumes:
+      - "{{ migvol_orig_volume_name }}:/src:ro,z"
+      - "{{ migvol_new_volume_name }}:/dest:rw,z"
