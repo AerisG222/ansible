@@ -3,6 +3,7 @@
   containers.podman.podman_volume_info:
     name: "{{ migvol_orig_volume_name }}"
   register: migvol_orig
+  failed_when: false
 
 - name: copy data if original volume exists
   ansible.builtin.include_role:
