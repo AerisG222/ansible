@@ -38,8 +38,8 @@ mawus_config_dev:
   pfx_www: "{{ remote_mawus_root }}/certs/www/www.pfx"
 
   gdrive_creds_dir: ""  # not needed for dev
-  google_email_creds_dir: "{{ remote_mawus_root }}/google-creds"
-  google_email_creds_file: "{{ remote_mawus_root }}/google-creds/www_emailer.json"
+  google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
+  google_email_creds_file: "{{ controller_mawus_env_root }}/google-creds/www_emailer.json"
 
   allow_low_ports: false
 
