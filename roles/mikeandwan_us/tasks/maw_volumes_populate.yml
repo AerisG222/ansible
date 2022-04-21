@@ -1,78 +1,78 @@
 ---
 - name: migrate auth dataprotection files
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: auth_dataprotection_volume.changed
   vars:
     migvol_orig_volume_name: maw-auth-dataprotection
-    migvol_new_volume_name: auth_dataprotection_volume.volume.Name
+    migvol_new_volume_name: "{{ auth_dataprotection_volume.volume.Name }}"
 
 - name: migrate api dataprotection files
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: api_dataprotection_volume.changed
   vars:
     migvol_orig_volume_name: maw-api-dataprotection
-    migvol_new_volume_name: api_dataprotection_volume.volume.Name
+    migvol_new_volume_name: "{{ api_dataprotection_volume.volume.Name }}"
 
 - name: migrate www dataprotection files
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: www_dataprotection_volume.changed
   vars:
     migvol_orig_volume_name: maw-www-dataprotection
-    migvol_new_volume_name: www_dataprotection_volume.volume.Name
+    migvol_new_volume_name: "{{ www_dataprotection_volume.volume.Name }}"
 
 - name: migrate certbot certs
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: certbot_certs_volume.changed
   vars:
     migvol_command: cp -R /src/internal/. /dest
     migvol_orig_volume_name: maw-certbot-certs
-    migvol_new_volume_name: certbot_certs_volume.volume.Name
+    migvol_new_volume_name: "{{ certbot_certs_volume.volume.Name }}"
 
 - name: migrate certbot validation
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: certbot_validation_volume.changed
   vars:
     migvol_orig_volume_name: maw-certbot-validation
-    migvol_new_volume_name: certbot_validation_volume.volume.Name
+    migvol_new_volume_name: "{{ certbot_validation_volume.volume.Name }}"
 
 - name: migrate maw-certs
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: maw_cert_volume.changed
   vars:
     migvol_result_varname: maw_certs_migrated
     migvol_orig_volume_name: maw-certs
-    migvol_new_volume_name: maw_cert_volume.volume.Name
+    migvol_new_volume_name: "{{ maw_cert_volume.volume.Name }}"
 
 - name: migrate maw-reverse-geocode
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: reverse_geocode_volume.changed
   vars:
     migvol_orig_volume_name: maw-reverse-geocode
-    migvol_new_volume_name: reverse_geocode_volume.volume.Name
+    migvol_new_volume_name: "{{ reverse_geocode_volume.volume.Name }}"
 
 - name: migrate maw-uploads
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: uploads_volume.changed
   vars:
     migvol_orig_volume_name: maw-uploads
-    migvol_new_volume_name: uploads_volume.volume.Name
+    migvol_new_volume_name: "{{ uploads_volume.volume.Name }}"
 
 - name: migrate maw-gdrive-creds
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: gdrive_creds_volume.changed
   vars:
     migvol_result_varname: gdrive_creds_migrated
     migvol_orig_volume_name: maw-gdrive-creds
-    migvol_new_volume_name: gdrive_creds_volume.volume.Name
+    migvol_new_volume_name: "{{ gdrive_creds_volume.volume.Name }}"
 
 - name: copy google drive credentials to volume if not migrated
   ansible.builtin.include_role:
@@ -85,13 +85,13 @@
   when: gdrive_creds_volume.changed and (not gdrive_creds_migrated)
 
 - name: migrate maw-google-creds
-  ansible.builtin.include_tasks:
-    file: maw_migrate_volume_data.yml
+  ansible.builtin.include_role:
+    name: podman_migrate_volume_data
   when: google_creds_volume.changed
   vars:
     migvol_result_varname: google_creds_migrated
     migvol_orig_volume_name: maw-google-creds
-    migvol_new_volume_name: google_creds_volume.volume.Name
+    migvol_new_volume_name: "{{ google_creds_volume.volume.Name }}"
 
 - name: copy google email credentials to volume if not migrated
   ansible.builtin.include_role:
