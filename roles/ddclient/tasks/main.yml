@@ -1,11 +1,4 @@
 ---
-- name: "Temporarily set SSH username to {{ ddclient_config.service_account.username }}"
-  ansible.builtin.set_fact:
-    orig_ansible_user: "{{ ansible_user }}"
-    ansible_user: "{{ ddclient_config.service_account.username }}"
-  changed_when: false
-  delegate_to: localhost
-
 - name: Create ddclient config volume
   containers.podman.podman_volume:
     name: ddclient_config
@@ -15,20 +8,21 @@
 - name: Prepare ddclient.conf
   ansible.builtin.template:
     src: ddclient.conf.j2
-    dest: ddclient.conf
+    dest: "{{ ddclient_config.remote_home_dir }}/ddclient.conf"
     mode: u+rw
 
 - name: Copy ddclient.conf to volume
   ansible.builtin.include_role:
     name: podman_copy_to_volume
   vars:
-    podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
+    podman_copy_remote_src: true
+    podman_copy_remote_temp_dir: "{{ ddclient_config.remote_home_dir }}/_tmp_ansible"
     podman_copy_volume_name: ddclient_config
-    podman_copy_src_path: ddclient.conf
+    podman_copy_src_path: "{{ ddclient_config.remote_home_dir }}/ddclient.conf"
 
 - name: Delete temp file
   ansible.builtin.file:
-    path: ddclient.conf
+    path: "{{ ddclient_config.remote_home_dir }}/ddclient.conf"
     state: absent
 
 # stop pod via systemd, otherwise systemd and podman fight
@@ -68,12 +62,17 @@
     label:
       io.containers.autoupdate: image
 
+- name: "Ensure systemd config directory exists"
+  ansible.builtin.file:
+    path: "{{ ddclient_config.systemd_dir }}"
+    state: directory
+
 - name: Create systemd unit files
   containers.podman.podman_pod:
     name: "{{ ddclient_config.podman_podname }}"
     generate_systemd:
       new: true
-      path: .config/systemd/user
+      path: "{{ ddclient_config.systemd_dir }}"
 
 - name: Enable ddclient via systemd
   ansible.builtin.systemd:
@@ -82,9 +81,3 @@
     state: started
     scope: user
     daemon_reload: true
-
-- name: "Reset SSH username to {{ orig_ansible_user }}"
-  ansible.builtin.set_fact:
-    ansible_user: "{{ orig_ansible_user }}"
-  changed_when: false
-  delegate_to: localhost

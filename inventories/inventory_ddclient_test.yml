@@ -5,4 +5,4 @@ all:
     ddclient:
       hosts:
         lvmtest:
-        vmtest:
+        vmtest2:
