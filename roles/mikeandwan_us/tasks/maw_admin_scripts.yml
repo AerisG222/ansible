@@ -14,3 +14,4 @@
   loop:
     - idsrvsql.sh
     - wwwsql.sh
+    - update-support-images.sh

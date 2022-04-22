@@ -1,0 +1,9 @@
+#!/bin/bash
+
+podman pull {{ mawus_config.podman_image_certbot }}
+podman pull {{ mawus_config.podman_image_gdrive }}
+
+podman pull {{ mawus_config.podman_image_cache_sync }}
+podman pull {{ mawus_config.podman_image_maw_certs }}
+podman pull {{ mawus_config.podman_image_reverse_geocode }}
+podman pull {{ mawus_config.podman_image_solr_indexer }}
