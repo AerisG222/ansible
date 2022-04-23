@@ -1,0 +1,2 @@
+#!/bin/bash
+podman run -it --rm --pod {{ maw_as__pod }} --env-file {{ maw_as__postgres_envfile }} {{ maw_as__postgres_image }} psql -h localhost -U postgres -d idsrv

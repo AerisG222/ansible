@@ -1,0 +1,9 @@
+#!/bin/bash
+
+podman pull {{ maw_as__certbot_image }}
+podman pull {{ maw_as__gdrive_image }}
+
+podman pull {{ maw_as__cache_sync_image }}
+podman pull {{ maw_as__maw_certs_image }}
+podman pull {{ maw_as__reverse_geocode_image }}
+podman pull {{ maw_as__solr_indexer }}

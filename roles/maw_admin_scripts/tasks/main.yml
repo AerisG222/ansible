@@ -1,16 +1,18 @@
 ---
 - name: Make sure admin_scripts directory exists
   ansible.builtin.file:
-    path: "{{ remote_mawus_root }}/admin_scripts"
+    path: "{{ maw_as__dir }}"
     state: directory
     mode: u+rwx
 
 - name: Prepare scripts
   ansible.builtin.template:
-    backup: "{{ mawus_config.env == 'prod' }}"
-    src: "admin_scripts/{{ item }}.j2"
-    dest: "{{ remote_mawus_root }}/admin_scripts/{{ item }}"
+    backup: "{{ maw_as__do_backup }}"
+    src: "{{ _maw_as__item }}.j2"
+    dest: "{{ maw_as__dir }}/{{ _maw_as__item }}"
     mode: u+rwx
+  loop_control:
+    loop_var: _maw_as__item
   loop:
     - idsrvsql.sh
     - wwwsql.sh

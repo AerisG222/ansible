@@ -1,0 +1,59 @@
+---
+argument_specs:
+  main:
+    short_description: Creates helper admin scripts for mikeandwan.us
+    options:
+      maw_as__dir:
+        type: str
+        required: true
+        description: the directory where the scripts should be deployed
+
+      maw_as__do_backup:
+        type: bool
+        default: false
+        description: backup current script if it exists
+
+      maw_as__pod:
+        type: str
+        required: true
+        description: name of pod that is running postgres services
+
+      maw_as__postgres_envfile:
+        type: str
+        required: true
+        description: path to postgres environment file (containing PGPASSWORD)
+
+      maw_as__postgres_image:
+        type: str
+        required: true
+        description: docker image to use when connecting to postgres
+
+      maw_as__certbot_image:
+        type: str
+        required: true
+        description: docker image to use for certbot
+
+      maw_as__gdrive_image:
+        type: str
+        required: true
+        description: docker image to use for gdrive / remote archives
+
+      maw_as__cache_sync_image:
+        type: str
+        required: true
+        description: docker image to use for cache sync process
+
+      maw_as__maw_certs_image:
+        type: str
+        required: true
+        description: docker image to use for maw certs
+
+      maw_as__reverse_geocode_image:
+        type: str
+        required: true
+        description: docker image to use for the reverse geocode process
+
+      maw_as__solr_indexer:
+        type: str
+        required: true
+        description: docker image to use for indexing content to solr

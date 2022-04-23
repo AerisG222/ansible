@@ -1,2 +1,0 @@
-#!/bin/bash
-podman run -it --rm --pod {{ mawus_config.podman_podname }} --env-file {{ mawus_config.podman_env_dir }}/maw-postgres.env postgres:{{ mawus_config.version_postgres }} psql -h localhost -U postgres -d maw_website
