@@ -6,7 +6,7 @@
     name: '*'
     state: latest
   tags: skip_ansible_lint
-  when: update_packages
+  when: fed_b__update_packages
 
 - name: Install Packages
   become: true

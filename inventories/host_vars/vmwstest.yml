@@ -2,7 +2,7 @@
 ansible_host: 192.168.122.247
 ansible_user: mmorano
 
-hostname: vmwstest
+fed_b__hostname: vmwstest
 
 update_packages: true
 android_studio: true

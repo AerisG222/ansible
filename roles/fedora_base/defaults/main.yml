@@ -1,4 +1,2 @@
 ---
-hostname: ""
-domain: ""
-update_packages: false
+fed_b__update_packages: false

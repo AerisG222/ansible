@@ -1,0 +1,20 @@
+---
+argument_specs:
+  main:
+    short_description: Steps to initialize and harden Fedora
+    options:
+      fed_b__hostname:
+        type: str
+        required: true
+        description: the name to use for this host
+
+      fed_b__domain:
+        type: str
+        required: true
+        description: the domain name for this host
+
+      fed_b__update_packages:
+        type: bool
+        default: false
+        description: whether packages should automatically be upgraded when role runs
+

@@ -1,7 +1,6 @@
 ---
-- name: Set hostname
-  when: hostname | length > 0 and domain | length > 0
+- name: "Set hostname to {{ fed_b__hostname }}.{{ fed_b__domain }}"
   become: true
   ansible.builtin.hostname:
-    name: '{{ hostname }}.{{ domain }}'
+    name: '{{ fed_b__hostname }}.{{ fed_b__domain }}'
     use: systemd
