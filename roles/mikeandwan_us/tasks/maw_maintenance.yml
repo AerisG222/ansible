@@ -3,16 +3,15 @@
   ansible.builtin.include_role:
     name: certbot_renew
   vars:
-    certbot_ctx:
-      container_image: "{{ mawus_config.podman_image_certbot }}"
-      service_name: "{{ mawus_config.env }}-certbot-renew"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      validation_volume_name: "{{ certbot_validation_volume.volume.Name }}"
-      certs_volume_name: "{{ certbot_certs_volume.volume.Name }}"
-      calendar: 0/12:00:00
+    cb__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    cb__service_name: "{{ mawus_config.env }}-certbot-renew"
+    cb__start_job: false
+    cb__enable_job: "{{ mawus_config.env == 'prod' }}"
+    cb__calendar: '0/12:00:00'
+    cb__pod: "{{ mawus_config.podman_podname }}"
+    cb__container_image: "{{ mawus_config.podman_image_certbot }}"
+    cb__validation_volume: "{{ certbot_validation_volume.volume.Name }}"
+    cb__certs_volume: "{{ certbot_certs_volume.volume.Name }}"
   when: mawus_config.env == 'prod'
 
 - name: Configure Reverse Geocoder

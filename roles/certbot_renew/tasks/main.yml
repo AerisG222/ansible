@@ -9,9 +9,9 @@
     name: systemd_job
   vars:
     systemd_job_ctx:
-      systemd_dir: "{{ certbot_ctx.systemd_dir }}"
-      service_name: "{{ certbot_ctx.service_name }}"
-      start_job: "{{ certbot_ctx.start_job }}"
-      enable_job: "{{ certbot_ctx.enable_job }}"
+      systemd_dir: "{{ cb__systemd_dir }}"
+      service_name: "{{ cb__service_name }}"
+      start_job: "{{ cb__start_job }}"
+      enable_job: "{{ cb__enable_job }}"
       service_template: "{{ service_template }}"
       timer_template: "{{ timer_template }}"

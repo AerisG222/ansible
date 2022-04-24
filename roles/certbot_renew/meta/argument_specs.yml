@@ -1,0 +1,49 @@
+---
+argument_specs:
+  main:
+    short_description: Configures systemd service and timer to run certbot rewnew
+    options:
+      cb__systemd_dir:
+        type: str
+        required: true
+        description: the directory where the systemd service/timer files should live (usually ~/.config/systemd/user)
+
+      cb__service_name:
+        type: str
+        required: true
+        description: the name to use for this the systemd service
+
+      cb__start_job:
+        type: bool
+        default: false
+        description: if the job should start immediately
+
+      cb__enable_job:
+        type: bool
+        default: false
+        description: if the job should start automatically after reboot
+
+      cb__calendar:
+        type: str
+        default: '0/12:00:00'
+        description: the systemd timer specification for when to run the job
+
+      cb__pod:
+        type: str
+        required: true
+        description: name of the pod to run this container in
+
+      cb__container_image:
+        type: str
+        required: true
+        description: the full name of the certbot docker image
+
+      cb__validation_volume:
+        type: str
+        required: true
+        description: the name of the volume to use/share with nginx to verify domain ownership for certbot
+
+      cb__certs_volume:
+        type: str
+        required: true
+        description: the name of the volume to write Let's Encrypt certificates to
