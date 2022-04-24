@@ -1,0 +1,16 @@
+---
+argument_specs:
+  main:
+    short_description: Creates helper admin scripts for mikeandwan.us
+    options:
+      fw__allowed_services:
+        type: list
+        elements: str
+        default: []
+        description: services to add to the allow list
+
+      fw__denied_services:
+        type: list
+        elements: str
+        default: []
+        description: services to remove from the allow list

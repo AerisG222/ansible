@@ -7,7 +7,7 @@
     service: "{{ item }}"
     state: enabled
     zone: FedoraServer
-  loop: "{{ firewall_allowed_services if firewall_allowed_services is iterable else [] }}"
+  loop: "{{ fw__allowed_services }}"
 
 - name: Deny firewall traffic
   become: true
@@ -17,4 +17,4 @@
     service: "{{ item }}"
     state: disabled
     zone: FedoraServer
-  loop: "{{ firewall_denied_services if firewall_denied_services is iterable else [] }}"
+  loop: "{{ fw__denied_services }}"

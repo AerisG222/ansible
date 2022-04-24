@@ -20,7 +20,7 @@
       ansible.builtin.include_role:
         name: firewall
       vars:
-        firewall_allowed_services:
+        fw__allowed_services:
           - http
           - https
 
