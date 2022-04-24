@@ -8,6 +8,10 @@ ddclient_secrets_file: "{{ external_vars_root }}/ddclient_secrets.yml"
 # -------------------------------------
 # ddclient
 # -------------------------------------
+dd__tmp_dir: /home/svc_ddclient
+dd__systemd_dir: /home/svc_ddclient/.config/systemd/user
+dd__namecheap_password: "{{ vault_namecheap_password }}"
+
 ddclient_config:
   service_account:
     username: svc_ddclient
@@ -16,6 +20,3 @@ ddclient_config:
     subuid: 300000-365536
     subgid: 300000-365536
     enable_linger: true
-  podman_podname: ddclient-pod
-  podman_container_name: ddclient-container
-  namecheap_password: "{{ vault_namecheap_password }}"

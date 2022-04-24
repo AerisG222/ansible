@@ -37,5 +37,3 @@
         apply:
           become: true
           become_user: "{{ ddclient_config.service_account.username }}"
-      vars:
-        ddclient_namecheap_password: "{{ ddclient_config.namecheap_password }}"

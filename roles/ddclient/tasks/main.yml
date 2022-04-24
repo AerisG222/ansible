@@ -1,14 +1,13 @@
 ---
-- name: Create ddclient config volume
+- name: Create volume to hold ddclient config
   containers.podman.podman_volume:
-    name: ddclient_config
+    name: "{{ dd__volume }}"
     state: present
-  register: ddclient_volume
 
 - name: Prepare ddclient.conf
   ansible.builtin.template:
     src: ddclient.conf.j2
-    dest: "{{ ddclient_config.remote_home_dir }}/ddclient.conf"
+    dest: "{{ dd__tmp_dir }}/ddclient.conf"
     mode: u+rw
 
 - name: Copy ddclient.conf to volume
@@ -16,67 +15,66 @@
     name: podman_copy_to_volume
   vars:
     podman_copy_remote_src: true
-    podman_copy_remote_temp_dir: "{{ ddclient_config.remote_home_dir }}/_tmp_ansible"
-    podman_copy_volume_name: ddclient_config
-    podman_copy_src_path: "{{ ddclient_config.remote_home_dir }}/ddclient.conf"
+    podman_copy_remote_temp_dir: "{{ dd__tmp_dir }}/_tmp_ansible"
+    podman_copy_volume_name: "{{ dd__volume }}"
+    podman_copy_src_path: "{{ dd__tmp_dir }}/ddclient.conf"
 
 - name: Delete temp file
   ansible.builtin.file:
-    path: "{{ ddclient_config.remote_home_dir }}/ddclient.conf"
+    path: "{{ dd__tmp_dir }}/ddclient.conf"
     state: absent
 
 # stop pod via systemd, otherwise systemd and podman fight
-- name: "Disable {{ ddclient_config.podman_podname }} via systemd"
+- name: "Disable {{ dd__pod }} via systemd"
   ansible.builtin.systemd:
-    name: "pod-{{ ddclient_config.podman_podname }}xx"
+    name: "pod-{{ dd__pod }}"
     enabled: false
     state: stopped
     scope: user
-  register: sysctl_result
   ignore_errors: true # nothing to stop if it doesn't exist
   tags: skip_ansible_lint
 
 - name: get pod info
   containers.podman.podman_pod_info:
-    name: "{{ ddclient_config.podman_podname }}"
-  register: podinfo
+    name: "{{ dd__pod }}"
+  register: _dd__podinfo
 
 - name: stop pod if running
   containers.podman.podman_pod:
-    name: "{{ ddclient_config.podman_podname }}"
+    name: "{{ dd__pod }}"
     state: stopped
-  when: (podinfo.pods | length > 0) and (podinfo.pods[0].State == 'Running')
+  when: (_dd__podinfo.pods | length > 0) and (_dd__podinfo.pods[0].State == 'Running')
 
-- name: "Create pod {{ ddclient_config.podman_podname }}"
+- name: "Create pod {{ dd__pod }}"
   containers.podman.podman_pod:
-    name: "{{ ddclient_config.podman_podname }}"
+    name: "{{ dd__pod }}"
     state: started
 
-- name: "Create container {{ ddclient_config.podman_container_name }}"
+- name: "Create container {{ dd__container }}"
   containers.podman.podman_container:
-    name: "{{ ddclient_config.podman_container_name }}"
+    name: "{{ dd__container }}"
     image: docker.io/linuxserver/ddclient
-    pod: "{{ ddclient_config.podman_podname }}"
-    volume: "{{ ddclient_volume.volume.Name }}:/config"
+    pod: "{{ dd__pod }}"
+    volume: "{{ dd__volume }}:/config"
     state: started
     label:
       io.containers.autoupdate: image
 
 - name: "Ensure systemd config directory exists"
   ansible.builtin.file:
-    path: "{{ ddclient_config.systemd_dir }}"
+    path: "{{ dd__systemd_dir }}"
     state: directory
 
 - name: Create systemd unit files
   containers.podman.podman_pod:
-    name: "{{ ddclient_config.podman_podname }}"
+    name: "{{ dd__pod }}"
     generate_systemd:
       new: true
-      path: "{{ ddclient_config.systemd_dir }}"
+      path: "{{ dd__systemd_dir }}"
 
 - name: Enable ddclient via systemd
   ansible.builtin.systemd:
-    name: "pod-{{ ddclient_config.podman_podname }}"
+    name: "pod-{{ dd__pod }}"
     enabled: true
     state: started
     scope: user
