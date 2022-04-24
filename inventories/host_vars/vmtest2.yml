@@ -1,7 +1,7 @@
 ansible_host: 192.168.122.245
 ansible_user: mmorano
 
-# base
+# fedora base
 fed_b__hostname: vmtest2
 
 external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/hosts/{{ hostname }}"

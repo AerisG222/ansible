@@ -1,5 +1,6 @@
 ansible_user: mmorano
 
+# fedora base
 fed_b__hostname: tifa
 
 external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/hosts/{{ hostname }}"

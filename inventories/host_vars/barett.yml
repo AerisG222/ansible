@@ -1,4 +1,7 @@
 ansible_connection: local
 
-# workstation variables
-has_nvidia_gpu: true
+# fedora base
+fed_b__hostname: barett
+
+# fedora workstation
+fed_w__nvidia: true

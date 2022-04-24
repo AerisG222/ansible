@@ -1,13 +1,13 @@
 ---
-android_studio: false
-aws_cli: false
-azure_cli: false
-azure_data_studio: false
-google_chrome: false
-google_earth: false
-ms_teams: false
-powershell: false
-vscode: false
-piper: false
-nvidia: false
-nvidia_container: false
+fed_w__android_studio: false
+fed_w__aws_cli: false
+fed_w__azure_cli: false
+fed_w__azure_data_studio: false
+fed_w__google_chrome: false
+fed_w__google_earth: false
+fed_w__ms_teams: false
+fed_w__powershell: false
+fed_w__vscode: false
+fed_w__piper: false
+fed_w__nvidia: false
+fed_w__nvidia_container: false

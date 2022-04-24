@@ -1,0 +1,64 @@
+---
+argument_specs:
+  main:
+    short_description: Helper role to install various applications for Fedora workstations
+    options:
+      fed_w__android_studio:
+        type: bool
+        default: false
+        description: indicates if Android Studio should be installed
+
+      fed_w__aws_cli:
+        type: bool
+        default: false
+        description: indicates if AWS CLI should be installed
+
+      fed_w__azure_cli:
+        type: bool
+        default: false
+        description: indicates if Azure CLI should be installed
+
+      fed_w__azure_data_studio:
+        type: bool
+        default: false
+        description: indicates if Azure Data Studio should be installed
+
+      fed_w__google_chrome:
+        type: bool
+        default: false
+        description: indicates if Google Chrome should be installed
+
+      fed_w__google_earth:
+        type: bool
+        default: false
+        description: indicates if Google Earth should be installed
+
+      fed_w__ms_teams:
+        type: bool
+        default: false
+        description: indicates if MS Teams should be installed
+
+      fed_w__powershell:
+        type: bool
+        default: false
+        description: indicates if Powershell should be installed
+
+      fed_w__vscode:
+        type: bool
+        default: false
+        description: indicates if VS Code should be installed
+
+      fed_w__piper:
+        type: bool
+        default: false
+        description: indicates if Piper should be installed
+
+      fed_w__nvidia:
+        type: bool
+        default: false
+        description: indicates if Nvidia drivers should be installed
+
+      fed_w__nvidia_container:
+        type: bool
+        default: false
+        description: indicates if Nvidia container should be installed

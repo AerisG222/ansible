@@ -1,43 +1,43 @@
 ---
 - name: Import android_studio.yml
   ansible.builtin.import_tasks: android_studio.yml
-  when: android_studio
+  when: fed_w__android_studio
 
 - name: Import aws_cli.yml
   ansible.builtin.import_tasks: aws_cli.yml
-  when: aws_cli
+  when: fed_w__aws_cli
 
 - name: Import azure_cli.yml
   ansible.builtin.import_tasks: azure_cli.yml
-  when: azure_cli
+  when: fed_w__azure_cli
 
 - name: Import azure_data_studio.yml
   ansible.builtin.import_tasks: azure_data_studio.yml
-  when: azure_data_studio
+  when: fed_w__azure_data_studio
 
 - name: Import google_chrome.yml
   ansible.builtin.import_tasks: google_chrome.yml
-  when: google_chrome
+  when: fed_w__google_chrome
 
 - name: Import google_earth.yml
   ansible.builtin.import_tasks: google_earth.yml
-  when: google_earth
+  when: fed_w__google_earth
 
 - name: Import ms_teams.yml
   ansible.builtin.import_tasks: ms_teams.yml
-  when: ms_teams
+  when: fed_w__ms_teams
 
 - name: Import nvidia.yml
   ansible.builtin.import_tasks: nvidia.yml
-  when: nvidia
+  when: fed_w__nvidia
 
 - name: Import powershell.yml
   ansible.builtin.import_tasks: powershell.yml
-  when: powershell
+  when: fed_w__powershell
 
 - name: Import vscode.yml
   ansible.builtin.import_tasks: vscode.yml
-  when: vscode
+  when: fed_w__vscode
 
 - name: Add RPM Fusion repos
   become: true
@@ -86,7 +86,7 @@
   ansible.builtin.dnf:
     state: present
     name: piper
-  when: piper
+  when: fed_w__piper
 
 - name: configure sysctl for workstations
   become: true

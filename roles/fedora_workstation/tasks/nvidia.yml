@@ -14,7 +14,7 @@
     dest: /etc/yum.repos.d/nvidia-container-runtime.repo
     creates: /etc/yum.repos.d/nvidia-container-runtime.repo
   notify: update_package_cache
-  when: nvidia_container
+  when: fed_w__nvidia_container
 
 - name: Install Nvidia Container Runtime
   become: true
@@ -22,4 +22,4 @@
     state: present
     name:
       - nvidia-container-runtime
-  when: nvidia_container
+  when: fed_w__nvidia_container
