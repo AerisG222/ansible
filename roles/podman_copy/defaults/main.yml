@@ -1,0 +1,6 @@
+pod_cp__skip_if_src_not_exists: false
+pod_cp__container_src_dir: /src:ro,z
+pod_cp__container_dest_dir: /dest:rw,z
+pod_cp__command: cp -R /src/. /dest
+
+pod_cp__result: false

@@ -1,0 +1,39 @@
+---
+argument_specs:
+  main:
+    short_description: Role to simplify copying files to / from / between volumes and host
+    options:
+      pod_cp__src_dir_or_volume:
+        type: str
+        required: true
+        description: the name of the source volume or host directory to bind to the container
+
+      pod_cp__dest_dir_or_volume:
+        type: str
+        required: true
+        description: the name of the destination volume or host directory to bind to the container
+
+      pod_cp__container_src_dir:
+        type: str
+        default: /src:ro,z
+        description: The path within the container where the source directory/volume is mounted
+
+      pod_cp__container_dest_dir:
+        type: str
+        default: /dest:ro,z
+        description: The path within the container where the destination directory/volume is mounted
+
+      pod_cp__command:
+        type: str
+        default: cp -R /src/. /dest
+        description: The command to use to copy files between from the source to the destination
+
+      pod_cp__skip_if_src_not_exists:
+        type: bool
+        default: false
+        description: this will check to see if the source directory/volume exist, and if not, will skip the task gracefully
+
+      pod_cp__result:
+        type: bool
+        default: false
+        description: this is the output variable indicating if files were copied or not

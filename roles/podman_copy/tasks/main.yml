@@ -1,0 +1,71 @@
+---
+- name: deterimine if source is directory or volume
+  ansible.builtin.set_fact:
+    _pod_cp__is_directory: "{{ (pod_cp__src_dir_or_volume is match('\\.')) or (pod_cp__src_dir_or_volume is match('\\/')) }}"
+
+- name: check if source directory exists
+  block:
+
+    - name: lookup source directory info
+      ansible.builtin.stat:
+        path: "{{ pod_cp__src_dir_or_volume }}"
+      register: _pod_cp__src_dir_exists
+
+    - name: set variable to indicate if source directory exists
+      ansible.builtin.set_fact:
+        _pod_cp__src_directory_exists: "{{ _pod_cp__src_dir_exists.stat.exists }}"
+
+  when: >
+    pod_cp__skip_if_src_not_exists
+    and
+    _pod_cp__is_directory
+
+- name: check if source volume exists
+  block:
+
+    - name: lookup source volume
+      containers.podman.podman_volume_info:
+        name: "{{ pod_cp__src_dir_or_volume }}"
+      register: _pod_cp__src_volume_exists
+      ignore_errors: true
+
+    - name: set variable to indicate if source volume exists
+      ansible.builtin.set_fact:
+        _pod_cp__src_volume_exists: "{{ (not _pod_cp__src_volume_exists.failed) and (_pod_cp__src_volume_exists.volumes | length > 0) }}"
+
+  when: >
+    pod_cp__skip_if_src_not_exists
+    and
+    (not _pod_cp__is_directory)
+
+- name: copy data using container
+  block:
+
+    - name: copy files
+      ansible.builtin.include_role:
+        name: podman_alpine
+      vars:
+        pod_alpine__container: temp-copy-container
+        pod_alpine__command: "{{ pod_cp__command }}"
+        pod_alpine__volumes:
+          - "{{ pod_cp__src_dir_or_volume }}:{{ pod_cp__container_src_dir }}"
+          - "{{ pod_cp__dest_dir_or_volume }}:{{ pod_cp__container_dest_dir }}"
+
+    - name: wait for copy to complete
+      ansible.builtin.include_role:
+        name: podman_wait_for_stop
+      vars:
+        pod_stop__container_name: temp-copy-container
+        pod_stop__result_varname: _pod_cp__exit_code
+
+    - name: set output variable
+      ansible.builtin.fail:
+        msg: there was an error copying files to/from the container
+      when: _pod_cp__exit_code | int != 0
+
+  when: >
+    (not pod_cp__skip_if_src_not_exists)
+    or
+    (pod_cp__skip_if_src_not_exists and _pod_cp__is_directory and _pod_cp__src_directory_exists)
+    or
+    (pod_cp__skip_if_src_not_exists and (not _pod_cp__is_directory) and _pod_cp__src_volume_exists)
