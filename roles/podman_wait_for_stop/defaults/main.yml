@@ -1,0 +1,2 @@
+pod_stop__remove_container: true
+pod_stop__result_varname: pod_stop__result

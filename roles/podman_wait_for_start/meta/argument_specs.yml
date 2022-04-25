@@ -1,0 +1,9 @@
+---
+argument_specs:
+  main:
+    short_description: Role to wait until a container has entered the running state
+    options:
+      pod_start__container_name:
+        type: str
+        required: true
+        description: name of the container to wait for

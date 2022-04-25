@@ -1,0 +1,22 @@
+- name: "wait for container {{ pod_stop__container_name }} to stop (rm should not be specified when starting container)"
+  containers.podman.podman_container_info:
+    name: "{{ pod_stop__container_name }}"
+  register: _pod_stop__container_info
+  delay: 10
+  retries: 24
+  until: not _pod_stop__container_info.containers[0].State.Running
+
+- name: print container details
+  ansible.builtin.debug:
+    msg: "{{ _pod_stop__container_info }}"
+  when: ansible_verbosity > 0
+
+- name: set exit code variable
+  ansible.builtin.set_fact:
+    "{{ pod_stop__result_varname }}": "{{ _pod_stop__container_info.containers[0].State.ExitCode }}"
+
+- name: finally, remove the dead container
+  containers.podman.podman_container:
+    name: "{{ pod_stop__container_name }}"
+    state: absent
+  when: pod_stop__remove_container

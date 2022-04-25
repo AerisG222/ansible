@@ -1,0 +1,18 @@
+---
+argument_specs:
+  main:
+    short_description: Role to wait until a container is no longer in the running state
+    options:
+      pod_stop__container_name:
+        type: str
+        required: true
+        description: name of the container to wait for
+
+      pod_stop__result_varname:
+        type: str
+        description: variable name to use to store exit code of the container process
+
+      pod_stop__remove_container:
+        type: bool
+        default: true
+        description: indicates if this task should remove the container after it completes running
