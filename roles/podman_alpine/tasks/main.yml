@@ -7,7 +7,7 @@
     interactive: true
     tty: true
     rm: true
-    pod: "{{ alpine_pod }}"
-    env_file: "{{ alpine_envfile }}"
-    command: "{{ alpine_command }}"
-    volumes: "{{ alpine_volumes }}"
+    pod: "{{ pod_alpine__pod }}"
+    env_file: "{{ pod_alpine__envfile }}"
+    volumes: "{{ pod_alpine__volumes }}"
+    command: "{{ pod_alpine__command }}"

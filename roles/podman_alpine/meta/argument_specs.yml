@@ -1,0 +1,22 @@
+---
+argument_specs:
+  main:
+    short_description: Provides an easy way to run any command in an alpine container, which is especially helpful for things like copying data between volumes.
+    options:
+      pod_alpine__pod:
+        type: str
+        description: the pod to run the container in
+
+      pod_alpine__envfile:
+        type: str
+        description: the environment file to use when running this container
+
+      pod_alpine__volumes:
+        type: list
+        elements: str
+        description: all volumes and mount point specs to use when creating container
+
+      pod_alpine__command:
+        type: str
+        required: true
+        description: the command to run in the container

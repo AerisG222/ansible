@@ -14,8 +14,8 @@
     name: podman_alpine
   when: migvol_do_migrate
   vars:
-    alpine_command: "{{ migvol_command }}"
-    alpine_volumes:
+    pod_alpine__command: "{{ migvol_command }}"
+    pod_alpine__volumes:
       - "{{ migvol_orig_volume_name }}:/src:ro,z"
       - "{{ migvol_new_volume_name }}:/dest:rw,z"
 

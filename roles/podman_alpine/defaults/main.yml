@@ -1,3 +1,3 @@
-alpine_pod:
-alpine_envfile:
-alpine_volumes:
+pod_alpine__pod:
+pod_alpine__envfile:
+pod_alpine__volumes:
