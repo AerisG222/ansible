@@ -3,9 +3,9 @@
   ansible.builtin.include_role:
     name: podman_copy_from_volume
   vars:
-    volume_name: "{{ cert_vol }}"
-    src_path: "{{ item }}"
-    dest_relative_path: "{{ remote_home_dir }}"
+    pod_cfv__volume: "{{ cert_vol }}"
+    pod_cfv__src_path: "{{ item }}"
+    pod_cfv__dest_path: "{{ remote_home_dir }}"
   loop:
     - api/api.pfx.pwd
     - auth/auth.pfx.pwd

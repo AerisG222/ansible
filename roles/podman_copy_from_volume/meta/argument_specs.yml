@@ -1,0 +1,19 @@
+---
+argument_specs:
+  main:
+    short_description: Copies file from container volume to host
+    options:
+      pod_cfv__volume:
+        type: str
+        required: true
+        description: The name of the container volume
+
+      pod_cfv__src_path:
+        type: str
+        required: true
+        description: The specification for what to copy from the volume
+
+      pod_cfv__dest_path:
+        type: str
+        default: ""
+        description: The directory where data should be copied to on the host
