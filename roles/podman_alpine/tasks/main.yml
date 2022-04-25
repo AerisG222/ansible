@@ -1,12 +1,12 @@
 ---
 - name: run arbitrary command in alpine container
   containers.podman.podman_container:
-    name: temp_alpine_container
+    name: "{{ pod_alpine__container }}"
     image: docker.io/alpine
     state: started
     interactive: true
     tty: true
-    rm: true
+    rm: "{{ pod_alpine__rm }}"
     pod: "{{ pod_alpine__pod }}"
     env_file: "{{ pod_alpine__envfile }}"
     volumes: "{{ pod_alpine__volumes }}"

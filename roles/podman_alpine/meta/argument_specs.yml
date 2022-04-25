@@ -7,6 +7,11 @@ argument_specs:
         type: str
         description: the pod to run the container in
 
+      pod_alpine__container:
+        type: str
+        default: temp_alpine_container
+        description: the name to use for this container
+
       pod_alpine__envfile:
         type: str
         description: the environment file to use when running this container
@@ -20,3 +25,8 @@ argument_specs:
         type: str
         required: true
         description: the command to run in the container
+
+      pod_alpine__rm:
+        type: bool
+        default: false
+        description: specify if the container should be automatically removed after execution
