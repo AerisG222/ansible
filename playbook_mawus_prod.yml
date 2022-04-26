@@ -36,8 +36,8 @@
       ansible.builtin.include_role:
         name: podman_init
       vars:
-        podman_users:
-          - "{{ mawus_config_prod.service_account }}"
+        pod_init__linger_users:
+          - "{{ mawus_config_prod.service_account.username }}"
 
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:

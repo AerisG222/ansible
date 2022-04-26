@@ -19,4 +19,3 @@ ddclient_config:
     username: svc_ddclient
     password: "{{ vault_password_svc_ddclient }}"
     groups:
-    enable_linger: true

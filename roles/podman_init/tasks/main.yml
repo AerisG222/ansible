@@ -9,8 +9,7 @@
 - name: Enable linger for rootless containers
   become: true
   ansible.builtin.command:
-    cmd: loginctl enable-linger {{ item.username }}
-  when: item.enable_linger
+    cmd: loginctl enable-linger {{ _pod_init__linger_user }}
   loop_control:
-    label: "{{ item.username }}"
-  loop: "{{ podman_users if podman_users is iterable else [] }}"
+    loop_var: _pod_init__linger_user
+  loop: "{{ pod_init__linger_users }}"

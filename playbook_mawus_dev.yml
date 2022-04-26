@@ -19,8 +19,8 @@
       ansible.builtin.include_role:
         name: podman_init
       vars:
-        podman_users:
-          - "{{ mawus_config_dev.service_account }}"
+        pod_init__linger_users:
+          - "{{ mawus_config_dev.service_account.username }}"
 
     - name: Ensure git directory exists
       ansible.builtin.file:

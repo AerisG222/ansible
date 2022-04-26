@@ -1,0 +1,10 @@
+---
+argument_specs:
+  main:
+    short_description: Role to install podman and enable linger for specified users
+    options:
+      pod_init__linger_users:
+        type: list
+        elements: str
+        default: []
+        description: list of users that should be configured to enable linger for systemd
