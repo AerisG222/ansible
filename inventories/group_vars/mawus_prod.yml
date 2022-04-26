@@ -19,8 +19,6 @@ mawus_config_prod:
   # os level account that will run the site
   service_account:
     username: svc_www_maw
-    subuid: 200000-265535
-    subgid: 200000-265535
     enable_linger: true
     password: "{{ vault_os_svc_www_maw }}"
 

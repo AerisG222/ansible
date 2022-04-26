@@ -16,8 +16,6 @@ mawus_config_test:
   # os level account that will run the site
   service_account:
     username: "{{ ansible_user_id }}"
-    subuid: 100000-165535
-    subgid: 100000-165535
     enable_linger: false
 
   bash_profile: "{{ controller_home_dir }}/.bash_profile"

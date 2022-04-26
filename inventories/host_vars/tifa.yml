@@ -18,6 +18,4 @@ ddclient_config:
     username: svc_ddclient
     password: "{{ vault_password_svc_ddclient }}"
     groups:
-    subuid: 300000-365536
-    subgid: 300000-365536
     enable_linger: true
