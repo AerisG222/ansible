@@ -1,26 +1,26 @@
 ---
 - name: Create user systemd directory if necessary
   ansible.builtin.file:
-    path: "{{ systemd_job_ctx.systemd_dir }}"
+    path: "{{ sysd_job__systemd_dir }}"
     recurse: true
     state: directory
 
-- name: "Create systemd service file for {{ systemd_job_ctx.service_name }} job"
+- name: "Create systemd service file for {{ sysd_job__service }} job"
   ansible.builtin.template:
-    src: "{{ systemd_job_ctx.service_template }}"
-    dest: "{{ systemd_job_ctx.systemd_dir }}/{{ systemd_job_ctx.service_name }}.service"
+    src: "{{ sysd_job__service_template }}"
+    dest: "{{ sysd_job__systemd_dir }}/{{ sysd_job__service }}.service"
     mode: u+rw
 
-- name: "Create systemd timer file for {{ systemd_job_ctx.service_name }} job"
+- name: "Create systemd timer file for {{ sysd_job__service }} job"
   ansible.builtin.template:
-    src: "{{ systemd_job_ctx.timer_template }}"
-    dest: "{{ systemd_job_ctx.systemd_dir }}/{{ systemd_job_ctx.service_name }}.timer"
+    src: "{{ sysd_job__timer_template }}"
+    dest: "{{ sysd_job__systemd_dir }}/{{ sysd_job__service }}.timer"
     mode: u+rw
 
-- name: Enable job timer
+- name: Start and enable job timer
   ansible.builtin.systemd:
-    name: "{{ systemd_job_ctx.service_name }}.timer"
-    enabled: "{{ systemd_job_ctx.enable_job | default('false', true) }}"
-    state: "{{ systemd_job_ctx.start_job | default('false', true) | ternary('started', 'stopped') }}"
+    name: "{{ sysd_job__service }}.timer"
+    enabled: true
+    state: started
     scope: user
     daemon_reload: true

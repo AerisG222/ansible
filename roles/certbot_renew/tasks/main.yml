@@ -1,17 +1,11 @@
 ---
 - name: Set facts for systemd_job role
   ansible.builtin.set_fact:
-    service_template: "{{ role_path }}/templates/certbot-renew.service.j2"
-    timer_template: "{{ role_path }}/templates/certbot-renew.timer.j2"
+    sysd_job__service_template: "{{ role_path }}/templates/certbot-renew.service.j2"
+    sysd_job__timer_template: "{{ role_path }}/templates/certbot-renew.timer.j2"
+    sysd_job__systemd_dir: "{{ cb__systemd_dir }}"
+    sysd_job__service: "{{ cb__service_name }}"
 
 - name: Configure systemd job to run the certbot renew job
   ansible.builtin.include_role:
     name: systemd_job
-  vars:
-    systemd_job_ctx:
-      systemd_dir: "{{ cb__systemd_dir }}"
-      service_name: "{{ cb__service_name }}"
-      start_job: "{{ cb__start_job }}"
-      enable_job: "{{ cb__enable_job }}"
-      service_template: "{{ service_template }}"
-      timer_template: "{{ timer_template }}"

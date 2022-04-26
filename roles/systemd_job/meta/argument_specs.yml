@@ -1,0 +1,24 @@
+---
+argument_specs:
+  main:
+    short_description: Role to configure systemd service and timer
+    options:
+      sysd_job__systemd_dir:
+        type: str
+        required: true
+        description: directory where systemd files should be placed (i.e. ~/.config/systemd/user)
+
+      sysd_job__service:
+        type: str
+        required: true
+        description: the name of the service (w/o .service or .timer extension)
+
+      sysd_job__service_template:
+        type: str
+        required: true
+        description: the template file to use to prepare the .service definition
+
+      sysd_job__timer_template:
+        type: str
+        required: true
+        description: the template file to use to prepare the .timer definition
