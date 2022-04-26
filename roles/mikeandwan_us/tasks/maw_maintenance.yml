@@ -122,16 +122,12 @@
   ansible.builtin.include_role:
     name: postgres_backup_cleanup
   vars:
-    pg_cleanup_ctx:
-      container_image: "{{ mawus_config.podman_image_postgres }}"
-      service_name: "{{ mawus_config.env }}-postgres-cleanup"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      volume_name: "{{ postgres_backup_volume.volume.Name }}"
-      postgres_version: "{{ mawus_config.version_postgres }}"
-      calendar: 01:20:00
+    pg_clean__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    pg_clean__service: "{{ mawus_config.env }}-postgres-cleanup"
+    pg_clean__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_clean__pod: "{{ mawus_config.podman_podname }}"
+    pg_clean__volume: "{{ postgres_backup_volume.volume.Name }}"
+    pg_clean__calendar: '01:20:00'
 
 - name: Configure Postgres GDrive Daily Archive
   ansible.builtin.include_role:

@@ -2,7 +2,7 @@
 Description=Run delete old postgres backups
 
 [Timer]
-OnCalendar={{ pg_cleanup_ctx.calendar }}
+OnCalendar={{ pg_clean__calendar }}
 
 [Install]
 WantedBy=timers.target
