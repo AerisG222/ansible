@@ -1,7 +1,7 @@
 ---
 argument_specs:
   main:
-    short_description: Role to configure a systemd service and timer to delete old postgres backup files
+    short_description: Role to configure a systemd service and timer to backup postgres roles
     options:
       pg_bu_roles__systemd_dir:
         type: str
