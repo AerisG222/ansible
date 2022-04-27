@@ -1,0 +1,49 @@
+---
+argument_specs:
+  main:
+    short_description: Role to configure a systemd service and timer to delete old postgres backup files
+    options:
+      pg_archive__systemd_dir:
+        type: str
+        required: true
+        description: the directory where to write the systemd service and timer files
+
+      pg_archive__service:
+        type: str
+        required: true
+        description: the name of the service
+
+      pg_archive__pod:
+        type: str
+        required: true
+        description: the name of the pod to run this container in
+
+      pg_archive__files_to_archive_volume:
+        type: str
+        required: true
+        description: the name of the volume where backups will be written
+
+      pg_archive__credentials_volume:
+        type: str
+        required: true
+        description: the name of the volume where credentials needed for gdrive are stored
+
+      pg_archive__gdrive_image:
+        type: str
+        required: true
+        description: the name of the gdrive docker image
+
+      pg_archive__archive_folder:
+        type: str
+        required: true
+        description: the folder on gdrive where archives will be written
+
+      pg_archive__retain_duration:
+        type: str
+        required: true
+        description: the amount of time archived files for this folder will be retained
+
+      pg_archive__calendar:
+        type: str
+        required: true
+        description: the systemd calendar specification to define when this job runs

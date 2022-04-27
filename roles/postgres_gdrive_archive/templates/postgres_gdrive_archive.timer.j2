@@ -2,7 +2,7 @@
 Description=Run gdrive archive
 
 [Timer]
-OnCalendar={{ postgres_gdrive_archive_ctx.calendar }}
+OnCalendar={{ pg_archive__calendar }}
 
 [Install]
 WantedBy=timers.target

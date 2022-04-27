@@ -112,14 +112,28 @@
     #     pg_bu_db__db: my-db
     #     pg_bu_db__calendar: '00:00:00'
 
-    - name: test creating pg backup roles
+    # - name: test creating pg backup roles
+    #   ansible.builtin.include_role:
+    #     name: postgres_backup_roles
+    #   vars:
+    #     pg_bu_roles__systemd_dir: /home/mmorano/.config/systemd/user
+    #     pg_bu_roles__service: pg_backup_roles
+    #     pg_bu_roles__pod: test-pod
+    #     pg_bu_roles__volume: test-volume
+    #     pg_bu_roles__envfile: /path/to/envfile.env
+    #     pg_bu_roles__postgres_image: postgres
+    #     pg_bu_roles__calendar: '00:00:00'
+
+    - name: test creating pg archive service
       ansible.builtin.include_role:
-        name: postgres_backup_roles
+        name: postgres_gdrive_archive
       vars:
-        pg_bu_roles__systemd_dir: /home/mmorano/.config/systemd/user
-        pg_bu_roles__service: pg_backup_roles
-        pg_bu_roles__pod: test-pod
-        pg_bu_roles__volume: test-volume
-        pg_bu_roles__envfile: /path/to/envfile.env
-        pg_bu_roles__postgres_image: postgres
-        pg_bu_roles__calendar: '00:00:00'
+        pg_archive__systemd_dir: /home/mmorano/.config/systemd/user
+        pg_archive__service: pg_archive
+        pg_archive__pod: test-pod
+        pg_archive__files_to_archive_volume: test-volume
+        pg_archive__credentials_volume: test-creds
+        pg_archive__gdrive_image: postgres
+        pg_archive__archive_folder: archive_folder
+        pg_archive__retain_duration: '5d'
+        pg_archive__calendar: '00:00:00'
