@@ -48,17 +48,13 @@
   ansible.builtin.include_role:
     name: postgres_backup_roles
   vars:
-    pg_backup_roles_ctx:
-      container_image: "{{ mawus_config.podman_image_postgres }}"
-      service_name: "{{ mawus_config.env }}-postgres-backup-roles"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      volume_name: "{{ postgres_backup_volume.volume.Name }}"
-      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-      postgres_version: "{{ mawus_config.version_postgres }}"
-      calendar: 00:55:00
+    pg_bu_roles__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    pg_bu_roles__service: "{{ mawus_config.env }}-postgres-backup-roles"
+    pg_bu_roles__pod: "{{ mawus_config.podman_podname }}"
+    pg_bu_roles__volume: "{{ postgres_backup_volume.volume.Name }}"
+    pg_bu_roles__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pg_bu_roles__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_bu_roles__calendar: '00:55:00'
 
 - name: Configure postgres backup for maw_website database
   ansible.builtin.include_role:

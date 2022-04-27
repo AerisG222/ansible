@@ -99,15 +99,27 @@
     #     pg_clean__postgres_image: postgres
     #     pg_clean__calendar: '00:00:00'
 
-    - name: test creating pg backup job
+    # - name: test creating pg backup job
+    #   ansible.builtin.include_role:
+    #     name: postgres_backup_database
+    #   vars:
+    #     pg_bu_db__systemd_dir: /home/mmorano/.config/systemd/user
+    #     pg_bu_db__service: pg_backup
+    #     pg_bu_db__pod: test-pod
+    #     pg_bu_db__volume: test-volume
+    #     pg_bu_db__envfile: /path/to/envfile.env
+    #     pg_bu_db__postgres_image: postgres
+    #     pg_bu_db__db: my-db
+    #     pg_bu_db__calendar: '00:00:00'
+
+    - name: test creating pg backup roles
       ansible.builtin.include_role:
-        name: postgres_backup_database
+        name: postgres_backup_roles
       vars:
-        pg_bu_db__systemd_dir: /home/mmorano/.config/systemd/user
-        pg_bu_db__service: pg_backup
-        pg_bu_db__pod: test-pod
-        pg_bu_db__volume: test-volume
-        pg_bu_db__envfile: /path/to/envfile.env
-        pg_bu_db__postgres_image: postgres
-        pg_bu_db__db: my-db
-        pg_bu_db__calendar: '00:00:00'
+        pg_bu_roles__systemd_dir: /home/mmorano/.config/systemd/user
+        pg_bu_roles__service: pg_backup_roles
+        pg_bu_roles__pod: test-pod
+        pg_bu_roles__volume: test-volume
+        pg_bu_roles__envfile: /path/to/envfile.env
+        pg_bu_roles__postgres_image: postgres
+        pg_bu_roles__calendar: '00:00:00'
