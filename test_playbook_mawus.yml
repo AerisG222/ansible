@@ -124,16 +124,28 @@
     #     pg_bu_roles__postgres_image: postgres
     #     pg_bu_roles__calendar: '00:00:00'
 
-    - name: test creating pg archive service
+    # - name: test creating pg archive service
+    #   ansible.builtin.include_role:
+    #     name: postgres_gdrive_archive
+    #   vars:
+    #     pg_archive__systemd_dir: /home/mmorano/.config/systemd/user
+    #     pg_archive__service: pg_archive
+    #     pg_archive__pod: test-pod
+    #     pg_archive__files_to_archive_volume: test-volume
+    #     pg_archive__credentials_volume: test-creds
+    #     pg_archive__gdrive_image: postgres
+    #     pg_archive__archive_folder: archive_folder
+    #     pg_archive__retain_duration: '5d'
+    #     pg_archive__calendar: '00:00:00'
+
+    - name: test creating pg optimization service
       ansible.builtin.include_role:
-        name: postgres_gdrive_archive
+        name: postgres_optimize
       vars:
-        pg_archive__systemd_dir: /home/mmorano/.config/systemd/user
-        pg_archive__service: pg_archive
-        pg_archive__pod: test-pod
-        pg_archive__files_to_archive_volume: test-volume
-        pg_archive__credentials_volume: test-creds
-        pg_archive__gdrive_image: postgres
-        pg_archive__archive_folder: archive_folder
-        pg_archive__retain_duration: '5d'
-        pg_archive__calendar: '00:00:00'
+        pg_optimize__systemd_dir: /home/mmorano/.config/systemd/user
+        pg_optimize__service: pg_optimize
+        pg_optimize__pod: test-pod
+        pg_optimize__envfile: /path/to/envfile.env
+        pg_optimize__postgres_image: postgres
+        pg_optimize__db: my_db
+        pg_optimize__calendar: '00:00:00'

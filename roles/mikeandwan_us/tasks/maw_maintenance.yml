@@ -82,33 +82,29 @@
     pg_bu_db__db: idsrv
     pg_bu_db__calendar: '01:05:00'
 
-- name: Configure Postgres Optimizations
+- name: Configure postgres optimizations for maw_website
   ansible.builtin.include_role:
     name: postgres_optimize
-  loop_control:
-    loop_var: pg_optimize_ctx
-  loop:
-    - db_name: maw_website
-      container_image: "{{ mawus_config.podman_image_postgres }}"
-      service_name: "{{ mawus_config.env }}-postgres-optimize-mawus"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-      postgres_version: "{{ mawus_config.version_postgres }}"
-      calendar: 01:10:00
+  vars:
+    pg_optimize__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    pg_optimize__service: "{{ mawus_config.env }}-postgres-optimize-mawus"
+    pg_optimize__pod: "{{ mawus_config.podman_podname }}"
+    pg_optimize__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pg_optimize__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_optimize__db: maw_website
+    pg_optimize__calendar: '01:10:00'
 
-    - db_name: idsrv
-      container_image: "{{ mawus_config.podman_image_postgres }}"
-      service_name: "{{ mawus_config.env }}-postgres-optimize-idsrv"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-      postgres_version: "{{ mawus_config.version_postgres }}"
-      calendar: 01:15:00
+- name: Configure postgres optimizations for idsrv
+  ansible.builtin.include_role:
+    name: postgres_optimize
+  vars:
+    pg_optimize__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    pg_optimize__service: "{{ mawus_config.env }}-postgres-optimize-idsrv"
+    pg_optimize__pod: "{{ mawus_config.podman_podname }}"
+    pg_optimize__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pg_optimize__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_optimize__db: idsrv
+    pg_optimize__calendar: '01:15:00'
 
 - name: Configure Postgres Backup Cleanup
   ansible.builtin.include_role:
