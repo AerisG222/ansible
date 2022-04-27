@@ -1,7 +1,7 @@
 ---
 argument_specs:
   main:
-    short_description: Role to configure a systemd service and timer to run the rsolr indexer process
+    short_description: Role to configure a systemd service and timer to run the solr indexer process
     options:
       solr_idx__systemd_dir:
         type: str
