@@ -60,35 +60,31 @@
       postgres_version: "{{ mawus_config.version_postgres }}"
       calendar: 00:55:00
 
-- name: Configure Postgres Backups
+- name: Configure postgres backup for maw_website database
   ansible.builtin.include_role:
     name: postgres_backup_database
-  loop_control:
-    loop_var: pg_backupdb_ctx
-  loop:
-    - db_name: maw_website
-      container_image: "{{ mawus_config.podman_image_postgres }}"
-      service_name: "{{ mawus_config.env }}-postgres-backup-mawus"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      volume_name: "{{ postgres_backup_volume.volume.Name }}"
-      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-      postgres_version: "{{ mawus_config.version_postgres }}"
-      calendar: 01:00:00
+  vars:
+    pg_bu_db__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    pg_bu_db__service: "{{ mawus_config.env }}-postgres-backup-mawus"
+    pg_bu_db__pod: "{{ mawus_config.podman_podname }}"
+    pg_bu_db__volume: "{{ postgres_backup_volume.volume.Name }}"
+    pg_bu_db__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pg_bu_db__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_bu_db__db: maw_website
+    pg_bu_db__calendar: '01:00:00'
 
-    - db_name: idsrv
-      container_image: "{{ mawus_config.podman_image_postgres }}"
-      service_name: "{{ mawus_config.env }}-postgres-backup-idsrv"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      volume_name: "{{ postgres_backup_volume.volume.Name }}"
-      env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-      postgres_version: "{{ mawus_config.version_postgres }}"
-      calendar: 01:05:00
+- name: Configure postgres backup for idsrv database
+  ansible.builtin.include_role:
+    name: postgres_backup_database
+  vars:
+    pg_bu_db__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    pg_bu_db__service: "{{ mawus_config.env }}-postgres-backup-idsrv"
+    pg_bu_db__pod: "{{ mawus_config.podman_podname }}"
+    pg_bu_db__volume: "{{ postgres_backup_volume.volume.Name }}"
+    pg_bu_db__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pg_bu_db__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_bu_db__db: idsrv
+    pg_bu_db__calendar: '01:05:00'
 
 - name: Configure Postgres Optimizations
   ansible.builtin.include_role:

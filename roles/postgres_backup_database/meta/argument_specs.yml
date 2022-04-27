@@ -1,0 +1,44 @@
+---
+argument_specs:
+  main:
+    short_description: Role to configure a systemd service and timer to delete old postgres backup files
+    options:
+      pg_bu_db__systemd_dir:
+        type: str
+        required: true
+        description: the directory where to write the systemd service and timer files
+
+      pg_bu_db__service:
+        type: str
+        required: true
+        description: the name of the service
+
+      pg_bu_db__pod:
+        type: str
+        required: true
+        description: the name of the pod to run this container in
+
+      pg_bu_db__volume:
+        type: str
+        required: true
+        description: the name of the volume where backups will be written
+
+      pg_bu_db__envfile:
+        type: str
+        required: true
+        description: the path to the environment file containing the postgres user password
+
+      pg_bu_db__postgres_image:
+        type: str
+        required: true
+        description: the name of the postgres docker image
+
+      pg_bu_db__db:
+        type: str
+        required: true
+        description: the name of the database to backup
+
+      pg_bu_db__calendar:
+        type: str
+        required: true
+        description: the systemd calendar specification to define when this job runs

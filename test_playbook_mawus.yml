@@ -88,13 +88,26 @@
     #     pod_cp__src_dir_or_volume: test-vol-2
     #     pod_cp__dest_dir_or_volume: /home/mmorano/test-3
 
-    - name: test creating pg cleanup job
+    # - name: test creating pg cleanup job
+    #   ansible.builtin.include_role:
+    #     name: postgres_backup_cleanup
+    #   vars:
+    #     pg_clean__systemd_dir: /home/mmorano/.config/systemd/user
+    #     pg_clean__service: pg_cleanup
+    #     pg_clean__pod: test-pod
+    #     pg_clean__volume: test-volume
+    #     pg_clean__postgres_image: postgres
+    #     pg_clean__calendar: '00:00:00'
+
+    - name: test creating pg backup job
       ansible.builtin.include_role:
-        name: postgres_backup_cleanup
+        name: postgres_backup_database
       vars:
-        pg_clean__systemd_dir: /home/mmorano/.config/systemd/user
-        pg_clean__service: pg_cleanup
-        pg_clean__pod: test-pod
-        pg_clean__volume: test-volume
-        pg_clean__postgres_image: postgres
-        pg_clean__calendar: '00:00:00'
+        pg_bu_db__systemd_dir: /home/mmorano/.config/systemd/user
+        pg_bu_db__service: pg_backup
+        pg_bu_db__pod: test-pod
+        pg_bu_db__volume: test-volume
+        pg_bu_db__envfile: /path/to/envfile.env
+        pg_bu_db__postgres_image: postgres
+        pg_bu_db__db: my-db
+        pg_bu_db__calendar: '00:00:00'

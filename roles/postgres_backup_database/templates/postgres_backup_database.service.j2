@@ -1,6 +1,6 @@
 [Unit]
-Description=PostgreSQL backup job for {{ pg_backupdb_ctx.db_name }} database
+Description=PostgreSQL backup job for {{ pg_bu_db__db }} database
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pod {{ pg_backupdb_ctx.pod_name }} --volume {{ pg_backupdb_ctx.volume_name }}:/pg_backup:rw,z --env-file {{ pg_backupdb_ctx.env_file }} {{ pg_backupdb_ctx.container_image }} /bin/bash -c "pg_dump -h localhost -U postgres -Fc {{ pg_backupdb_ctx.db_name }} > /pg_backup/{{ pg_backupdb_ctx.db_name }}.$(date +%%Y%%m%%d).dump"
+ExecStart=podman run -it --rm --pod {{ pg_bu_db__pod }} --volume {{ pg_bu_db__volume }}:/pg_backup:rw,z --env-file {{ pg_bu_db__envfile }} {{ pg_bu_db__postgres_image }} /bin/bash -c "pg_dump -h localhost -U postgres -Fc {{ pg_bu_db__db }} > /pg_backup/{{ pg_bu_db__db }}.$(date +%%Y%%m%%d).dump"
