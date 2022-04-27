@@ -1,0 +1,39 @@
+---
+argument_specs:
+  main:
+    short_description: Role to configure a systemd service and timer to run the rsolr indexer process
+    options:
+      solr_idx__systemd_dir:
+        type: str
+        required: true
+        description: the directory where to write the systemd service and timer files
+
+      solr_idx__service:
+        type: str
+        required: true
+        description: the name of the service
+
+      solr_idx__pod:
+        type: str
+        required: true
+        description: the name of the pod in which to run the reverse geocode service
+
+      solr_idx__image:
+        type: str
+        required: true
+        description: the name of docker image for the reverse geocode process
+
+      solr_idx__sql_username:
+        type: str
+        required: true
+        description: the username to use when connecting to the maw_website postgres database
+
+      solr_idx__sql_password:
+        type: str
+        required: true
+        description: the password to use when connecting to the maw_website postgres database
+
+      solr_idx__calendar:
+        type: str
+        required: true
+        description: the systemd calendar specification to define when this job runs

@@ -30,16 +30,13 @@
   ansible.builtin.include_role:
     name: solr_indexer
   vars:
-    solr_indexer_ctx:
-      container_image: "{{ mawus_config.podman_image_solr_indexer }}"
-      service_name: "{{ mawus_config.env }}-solr-indexer"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      sql_username: "{{ mawus_config.sql_solr_username }}"
-      sql_password: "{{ mawus_config.sql_solr_password }}"
-      calendar: 00:50:00
+    solr_idx__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    solr_idx__service: "{{ mawus_config.env }}-solr-indexer"
+    solr_idx__pod: "{{ mawus_config.podman_podname }}"
+    solr_idx__image: "{{ mawus_config.podman_image_solr_indexer }}"
+    solr_idx__sql_username: "{{ mawus_config.sql_solr_username }}"
+    solr_idx__sql_password: "{{ mawus_config.sql_solr_password }}"
+    solr_idx__calendar: '00:50:00'
 
 - name: Configure Postgres Role Backup
   ansible.builtin.include_role:

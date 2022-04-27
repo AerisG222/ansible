@@ -3,4 +3,4 @@ Description=Solr indexer job for mikeandwan.us
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pull always --pod {{ solr_indexer_ctx.pod_name }} {{ solr_indexer_ctx.container_image }} 'Server=127.0.0.1;Port=5432;Database=maw_website;User Id={{ solr_indexer_ctx.sql_username }};Password={{ solr_indexer_ctx.sql_password }}' http://127.0.0.1:8983/solr/multimedia-categories/update/?commit=true
+ExecStart=podman run -it --rm --pull always --pod {{ solr_idx__pod }} {{ solr_idx__image }} 'Server=127.0.0.1;Port=5432;Database=maw_website;User Id={{ solr_idx__sql_username }};Password={{ solr_idx__sql_password }}' http://127.0.0.1:8983/solr/multimedia-categories/update/?commit=true

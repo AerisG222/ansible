@@ -150,14 +150,26 @@
     #     pg_optimize__db: my_db
     #     pg_optimize__calendar: '00:00:00'
 
-    - name: test creating reverse geocoder service
+    # - name: test creating reverse geocoder service
+    #   ansible.builtin.include_role:
+    #     name: reverse_geocoder
+    #   vars:
+    #     rev_geo__systemd_dir: /home/mmorano/.config/systemd/user
+    #     rev_geo__service: revgeo
+    #     rev_geo__pod: test-pod
+    #     rev_geo__volume: test-volume
+    #     rev_geo__envfile: /path/to/envfile.env
+    #     rev_geo__image: postgres
+    #     rev_geo__calendar: '00:00:00'
+
+    - name: test creating solr indexer service
       ansible.builtin.include_role:
-        name: reverse_geocoder
+        name: solr_indexer
       vars:
-        rev_geo__systemd_dir: /home/mmorano/.config/systemd/user
-        rev_geo__service: revgeo
-        rev_geo__pod: test-pod
-        rev_geo__volume: test-volume
-        rev_geo__envfile: /path/to/envfile.env
-        rev_geo__image: postgres
-        rev_geo__calendar: '00:00:00'
+        solr_idx__systemd_dir: /home/mmorano/.config/systemd/user
+        solr_idx__service: solridx
+        solr_idx__pod: test-pod
+        solr_idx__image: simg
+        solr_idx__sql_username: usr
+        solr_idx__sql_password: pwd
+        solr_idx__calendar: '00:00:00'
