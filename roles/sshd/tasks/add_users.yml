@@ -2,7 +2,7 @@
 - name: add ssh public keys
   become: true
   ansible.builtin.authorized_key:
-    user: "{{ username }}"
+    user: "{{ _sshd__allow_user }}"
     state: present
     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
 
@@ -15,7 +15,7 @@
     argv:
       - grep
       - -E
-      - '^AllowUsers.*\b{{ username }}\b.*$'
+      - '^AllowUsers.*\b{{ _sshd__allow_user }}\b.*$'
       - /etc/ssh/sshd_config
   changed_when: false
   failed_when: grep_allowusers.rc != 0 and grep_allowusers.rc != 1
@@ -28,7 +28,7 @@
     backup: true
     backrefs: true
     regex: "^AllowUsers\\s+(.*)$"
-    line: "AllowUsers \\1 {{ username }}"
+    line: "AllowUsers \\1 {{ _sshd__allow_user }}"
     state: present
     validate: sshd -t -f %s
   when:
@@ -46,7 +46,7 @@
 - name: validate ssh
   delegate_to: localhost
   ansible.builtin.command:
-    cmd: ssh {{ username }}@{{ current_ssh_server }} "echo success"
+    cmd: ssh {{ _sshd__allow_user }}@{{ current_ssh_server }} "echo success"
   register: validate_ssh_output
   changed_when: false
 

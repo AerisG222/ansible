@@ -4,37 +4,11 @@
 
 - name: Include add_users.yml
   ansible.builtin.include_tasks: add_users.yml
-  loop: "{{ sshd_allow_users if sshd_allow_users is iterable else [] }}"
   loop_control:
-    loop_var: username
+    loop_var: _sshd__allow_user
+  loop: "{{ sshd__allow_users }}"
 
 - name: Import harden.yml
   ansible.builtin.import_tasks: harden.yml
-  vars:
-    sshd_harden_items:
-      - key: "PubkeyAuthentication"
-        value: "yes"
-      - key: "MaxAuthTries"
-        value: "3"
-      - key: "LoginGraceTime"
-        value: "10"
-      - key: "PermitRootLogin"
-        value: "no"
-      - key: "PermitEmptyPasswords"
-        value: "no"
-      - key: "ChallengeResponseAuthentication"
-        value: "no"
-      - key: "KerberosAuthentication"
-        value: "no"
-      - key: "GSSAPIAuthentication"
-        value: "no"
-      - key: "PasswordAuthentication"
-        value: "no"
-      - key: "KbdInteractiveAuthentication"
-        value: "no"
-      - key: "HostbasedAuthentication"
-        value: "no"
-      - key: "X11Forwarding"
-        value: "no"
   notify:
     - "reload_sshd"

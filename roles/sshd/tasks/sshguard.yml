@@ -6,26 +6,30 @@
     state: latest
   tags: skip_ansible_lint
 
-- name: enable sshguard whitelist
+- name: enable sshguard allowlist
   become: true
   ansible.builtin.lineinfile:
     path: "/etc/sshguard.conf"
     backup: true
-    regex: "^(#)?{{ item }}"
-    line: "{{ item }}"
+    regex: "^(#)?{{ _sshd__sshguard_item }}"
+    line: "{{ _sshd__sshguard_item }}"
     state: present
+  loop_control:
+    loop_var: _sshd__sshguard_item
   loop:
     - "WHITELIST_FILE=/etc/sshguard.whitelist"
 
-- name: whitelist some addresses in sshguard
+- name: allowlist some addresses in sshguard
   become: true
   ansible.builtin.lineinfile:
     path: "/etc/sshguard.whitelist"
     backup: true
-    regex: "^(#)?{{ item }}"
-    line: "{{ item }}"
+    regex: "^(#)?{{ _sshd__sshguard_item }}"
+    line: "{{ _sshd__sshguard_item }}"
     state: present
-  loop: "{{ sshd_sshguard_whitelist if sshd_sshguard_whitelist is iterable else [] }}"
+  loop_control:
+    loop_var: _sshd__sshguard_item
+  loop: "{{ sshd__sshguard_allowlist if sshd__sshguard_allowlist is iterable else [] }}"
 
 - name: start and enable sshguard
   become: true

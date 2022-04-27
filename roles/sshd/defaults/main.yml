@@ -1,6 +1,32 @@
 ---
-sshd_allow_users:
+sshd__allow_users:
   - "{{ ansible_user }}"
 
-sshd_sshguard_whitelist:
-  - 192.168.0.0/16
+sshd__sshguard_allowlist:
+  - '192.168.0.0/16'
+
+sshd__harden_items:
+  - key: "PubkeyAuthentication"
+    value: "yes"
+  - key: "MaxAuthTries"
+    value: "3"
+  - key: "LoginGraceTime"
+    value: "10"
+  - key: "PermitRootLogin"
+    value: "no"
+  - key: "PermitEmptyPasswords"
+    value: "no"
+  - key: "ChallengeResponseAuthentication"
+    value: "no"
+  - key: "KerberosAuthentication"
+    value: "no"
+  - key: "GSSAPIAuthentication"
+    value: "no"
+  - key: "PasswordAuthentication"
+    value: "no"
+  - key: "KbdInteractiveAuthentication"
+    value: "no"
+  - key: "HostbasedAuthentication"
+    value: "no"
+  - key: "X11Forwarding"
+    value: "no"

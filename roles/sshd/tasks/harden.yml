@@ -6,8 +6,10 @@
   ansible.builtin.lineinfile:
     path: "/etc/ssh/sshd_config"
     backup: true
-    regex: "^(#)?{{ item.key }}"
-    line: "{{ item.key }} {{ item.value }}"
+    regex: "^(#)?{{ _sshd__harden_item.key }}"
+    line: "{{ _sshd__harden_item.key }} {{ _sshd__harden_item.value }}"
     state: present
     validate: sshd -t -f %s
-  loop: "{{ sshd_harden_items if sshd_harden_items is iterable else [] }}"
+  loop_control:
+    loop_var: _sshd__harden_item
+  loop: "{{ sshd__harden_items }}"

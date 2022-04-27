@@ -162,14 +162,22 @@
     #     rev_geo__image: postgres
     #     rev_geo__calendar: '00:00:00'
 
-    - name: test creating solr indexer service
+    # - name: test creating solr indexer service
+    #   ansible.builtin.include_role:
+    #     name: solr_indexer
+    #   vars:
+    #     solr_idx__systemd_dir: /home/mmorano/.config/systemd/user
+    #     solr_idx__service: solridx
+    #     solr_idx__pod: test-pod
+    #     solr_idx__image: simg
+    #     solr_idx__sql_username: usr
+    #     solr_idx__sql_password: pwd
+    #     solr_idx__calendar: '00:00:00'
+
+    - name: test setting up sshd
       ansible.builtin.include_role:
-        name: solr_indexer
+        name: sshd
       vars:
-        solr_idx__systemd_dir: /home/mmorano/.config/systemd/user
-        solr_idx__service: solridx
-        solr_idx__pod: test-pod
-        solr_idx__image: simg
-        solr_idx__sql_username: usr
-        solr_idx__sql_password: pwd
-        solr_idx__calendar: '00:00:00'
+        sshd__allow_users:
+          - "{{ ansible_user }}"
+          - svc_ddclient

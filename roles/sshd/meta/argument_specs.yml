@@ -1,0 +1,21 @@
+---
+argument_specs:
+  main:
+    short_description: Role to configure sshd
+    options:
+      sshd__allow_users:
+        type: list
+        elements: str
+        default: ['{{ ansible_user }}']
+        description: list of usernames to be added to the sshd AllowUsers directive
+
+      sshd__sshguard_allowlist:
+        type: list
+        elements: str
+        default: ['192.168.0.0/16']
+        description: list of ips / ranges to allow and never block by sshguard
+
+      sshd__harden_items:
+        type: list
+        elements: dict
+        description: sshd_config directives and values to improve sshd security
