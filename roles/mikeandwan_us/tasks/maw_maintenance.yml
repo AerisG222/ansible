@@ -135,13 +135,12 @@
   ansible.builtin.include_role:
     name: postgres_gdrive_archive
   vars:
-    postgres_gdrive_archive_ctx:
-      container_image: "{{ mawus_config.podman_image_gdrive }}"
-      service_name: "{{ mawus_config.env }}-postgres-archive-monthly"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      files_to_archive_volume: "{{ postgres_backup_volume.volume.Name }}"
-      creds_volume: "{{ gdrive_creds_volume.volume.Name }}"
-      archive_folder: "{{ mawus_config.podman_podname }}-{{ ansible_host }}-pg_backup-monthly"
-      retain_archive_duration: 2y
-      calendar: '*-*-01 01:30:00'
+    pg_archive__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    pg_archive__service: "{{ mawus_config.env }}-postgres-archive-monthly"
+    pg_archive__pod: "{{ mawus_config.podman_podname }}"
+    pg_archive__files_to_archive_volume: "{{ postgres_backup_volume.volume.Name }}"
+    pg_archive__credentials_volume: "{{ gdrive_creds_volume.volume.Name }}"
+    pg_archive__gdrive_image: "{{ mawus_config.podman_image_gdrive }}"
+    pg_archive__archive_folder: "{{ mawus_config.podman_podname }}-{{ ansible_host }}-pg_backup-monthly"
+    pg_archive__retain_duration: '2y'
+    pg_archive__calendar: '*-*-01 01:30:00'
