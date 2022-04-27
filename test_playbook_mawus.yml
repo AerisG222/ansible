@@ -138,14 +138,26 @@
     #     pg_archive__retain_duration: '5d'
     #     pg_archive__calendar: '00:00:00'
 
-    - name: test creating pg optimization service
+    # - name: test creating pg optimization service
+    #   ansible.builtin.include_role:
+    #     name: postgres_optimize
+    #   vars:
+    #     pg_optimize__systemd_dir: /home/mmorano/.config/systemd/user
+    #     pg_optimize__service: pg_optimize
+    #     pg_optimize__pod: test-pod
+    #     pg_optimize__envfile: /path/to/envfile.env
+    #     pg_optimize__postgres_image: postgres
+    #     pg_optimize__db: my_db
+    #     pg_optimize__calendar: '00:00:00'
+
+    - name: test creating reverse geocoder service
       ansible.builtin.include_role:
-        name: postgres_optimize
+        name: reverse_geocoder
       vars:
-        pg_optimize__systemd_dir: /home/mmorano/.config/systemd/user
-        pg_optimize__service: pg_optimize
-        pg_optimize__pod: test-pod
-        pg_optimize__envfile: /path/to/envfile.env
-        pg_optimize__postgres_image: postgres
-        pg_optimize__db: my_db
-        pg_optimize__calendar: '00:00:00'
+        rev_geo__systemd_dir: /home/mmorano/.config/systemd/user
+        rev_geo__service: revgeo
+        rev_geo__pod: test-pod
+        rev_geo__volume: test-volume
+        rev_geo__envfile: /path/to/envfile.env
+        rev_geo__image: postgres
+        rev_geo__calendar: '00:00:00'

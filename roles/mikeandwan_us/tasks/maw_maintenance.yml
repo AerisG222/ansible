@@ -18,16 +18,13 @@
   ansible.builtin.include_role:
     name: reverse_geocoder
   vars:
-    reverse_geocode_ctx:
-      container_image: "{{ mawus_config.podman_image_reverse_geocode }}"
-      service_name: "{{ mawus_config.env }}-reverse-geocoder"
-      systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-      start_job: false
-      enable_job: "{{ mawus_config.env == 'prod' }}"
-      pod_name: "{{ mawus_config.podman_podname }}"
-      volume_name: "{{ reverse_geocode_volume.volume.Name }}"
-      env_file: "{{ mawus_config.podman_env_dir }}/maw-reverse-geocode.env"
-      calendar: 00:45:00
+    rev_geo__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+    rev_geo__service: "{{ mawus_config.env }}-reverse-geocoder"
+    rev_geo__pod: "{{ mawus_config.podman_podname }}"
+    rev_geo__volume: "{{ reverse_geocode_volume.volume.Name }}"
+    rev_geo__envfile: "{{ mawus_config.podman_env_dir }}/maw-reverse-geocode.env"
+    rev_geo__image: "{{ mawus_config.podman_image_reverse_geocode }}"
+    rev_geo__calendar: '00:45:00'
 
 - name: Configure Solr Indexer
   ansible.builtin.include_role:

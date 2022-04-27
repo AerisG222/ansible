@@ -3,8 +3,8 @@
   ansible.builtin.set_fact:
     sysd_job__service_template: "{{ role_path }}/templates/reverse-geocode.service.j2"
     sysd_job__timer_template: "{{ role_path }}/templates/reverse-geocode.timer.j2"
-    sysd_job__systemd_dir: "{{ reverse_geocode_ctx.systemd_dir }}"
-    sysd_job__service: "{{ reverse_geocode_ctx.service_name }}"
+    sysd_job__systemd_dir: "{{ rev_geo__systemd_dir }}"
+    sysd_job__service: "{{ rev_geo__service }}"
 
 - name: Configure systemd job to run the reverse geocoder
   ansible.builtin.include_role:
