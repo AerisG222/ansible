@@ -1,4 +1,9 @@
 ---
+- name: Ensure temp dir exists
+  ansible.builtin.file:
+    path: "{{ dd__tmp_dir }}"
+    state: directory
+
 - name: Create volume to hold ddclient config
   containers.podman.podman_volume:
     name: "{{ dd__volume }}"
@@ -12,16 +17,14 @@
 
 - name: Copy ddclient.conf to volume
   ansible.builtin.include_role:
-    name: podman_copy_to_volume
+    name: podman_copy
   vars:
-    podman_copy_remote_src: true
-    podman_copy_remote_temp_dir: "{{ dd__tmp_dir }}/_tmp_ansible"
-    podman_copy_volume_name: "{{ dd__volume }}"
-    podman_copy_src_path: "{{ dd__tmp_dir }}/ddclient.conf"
+    pod_cp__src_dir_or_volume: "{{ dd__tmp_dir }}"
+    pod_cp__dest_dir_or_volume: "{{ dd__volume }}"
 
-- name: Delete temp file
+- name: Delete temp dir
   ansible.builtin.file:
-    path: "{{ dd__tmp_dir }}/ddclient.conf"
+    path: "{{ dd__tmp_dir }}"
     state: absent
 
 # stop pod via systemd, otherwise systemd and podman fight
