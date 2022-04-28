@@ -9,13 +9,12 @@ remote_mawus_root: "{{ remote_home_dir }}/mawus_test"
 # asset directory root
 asset_dir_root: /srv/www/website_assets
 
+# mawus
+mawus__username: "{{ ansible_user_id }}"
+
 mawus_config_test:
   env: test
   aspnet_env: test
-
-  # os level account that will run the site
-  service_account:
-    username: "{{ ansible_user_id }}"
 
   bash_profile: "{{ controller_home_dir }}/.bash_profile"
 

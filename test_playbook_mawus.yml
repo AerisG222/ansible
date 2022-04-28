@@ -10,7 +10,7 @@
     #     name: maw_admin_scripts
     #     apply:
     #       become: true
-    #       become_user: "{{ mawus_config_prod.service_account.username }}"
+    #       become_user: "{{ mawus__username }}"
     #   vars:
     #     maw_as__dir: "{{ remote_mawus_root }}/admin_scripts"
     #     maw_as__do_backup: "{{ mawus_config_prod.env == 'prod' }}"
@@ -29,7 +29,7 @@
     #     name: certbot_renew
     #     apply:
     #       become: true
-    #       become_user: "{{ mawus_config_prod.service_account.username }}"
+    #       become_user: "{{ mawus__username }}"
     #   vars:
     #     cb__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     #     cb__service_name: "{{ mawus_config_prod.env }}-certbot-renew"

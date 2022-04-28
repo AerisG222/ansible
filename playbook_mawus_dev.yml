@@ -20,7 +20,7 @@
         name: podman_init
       vars:
         pod_init__linger_users:
-          - "{{ mawus_config_dev.service_account.username }}"
+          - "{{ mawus__username }}"
 
     - name: Ensure git directory exists
       ansible.builtin.file:

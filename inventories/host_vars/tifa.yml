@@ -1,20 +1,13 @@
 ansible_user: mmorano
+external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/hosts/{{ hostname }}"
 
 # fedora base
 fed_b__hostname: tifa
 
-external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/hosts/{{ hostname }}"
-ddclient_secrets_file: "{{ external_vars_root }}/ddclient_secrets.yml"
-
-# -------------------------------------
 # ddclient
-# -------------------------------------
+dd__secrets_file: "{{ external_vars_root }}/ddclient_secrets.yml"
 dd__tmp_dir: /home/svc_ddclient
 dd__systemd_dir: /home/svc_ddclient/.config/systemd/user
 dd__namecheap_password: "{{ vault_namecheap_password }}"
-
-ddclient_config:
-  service_account:
-    username: svc_ddclient
-    password: "{{ vault_password_svc_ddclient }}"
-    groups:
+dd__username: svc_ddclient
+dd__password: "{{ vault_password_svc_ddclient }}"

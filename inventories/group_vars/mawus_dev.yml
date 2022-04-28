@@ -12,13 +12,12 @@ git_root: "{{ controller_home_dir }}/git"
 # asset directory root
 asset_dir_root: /srv/www/website_assets
 
+# mawus
+mawus__username: "{{ ansible_user_id }}"
+
 mawus_config_dev:
   env: dev
   aspnet_env: development
-
-  # os level account that will run the site
-  service_account:
-    username: "{{ ansible_user_id }}"
 
   bash_profile: "{{ controller_home_dir }}/.bash_profile"
 

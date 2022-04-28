@@ -9,9 +9,5 @@ fed_b__hostname: lvmtest
 dd__tmp_dir: /home/svc_ddclient
 dd__systemd_dir: /home/svc_ddclient/.config/systemd/user
 dd__namecheap_password: "{{ vault_namecheap_password }}"
-
-ddclient_config:
-  service_account:
-    username: svc_ddclient
-    password: "{{ vault_password_lvmtest_svc_ddclient }}"
-    groups:
+dd__username: svc_ddclient
+dd__password: "{{ vault_password_lvmtest_svc_ddclient }}"

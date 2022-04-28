@@ -12,14 +12,13 @@ git_root: "{{ controller_home_dir }}/git"
 # asset directory root
 asset_dir_root: /srv/www/website_assets
 
+# mawus
+mawus__username: svc_www_maw
+mawus__password: "{{ vault_os_svc_www_maw }}"
+
 mawus_config_prod:
   env: prod
   aspnet_env: production
-
-  # os level account that will run the site
-  service_account:
-    username: svc_www_maw
-    password: "{{ vault_os_svc_www_maw }}"
 
   bash_profile: "{{ controller_home_dir }}/.bash_profile"
 

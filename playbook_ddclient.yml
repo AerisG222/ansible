@@ -2,19 +2,20 @@
 - name: Configure ddclient Servers
   hosts: ddclient
   vars_files:
-    - "{{ ddclient_secrets_file }}"
+    - "{{ dd__secrets_file }}"
 
   tasks:
     - name: Configure Base
       ansible.builtin.include_role:
         name: fedora_base
 
-    - name: Configure Service Accounts
-      ansible.builtin.include_role:
-        name: service_accounts
-      vars:
-        service_accounts:
-          - "{{ ddclient_config.service_account }}"
+    - name: Add Service Account
+      become: true
+      ansible.builtin.user:
+        name: "{{ dd__username }}"
+        password: "{{ dd__password | password_hash('sha512') }}"
+        update_password: always
+        state: present
 
     - name: Configure sshd
       ansible.builtin.import_role:
@@ -22,18 +23,18 @@
       vars:
         sshd_allow_users:
           - "{{ ansible_user }}"
-          - "{{ ddclient_config.service_account.username }}"
+          - "{{ dd__username }}"
 
     - name: Initialize podman
       ansible.builtin.include_role:
         name: podman_init
       vars:
         pod_init__linger_users:
-          - "{{ ddclient_config.service_account.username }}"
+          - "{{ dd__username }}"
 
     - name: Configure ddclient
       ansible.builtin.include_role:
         name: ddclient
         apply:
           become: true
-          become_user: "{{ ddclient_config.service_account.username }}"
+          become_user: "{{ dd__username }}"

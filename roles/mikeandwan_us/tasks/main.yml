@@ -25,7 +25,7 @@
     name: maw_admin_scripts
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
   vars:
     maw_as__dir: "{{ remote_mawus_root }}/admin_scripts"
     maw_as__do_backup: "{{ mawus_config.env == 'prod' }}"
@@ -45,53 +45,53 @@
     file: maw_pull_images.yml
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
 
 - name: Include maw_volumes_create.yml
   ansible.builtin.include_tasks:
     file: maw_volumes_create.yml
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
 
 - name: Include maw_volumes_populate.yml
   ansible.builtin.include_tasks:
     file: maw_volumes_populate.yml
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
 
 - name: Initialize self signed certificates
   ansible.builtin.include_tasks:
     file: maw_certs.yml
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
 
 - name: Obtain self signed certificate passwords
   ansible.builtin.include_tasks:
     file: maw_certs_get_pwds.yml
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
 
 - name: Include maw_maintenance.yml
   ansible.builtin.include_tasks:
     file: maw_maintenance.yml
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
 
 - name: Include maw_env_files.yml
   ansible.builtin.include_tasks:
     file: maw_env_files.yml
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
 
 - name: Include maw_pod.yml
   ansible.builtin.include_tasks:
     file: maw_pod.yml
     apply:
       become: true
-      become_user: "{{ mawus_config.service_account.username }}"
+      become_user: "{{ mawus__username }}"
