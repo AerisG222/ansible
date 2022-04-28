@@ -81,7 +81,7 @@
     podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
     podman_copy_src_path: "{{ item }}"
     podman_copy_volume_name: "{{ gdrive_creds_volume.volume.Name }}"
-  with_fileglob: "{{ mawus_config.gdrive_creds_dir }}/*"
+  with_fileglob: "{{ mawus__gdrive_creds_dir }}/*"
   when: gdrive_creds_volume.changed and (not gdrive_creds_migrated)
 
 - name: migrate maw-google-creds
@@ -100,5 +100,5 @@
     podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
     podman_copy_src_path: "{{ item }}"
     podman_copy_volume_name: "{{ google_creds_volume.volume.Name }}"
-  with_fileglob: "{{ mawus_config.google_email_creds_dir }}/*"
+  with_fileglob: "{{ mawus__google_email_creds_dir }}/*"
   when: google_creds_volume.changed and (not google_creds_migrated)

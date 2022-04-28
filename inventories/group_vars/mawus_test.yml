@@ -27,12 +27,12 @@ mawus__pfx_auth: /certs/auth/auth.pfx
 mawus__pfx_signing: /certs/signing/signing.pfx
 mawus__pfx_www: /certs/www/www.pfx
 
+mawus__gdrive_creds_dir:  # not needed for test
+mawus__google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
+mawus__google_email_creds_file: /google-creds/www_emailer.json
+
 
 mawus_config_test:
-  gdrive_creds_dir: ""
-  google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
-  google_email_creds_file: /google-creds/www_emailer.json
-
   allow_low_ports: false
 
   # certs written to dir to simplify adding ca cert to host
