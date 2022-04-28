@@ -11,7 +11,7 @@
 
 - name: Include port_mapping.yml
   ansible.builtin.include_tasks: port_mapping.yml
-  when: mawus_config.allow_low_ports
+  when: mawus__allow_low_ports
 
 - name: Initialize host directories
   ansible.builtin.include_tasks: maw_host_directories.yml

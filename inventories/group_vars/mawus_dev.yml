@@ -17,6 +17,7 @@ mawus__username: "{{ ansible_user_id }}"
 mawus__env: dev
 mawus__aspnet_env: development
 mawus__bash_profile: "{{ controller_home_dir }}/.bash_profile"
+mawus__allow_low_ports: false
 
 mawus__fqdn_naked: dev.mikeandwan.us
 mawus__fqdn_api: dev.api.mikeandwan.us
@@ -36,8 +37,6 @@ mawus__google_email_creds_file: "{{ controller_mawus_env_root }}/google-creds/ww
 
 
 mawus_config_dev:
-  allow_low_ports: false
-
   certs_dir: "{{ remote_mawus_root }}/certs"
   dataprotection_dir: "{{ remote_mawus_root }}/dataprotection"
   upload_dir: "{{ remote_mawus_root }}/maw-uploads"

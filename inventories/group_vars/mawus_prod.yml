@@ -18,6 +18,7 @@ mawus__password: "{{ vault_os_svc_www_maw }}"
 mawus__env: prod
 mawus__aspnet_env: production
 mawus__bash_profile: # not needed for prod
+mawus__allow_low_ports: true
 
 mawus__fqdn_naked: mikeandwan.us
 mawus__fqdn_api: api.mikeandwan.us
@@ -37,7 +38,6 @@ mawus__google_email_creds_file: /google-creds/www_emailer.json
 
 
 mawus_config_prod:
-  allow_low_ports: true
 
   certs_dir: ""
   dataprotection_dir: ""

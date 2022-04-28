@@ -14,6 +14,7 @@ mawus__username: "{{ ansible_user_id }}"
 mawus__env: test
 mawus__aspnet_env: test
 mawus__bash_profile: "{{ controller_home_dir }}/.bash_profile"
+mawus__allow_low_ports: false
 
 mawus__fqdn_naked: test.mikeandwan.us
 mawus__fqdn_api: test.api.mikeandwan.us
@@ -33,8 +34,6 @@ mawus__google_email_creds_file: /google-creds/www_emailer.json
 
 
 mawus_config_test:
-  allow_low_ports: false
-
   # certs written to dir to simplify adding ca cert to host
   certs_dir: "{{ remote_mawus_root }}/certs"
   dataprotection_dir: ""
