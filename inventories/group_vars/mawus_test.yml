@@ -13,11 +13,10 @@ asset_dir_root: /srv/www/website_assets
 mawus__username: "{{ ansible_user_id }}"
 mawus__env: test
 mawus__aspnet_env: test
+mawus__bash_profile: "{{ controller_home_dir }}/.bash_profile"
 
 
 mawus_config_test:
-  bash_profile: "{{ controller_home_dir }}/.bash_profile"
-
   fqdn_naked: test.mikeandwan.us
   fqdn_api: test.api.mikeandwan.us
   fqdn_auth: test.auth.mikeandwan.us
