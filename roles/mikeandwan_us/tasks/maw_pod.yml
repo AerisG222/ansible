@@ -124,12 +124,12 @@
 
 - name: set the dir / volume variables
   ansible.builtin.set_fact:
-    cert_vol: "{{ maw_cert_volume.volume is defined | ternary(maw_cert_volume.volume.Name, mawus_config.certs_dir) }}"
-    auth_dataprotection_vol: "{{ auth_dataprotection_volume.volume is defined | ternary(auth_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
-    api_dataprotection_vol: "{{ api_dataprotection_volume.volume is defined | ternary(api_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
-    www_dataprotection_vol: "{{ www_dataprotection_volume.volume is defined | ternary(www_dataprotection_volume.volume.Name, mawus_config.dataprotection_dir) }}"
+    cert_vol: "{{ maw_cert_volume.volume is defined | ternary(maw_cert_volume.volume.Name, mawus__certs_dir) }}"
+    auth_dataprotection_vol: "{{ auth_dataprotection_volume.volume is defined | ternary(auth_dataprotection_volume.volume.Name, mawus__dataprotection_dir) }}"
+    api_dataprotection_vol: "{{ api_dataprotection_volume.volume is defined | ternary(api_dataprotection_volume.volume.Name, mawus__dataprotection_dir) }}"
+    www_dataprotection_vol: "{{ www_dataprotection_volume.volume is defined | ternary(www_dataprotection_volume.volume.Name, mawus__dataprotection_dir) }}"
     google_creds_vol: "{{ google_creds_volume.volume.Name }}"
-    uploads_vol: "{{ uploads_volume.volume is defined | ternary(uploads_volume.volume.Name, mawus_config.upload_dir) }}"
+    uploads_vol: "{{ uploads_volume.volume is defined | ternary(uploads_volume.volume.Name, mawus__upload_dir) }}"
 
 - name: auth container block
   block:
@@ -172,7 +172,7 @@
           - "{{ cert_vol }}:/certs:ro,z"
           - "{{ api_dataprotection_vol }}:/dataprotection:rw,Z"
           - "{{ uploads_vol }}:/maw-uploads:rw,z"
-          - "{{ mawus_config.asset_dir_images }}:/srv/www/website_assets/images:ro"
+          - "{{ mawus__asset_dir_images }}:/srv/www/website_assets/images:ro"
         label:
           io.containers.autoupdate: image
       register: api_container
@@ -200,8 +200,8 @@
           - "{{ cert_vol }}:/certs:ro,z"
           - "{{ www_dataprotection_vol }}:/dataprotection:rw,Z"
           - "{{ google_creds_vol }}:/google-creds:ro,z"
-          - "{{ mawus_config.asset_dir_images }}:/srv/www/website_assets/images:ro"
-          - "{{ mawus_config.asset_dir_movies }}:/srv/www/website_assets/movies:ro"
+          - "{{ mawus__asset_dir_images }}:/srv/www/website_assets/images:ro"
+          - "{{ mawus__asset_dir_movies }}:/srv/www/website_assets/movies:ro"
         label:
           io.containers.autoupdate: image
       register: www_container
@@ -300,7 +300,7 @@
 
 - name: Ensure user systemd directory exists
   ansible.builtin.file:
-    path: "{{ mawus_config.systemd_dir }}"
+    path: "{{ mawus__systemd_dir }}"
     state: directory
     mode: u+rwx
 
@@ -309,12 +309,12 @@
 - name: Create systemd unit files (manually)
   ansible.builtin.command:
     cmd: "podman generate systemd -f -n --new {{ mawus_config.podman_podname }}"
-    chdir: "{{ mawus_config.systemd_dir }}"
+    chdir: "{{ mawus__systemd_dir }}"
   changed_when: true
 
 - name: Configure container order
   ansible.builtin.lineinfile:
-    path: "{{ mawus_config.systemd_dir }}/{{ item.unitfile }}"
+    path: "{{ mawus__systemd_dir }}/{{ item.unitfile }}"
     insertafter: ^After=.*$
     line: "Before={{ item.before }}"
   loop:

@@ -17,8 +17,8 @@
   ansible.builtin.include_tasks: maw_host_directories.yml
   vars:
     asset_dirs:
-      - "{{ mawus_config.asset_dir_images }}"
-      - "{{ mawus_config.asset_dir_movies }}"
+      - "{{ mawus__asset_dir_images }}"
+      - "{{ mawus__asset_dir_movies }}"
 
 - name: Include maw_admin_scripts
   ansible.builtin.include_role:

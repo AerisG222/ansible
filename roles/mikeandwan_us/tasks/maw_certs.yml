@@ -1,15 +1,15 @@
 ---
 - name: set the cert dir / volume name and fqdn prefix
   ansible.builtin.set_fact:
-    cert_vol: "{{ (maw_cert_volume.volume is defined) | ternary(maw_cert_volume.volume.Name, mawus_config.certs_dir) }}"
+    cert_vol: "{{ (maw_cert_volume.volume is defined) | ternary(maw_cert_volume.volume.Name, mawus__certs_dir) }}"
     cert_fqdn_prefix: "{{ (mawus__env == 'prod') | ternary('', mawus__env) }}"
 
 - name: ensure cert dir exists for local projects
   ansible.builtin.file:
-    path: "{{ mawus_config.certs_dir }}"
+    path: "{{ mawus__certs_dir }}"
     state: directory
     mode: u+rwx
-  when: mawus_config.certs_dir | length > 0
+  when: mawus__certs_dir | length > 0
 
 # if you add a new environment, you may need to update the maw-certs image to be able to generate certs for the new env
 # todo: add logic to maw-certs to dynamically accept new env name
@@ -47,7 +47,7 @@
         src: "{{ item }}"
         mode: u+rw,go+r
       with_fileglob:
-        - "{{ mawus_config.certs_dir }}/ca/ca_*.crt"
+        - "{{ mawus__certs_dir }}/ca/ca_*.crt"
 
     - name: Make the system aware of the new ca certs
       become_user: root
@@ -62,4 +62,4 @@
           pfx_pwd_auth: "{{ lookup('file', remote_mawus_root + '/certs/auth/auth.pfx.pwd') }}"
           pfx_pwd_www: "{{ lookup('file', remote_mawus_root + '/certs/www/www.pfx.pwd') }}"
 
-  when: mawus_config.certs_dir | length > 0
+  when: mawus__certs_dir | length > 0

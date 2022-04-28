@@ -11,9 +11,9 @@
 
 - name: ensure maw-uploads directory exists
   ansible.builtin.file:
-    path: "{{ mawus_config.upload_dir }}"
+    path: "{{ mawus__upload_dir }}"
     state: directory
     mode: u+rwx,go+rx
-  when: mawus_config.upload_dir | length > 0
+  when: mawus__upload_dir | length > 0
 
 # todo: copy files for prod

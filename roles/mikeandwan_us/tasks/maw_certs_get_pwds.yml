@@ -42,7 +42,7 @@
     - "{{ remote_home_dir }}/auth.pfx.pwd"
     - "{{ remote_home_dir }}/www.pfx.pwd"
 
-  when: mawus_config.certs_dir | length == 0
+  when: mawus__certs_dir | length == 0
 
 # todo: this does not work, apparently due to the scoping of mawus_config -
 #       is there a way to update this variable so everything can live under mawus_config?

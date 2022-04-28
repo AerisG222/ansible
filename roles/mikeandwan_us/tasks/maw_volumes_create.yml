@@ -33,35 +33,35 @@
   containers.podman.podman_volume:
     name: "{{ mawus__env }}-maw-certs"
     state: present
-  when: mawus_config.certs_dir | length == 0
+  when: mawus__certs_dir | length == 0
   register: maw_cert_volume
 
 - name: create auth dataprotection volume
   containers.podman.podman_volume:
     name: "{{ mawus__env }}-maw-auth-dataprotection"
     state: present
-  when: mawus_config.dataprotection_dir | length == 0
+  when: mawus__dataprotection_dir | length == 0
   register: auth_dataprotection_volume
 
 - name: create api dataprotection volume
   containers.podman.podman_volume:
     name: "{{ mawus__env }}-maw-api-dataprotection"
     state: present
-  when: mawus_config.dataprotection_dir | length == 0
+  when: mawus__dataprotection_dir | length == 0
   register: api_dataprotection_volume
 
 - name: create uploads volume
   containers.podman.podman_volume:
     name: "{{ mawus__env }}-maw-uploads"
     state: present
-  when: mawus_config.upload_dir | length == 0
+  when: mawus__upload_dir | length == 0
   register: uploads_volume
 
 - name: create www dataprotection volume
   containers.podman.podman_volume:
     name: "{{ mawus__env }}-maw-www-dataprotection"
     state: present
-  when: mawus_config.dataprotection_dir | length == 0
+  when: mawus__dataprotection_dir | length == 0
   register: www_dataprotection_volume
 
 - name: create maw-google-creds volume

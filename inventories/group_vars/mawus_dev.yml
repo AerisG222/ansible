@@ -35,16 +35,15 @@ mawus__gdrive_creds_dir:  # not needed for dev
 mawus__google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
 mawus__google_email_creds_file: "{{ controller_mawus_env_root }}/google-creds/www_emailer.json"
 
+mawus__certs_dir: "{{ remote_mawus_root }}/certs"
+mawus__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection"
+mawus__upload_dir: "{{ remote_mawus_root }}/maw-uploads"
+mawus__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
+mawus__asset_dir_images: "{{ asset_dir_root }}/images"
+mawus__asset_dir_movies: "{{ asset_dir_root }}/movies"
+
 
 mawus_config_dev:
-  certs_dir: "{{ remote_mawus_root }}/certs"
-  dataprotection_dir: "{{ remote_mawus_root }}/dataprotection"
-  upload_dir: "{{ remote_mawus_root }}/maw-uploads"
-
-  systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-  asset_dir_images: "{{ asset_dir_root }}/images"
-  asset_dir_movies: "{{ asset_dir_root }}/movies"
-
   pg_backup_host_dir: "{{ controller_mawus_root }}/db_backups"
   pg_backup_roles: roles.sql
   pg_backup_idsrv: idsrv.20220307.dump
