@@ -28,10 +28,9 @@
 
 - name: set cert pwd variables
   ansible.builtin.set_fact:
-    mawus_config_pfx_pwd_updates:
-      pfx_pwd_api: "{{ api_pwd.content | b64decode }}"
-      pfx_pwd_auth: "{{ auth_pwd.content | b64decode }}"
-      pfx_pwd_www: "{{ www_pwd.content | b64decode }}"
+    mawus__pfx_pwd_api: "{{ api_pwd.content | b64decode }}"
+    mawus__pfx_pwd_auth: "{{ auth_pwd.content | b64decode }}"
+    mawus__pfx_pwd_www: "{{ www_pwd.content | b64decode }}"
 
 - name: delete temp files
   ansible.builtin.file:
@@ -43,9 +42,3 @@
     - "{{ remote_home_dir }}/www.pfx.pwd"
 
   when: mawus__certs_dir | length == 0
-
-# todo: this does not work, apparently due to the scoping of mawus_config -
-#       is there a way to update this variable so everything can live under mawus_config?
-# - name: update mawus_config with pwd values did not work, so lets first set a temp var
-#   ansible.builtin.set_fact:
-#     mawus_config: "{{ mawus_config | combine(mawus_config_updates, recursive=True) }}"

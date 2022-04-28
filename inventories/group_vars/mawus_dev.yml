@@ -31,6 +31,11 @@ mawus__pfx_auth: "{{ remote_mawus_root }}/certs/auth/auth.pfx"
 mawus__pfx_signing: "{{ remote_mawus_root }}/certs/signing/signing.pfx"
 mawus__pfx_www: "{{ remote_mawus_root }}/certs/www/www.pfx"
 
+# to be set by cert process
+mawus__pfx_pwd_api:
+mawus__pfx_pwd_auth:
+mawus__pfx_pwd_www:
+
 mawus__gdrive_creds_dir:  # not needed for dev
 mawus__google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
 mawus__google_email_creds_file: "{{ controller_mawus_env_root }}/google-creds/www_emailer.json"

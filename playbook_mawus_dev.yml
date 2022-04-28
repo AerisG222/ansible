@@ -50,5 +50,3 @@
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:
         name: mikeandwan_us
-      vars:
-        mawus_config: "{{ mawus_config_dev }}"

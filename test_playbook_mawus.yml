@@ -13,16 +13,16 @@
     #       become_user: "{{ mawus__username }}"
     #   vars:
     #     maw_as__dir: "{{ remote_mawus_root }}/admin_scripts"
-    #     maw_as__do_backup: "{{ mawus_config_prod.env == 'prod' }}"
-    #     maw_as__pod: "{{ mawus_config_prod.podman_podname }}"
-    #     maw_as__postgres_envfile: "{{ mawus_config_prod.podman_env_dir }}/maw-postgres.env"
-    #     maw_as__postgres_image: "{{ mawus_config_prod.podman_image_postgres }}"
-    #     maw_as__certbot_image: "{{ mawus_config_prod.podman_image_certbot }}"
-    #     maw_as__gdrive_image: "{{ mawus_config_prod.podman_image_gdrive }}"
-    #     maw_as__cache_sync_image: "{{ mawus_config_prod.podman_image_cache_sync }}"
-    #     maw_as__maw_certs_image: "{{ mawus_config_prod.podman_image_maw_certs }}"
-    #     maw_as__reverse_geocode_image: "{{ mawus_config_prod.podman_image_reverse_geocode }}"
-    #     maw_as__solr_indexer: "{{ mawus_config_prod.podman_image_solr_indexer }}"
+    #     maw_as__do_backup: "{{ mawus__env == 'prod' }}"
+    #     maw_as__pod: "{{ mawus__podman_podname }}"
+    #     maw_as__postgres_envfile: "{{ mawus__podman_env_dir }}/maw-postgres.env"
+    #     maw_as__postgres_image: "{{ mawus__podman_image_postgres }}"
+    #     maw_as__certbot_image: "{{ mawus__podman_image_certbot }}"
+    #     maw_as__gdrive_image: "{{ mawus__podman_image_gdrive }}"
+    #     maw_as__cache_sync_image: "{{ mawus__podman_image_cache_sync }}"
+    #     maw_as__maw_certs_image: "{{ mawus__podman_image_maw_certs }}"
+    #     maw_as__reverse_geocode_image: "{{ mawus__podman_image_reverse_geocode }}"
+    #     maw_as__solr_indexer: "{{ mawus__podman_image_solr_indexer }}"
 
     # - name: Include certbot_certs
     #   ansible.builtin.include_role:
@@ -32,12 +32,12 @@
     #       become_user: "{{ mawus__username }}"
     #   vars:
     #     cb__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-    #     cb__service_name: "{{ mawus_config_prod.env }}-certbot-renew"
+    #     cb__service_name: "{{ mawus__env }}-certbot-renew"
     #     cb__start_job: false
-    #     cb__enable_job: "{{ mawus_config_prod.env == 'prod' }}"
+    #     cb__enable_job: "{{ mawus__env == 'prod' }}"
     #     cb__calendar: '0/12:00:00'
-    #     cb__pod: "{{ mawus_config_prod.podman_podname }}"
-    #     cb__container_image: "{{ mawus_config_prod.podman_image_certbot }}"
+    #     cb__pod: "{{ mawus__podman_podname }}"
+    #     cb__container_image: "{{ mawus__podman_image_certbot }}"
     #     cb__validation_volume: cbval
     #     cb__certs_volume: cbcerts
 

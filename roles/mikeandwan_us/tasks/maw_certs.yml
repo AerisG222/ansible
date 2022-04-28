@@ -57,9 +57,8 @@
 
     - name: load cert pwds into variables for subsequent steps
       ansible.builtin.set_fact:
-        mawus_config_pfx_pwd_updates:
-          pfx_pwd_api: "{{ lookup('file', remote_mawus_root + '/certs/api/api.pfx.pwd') }}"
-          pfx_pwd_auth: "{{ lookup('file', remote_mawus_root + '/certs/auth/auth.pfx.pwd') }}"
-          pfx_pwd_www: "{{ lookup('file', remote_mawus_root + '/certs/www/www.pfx.pwd') }}"
+        mawus__pfx_pwd_api: "{{ lookup('file', remote_mawus_root + '/certs/api/api.pfx.pwd') }}"
+        mawus__pfx_pwd_auth: "{{ lookup('file', remote_mawus_root + '/certs/auth/auth.pfx.pwd') }}"
+        mawus__pfx_pwd_www: "{{ lookup('file', remote_mawus_root + '/certs/www/www.pfx.pwd') }}"
 
   when: mawus__certs_dir | length > 0
