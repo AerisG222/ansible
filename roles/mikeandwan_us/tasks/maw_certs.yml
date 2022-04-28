@@ -25,10 +25,11 @@
   register: certs_container
 
 - name: wait for cert initialization to complete
-  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
   vars:
-    container_name: maw-certs
-    exit_code_varname: certs_result
+    pod_stop__container_name: maw-certs
+    pod_stop__result_varname: certs_result
 
 - name: fail if certs not created
   ansible.builtin.fail:

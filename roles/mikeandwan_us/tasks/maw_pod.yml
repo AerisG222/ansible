@@ -68,9 +68,10 @@
   register: redis_container
 
 - name: wait for redis container
-  ansible.builtin.include_tasks: wait_for_container_to_start.yml
+  ansible.builtin.include_role:
+    name: podman_wait_for_start
   vars:
-    container_name: "{{ redis_container.container.Name }}"
+    pod_start__container_name: "{{ redis_container.container.Name }}"
 
 - name: maw-postgres container
   containers.podman.podman_container:
@@ -87,9 +88,10 @@
   register: postgres_container
 
 - name: wait for postgres container
-  ansible.builtin.include_tasks: wait_for_container_to_start.yml
+  ansible.builtin.include_role:
+    name: podman_wait_for_start
   vars:
-    container_name: "{{ postgres_container.container.Name }}"
+    pod_start__container_name: "{{ postgres_container.container.Name }}"
 
 - name: include maw_postgres_init.yml
   ansible.builtin.include_tasks: maw_postgres_init.yml
@@ -106,9 +108,10 @@
   register: cache_sync_container
 
 - name: wait for maw-cache-sync container
-  ansible.builtin.include_tasks: wait_for_container_to_start.yml
+  ansible.builtin.include_role:
+    name: podman_wait_for_start
   vars:
-    container_name: "{{ cache_sync_container.container.Name }}"
+    pod_start__container_name: "{{ cache_sync_container.container.Name }}"
 
 - name: maw-solr container
   containers.podman.podman_container:
@@ -123,9 +126,10 @@
   register: solr_container
 
 - name: wait for solr container
-  ansible.builtin.include_tasks: wait_for_container_to_start.yml
+  ansible.builtin.include_role:
+    name: podman_wait_for_start
   vars:
-    container_name: "{{ solr_container.container.Name }}"
+    pod_start__container_name: "{{ solr_container.container.Name }}"
 
 - name: include maw_solr_init.yml
   ansible.builtin.include_tasks: maw_solr_init.yml
@@ -158,9 +162,10 @@
       register: auth_container
 
     - name: wait for auth container
-      ansible.builtin.include_tasks: wait_for_container_to_start.yml
+      ansible.builtin.include_role:
+        name: podman_wait_for_start
       vars:
-        container_name: "{{ auth_container.container.Name }}"
+        pod_start__container_name: "{{ auth_container.container.Name }}"
 
   when: mawus__podman_image_auth | length > 0
 
@@ -186,9 +191,10 @@
       register: api_container
 
     - name: wait for api container
-      ansible.builtin.include_tasks: wait_for_container_to_start.yml
+      ansible.builtin.include_role:
+        name: podman_wait_for_start
       vars:
-        container_name: "{{ api_container.container.Name }}"
+        pod_start__container_name: "{{ api_container.container.Name }}"
 
   when: mawus__podman_image_api | length > 0
 
@@ -215,9 +221,10 @@
       register: www_container
 
     - name: wait for www container
-      ansible.builtin.include_tasks: wait_for_container_to_start.yml
+      ansible.builtin.include_role:
+        name: podman_wait_for_start
       vars:
-        container_name: "{{ www_container.container.Name }}"
+        pod_start__container_name: "{{ www_container.container.Name }}"
 
   when: mawus__podman_image_www | length > 0
 
@@ -237,9 +244,10 @@
       register: files_container
 
     - name: wait for files container
-      ansible.builtin.include_tasks: wait_for_container_to_start.yml
+      ansible.builtin.include_role:
+        name: podman_wait_for_start
       vars:
-        container_name: "{{ files_container.container.Name }}"
+        pod_start__container_name: "{{ files_container.container.Name }}"
 
   when: mawus__podman_image_files | length > 0
 
@@ -259,9 +267,10 @@
       register: photos_container
 
     - name: wait for photos container
-      ansible.builtin.include_tasks: wait_for_container_to_start.yml
+      ansible.builtin.include_role:
+        name: podman_wait_for_start
       vars:
-        container_name: "{{ photos_container.container.Name }}"
+        pod_start__container_name: "{{ photos_container.container.Name }}"
 
   when: mawus__podman_image_photos | length > 0
 
@@ -300,9 +309,10 @@
       register: gateway_container
 
     - name: wait for gateway container
-      ansible.builtin.include_tasks: wait_for_container_to_start.yml
+      ansible.builtin.include_role:
+        name: podman_wait_for_start
       vars:
-        container_name: "{{ gateway_container.container.Name }}"
+        pod_start__container_name: "{{ gateway_container.container.Name }}"
 
   when: mawus__podman_image_gateway | length > 0
 

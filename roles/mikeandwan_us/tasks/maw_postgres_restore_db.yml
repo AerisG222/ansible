@@ -19,10 +19,11 @@
   tags: skip_ansible_lint
 
 - name: "get {{ db_name }} exists test result"
-  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
   vars:
-    container_name: "{{ mawus__env }}-maw-pginit-restore-test"
-    exit_code_varname: sql_test_result
+    pod_stop__container_name: "{{ mawus__env }}-maw-pginit-restore-test"
+    pod_stop__result_varname: sql_test_result
 
 - name: set variable to determine if restore steps should be executed
   ansible.builtin.set_fact:
@@ -44,10 +45,11 @@
   when: do_restore_steps
 
 - name: "wait for {{ db_name }} restore"
-  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
   vars:
-    container_name: "{{ mawus__env }}-maw-pginit-restore"
-    exit_code_varname: restore_result
+    pod_stop__container_name: "{{ mawus__env }}-maw-pginit-restore"
+    pod_stop__result_varname: restore_result
   when: do_restore_steps
 
 - name: fail if restore failed
@@ -77,10 +79,11 @@
   when: do_restore_steps
 
 - name: wait for idsrv optimization
-  ansible.builtin.include_tasks: wait_for_container_to_stop.yml
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
   vars:
-    container_name: "{{ mawus__env }}-maw-pginit-optimize"
-    exit_code_varname: optimize_result
+    pod_stop__container_name: "{{ mawus__env }}-maw-pginit-optimize"
+    pod_stop__result_varname: optimize_result
   when: do_restore_steps
 
 - name: fail if optimization failed
