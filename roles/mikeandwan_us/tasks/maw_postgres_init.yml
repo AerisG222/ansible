@@ -15,7 +15,7 @@
     # trailing slash indicates parent dir itself is not copied - only contents
     - name: copy backup files
       ansible.builtin.copy:
-        src: "{{ mawus_config.pg_backup_host_dir }}/"
+        src: "{{ mawus__pg_backup_host_dir }}/"
         dest: "{{ pg_backup_dir }}"
         mode: u+rw
 
@@ -26,15 +26,15 @@
 
     - name: set backup dir
       ansible.builtin.set_fact:
-        pg_backup_dir: "{{ mawus_config.pg_backup_host_dir }}"
+        pg_backup_dir: "{{ mawus__pg_backup_host_dir }}"
 
   when: ansible_connection == 'local'
 
 - name: copy roles backup so we can safely edit
   ansible.builtin.copy:
     remote_src: true
-    src: "{{ pg_backup_dir }}/{{ mawus_config.pg_backup_roles }}"
-    dest: "{{ pg_backup_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+    src: "{{ pg_backup_dir }}/{{ mawus__pg_backup_roles }}"
+    dest: "{{ pg_backup_dir }}/{{ mawus__pg_backup_roles }}.safer.sql"
     force: true
     mode: u+rw
 
@@ -45,7 +45,7 @@
       - -i
       - -E
       - "s/CREATE ROLE (.+);/\\nDO \\$\\$\\nBEGIN\\nCREATE ROLE \\1;\\nEXCEPTION WHEN duplicate_object THEN RAISE NOTICE '%, skipping', SQLERRM USING ERRCODE = SQLSTATE;\\nEND\\n\\$\\$;\\n/g"
-      - "{{ pg_backup_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+      - "{{ pg_backup_dir }}/{{ mawus__pg_backup_roles }}.safer.sql"
   changed_when: true
   tags: skip_ansible_lint
 
@@ -55,7 +55,7 @@
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    command: "psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /postgres_backup/{{ mawus_config.pg_backup_roles }}.safer.sql"
+    command: "psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /postgres_backup/{{ mawus__pg_backup_roles }}.safer.sql"
     state: started
     interactive: true
     security_opt:
@@ -88,13 +88,13 @@
   ansible.builtin.include_tasks: maw_postgres_restore_db.yml
   vars:
     db_name: idsrv
-    backup_file: "{{ mawus_config.pg_backup_idsrv }}"
+    backup_file: "{{ mawus__pg_backup_idsrv }}"
 
 - name: restore maw_website if needed
   ansible.builtin.include_tasks: maw_postgres_restore_db.yml
   vars:
     db_name: maw_website
-    backup_file: "{{ mawus_config.pg_backup_www }}"
+    backup_file: "{{ mawus__pg_backup_www }}"
 
 - name: "remove temp {{ pg_backup_dir }} directory for remote connections"
   ansible.builtin.file:
@@ -104,6 +104,6 @@
 
 - name: clean safer role script file
   ansible.builtin.file:
-    path: "{{ pg_backup_dir }}/{{ mawus_config.pg_backup_roles }}.safer.sql"
+    path: "{{ pg_backup_dir }}/{{ mawus__pg_backup_roles }}.safer.sql"
     state: absent
   when: ansible_connection == 'local'

@@ -42,13 +42,13 @@ mawus__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
 mawus__asset_dir_images: "{{ asset_dir_root }}/images"
 mawus__asset_dir_movies: "{{ asset_dir_root }}/movies"
 
+mawus__pg_backup_host_dir: "{{ controller_mawus_root }}/db_backups"
+mawus__pg_backup_roles: roles.sql
+mawus__pg_backup_idsrv: idsrv.20220307.dump
+mawus__pg_backup_www: maw_website.20220307.dump
+
 
 mawus_config_dev:
-  pg_backup_host_dir: "{{ controller_mawus_root }}/db_backups"
-  pg_backup_roles: roles.sql
-  pg_backup_idsrv: idsrv.20220307.dump
-  pg_backup_www: maw_website.20220307.dump
-
   # dependency versions
   version_redis: 6
   version_postgres: 14
