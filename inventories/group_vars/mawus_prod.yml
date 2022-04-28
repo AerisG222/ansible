@@ -16,10 +16,10 @@ asset_dir_root: /srv/www/website_assets
 mawus__username: svc_www_maw
 mawus__password: "{{ vault_os_svc_www_maw }}"
 mawus__env: prod
+mawus__aspnet_env: production
+
 
 mawus_config_prod:
-  aspnet_env: production
-
   bash_profile: "{{ controller_home_dir }}/.bash_profile"
 
   fqdn_naked: mikeandwan.us
