@@ -8,8 +8,8 @@
     cb__start_job: false
     cb__enable_job: "{{ mawus__env == 'prod' }}"
     cb__calendar: '0/12:00:00'
-    cb__pod: "{{ mawus_config.podman_podname }}"
-    cb__container_image: "{{ mawus_config.podman_image_certbot }}"
+    cb__pod: "{{ mawus__podman_pod }}"
+    cb__container_image: "{{ mawus__podman_image_certbot }}"
     cb__validation_volume: "{{ certbot_validation_volume.volume.Name }}"
     cb__certs_volume: "{{ certbot_certs_volume.volume.Name }}"
   when: mawus__env == 'prod'
@@ -20,10 +20,10 @@
   vars:
     rev_geo__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     rev_geo__service: "{{ mawus__env }}-reverse-geocoder"
-    rev_geo__pod: "{{ mawus_config.podman_podname }}"
+    rev_geo__pod: "{{ mawus__podman_pod }}"
     rev_geo__volume: "{{ reverse_geocode_volume.volume.Name }}"
-    rev_geo__envfile: "{{ mawus_config.podman_env_dir }}/maw-reverse-geocode.env"
-    rev_geo__image: "{{ mawus_config.podman_image_reverse_geocode }}"
+    rev_geo__envfile: "{{ mawus__podman_env_dir }}/maw-reverse-geocode.env"
+    rev_geo__image: "{{ mawus__podman_image_reverse_geocode }}"
     rev_geo__calendar: '00:45:00'
 
 - name: Configure Solr Indexer
@@ -32,8 +32,8 @@
   vars:
     solr_idx__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     solr_idx__service: "{{ mawus__env }}-solr-indexer"
-    solr_idx__pod: "{{ mawus_config.podman_podname }}"
-    solr_idx__image: "{{ mawus_config.podman_image_solr_indexer }}"
+    solr_idx__pod: "{{ mawus__podman_pod }}"
+    solr_idx__image: "{{ mawus__podman_image_solr_indexer }}"
     solr_idx__sql_username: "{{ mawus_config.sql_solr_username }}"
     solr_idx__sql_password: "{{ mawus_config.sql_solr_password }}"
     solr_idx__calendar: '00:50:00'
@@ -44,10 +44,10 @@
   vars:
     pg_bu_roles__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     pg_bu_roles__service: "{{ mawus__env }}-postgres-backup-roles"
-    pg_bu_roles__pod: "{{ mawus_config.podman_podname }}"
+    pg_bu_roles__pod: "{{ mawus__podman_pod }}"
     pg_bu_roles__volume: "{{ postgres_backup_volume.volume.Name }}"
-    pg_bu_roles__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    pg_bu_roles__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_bu_roles__envfile: "{{ mawus__podman_env_dir }}/maw-postgres.env"
+    pg_bu_roles__postgres_image: "{{ mawus__podman_image_postgres }}"
     pg_bu_roles__calendar: '00:55:00'
 
 - name: Configure postgres backup for maw_website database
@@ -56,10 +56,10 @@
   vars:
     pg_bu_db__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     pg_bu_db__service: "{{ mawus__env }}-postgres-backup-mawus"
-    pg_bu_db__pod: "{{ mawus_config.podman_podname }}"
+    pg_bu_db__pod: "{{ mawus__podman_pod }}"
     pg_bu_db__volume: "{{ postgres_backup_volume.volume.Name }}"
-    pg_bu_db__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    pg_bu_db__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_bu_db__envfile: "{{ mawus__podman_env_dir }}/maw-postgres.env"
+    pg_bu_db__postgres_image: "{{ mawus__podman_image_postgres }}"
     pg_bu_db__db: maw_website
     pg_bu_db__calendar: '01:00:00'
 
@@ -69,10 +69,10 @@
   vars:
     pg_bu_db__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     pg_bu_db__service: "{{ mawus__env }}-postgres-backup-idsrv"
-    pg_bu_db__pod: "{{ mawus_config.podman_podname }}"
+    pg_bu_db__pod: "{{ mawus__podman_pod }}"
     pg_bu_db__volume: "{{ postgres_backup_volume.volume.Name }}"
-    pg_bu_db__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    pg_bu_db__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_bu_db__envfile: "{{ mawus__podman_env_dir }}/maw-postgres.env"
+    pg_bu_db__postgres_image: "{{ mawus__podman_image_postgres }}"
     pg_bu_db__db: idsrv
     pg_bu_db__calendar: '01:05:00'
 
@@ -82,9 +82,9 @@
   vars:
     pg_optimize__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     pg_optimize__service: "{{ mawus__env }}-postgres-optimize-mawus"
-    pg_optimize__pod: "{{ mawus_config.podman_podname }}"
-    pg_optimize__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    pg_optimize__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_optimize__pod: "{{ mawus__podman_pod }}"
+    pg_optimize__envfile: "{{ mawus__podman_env_dir }}/maw-postgres.env"
+    pg_optimize__postgres_image: "{{ mawus__podman_image_postgres }}"
     pg_optimize__db: maw_website
     pg_optimize__calendar: '01:10:00'
 
@@ -94,9 +94,9 @@
   vars:
     pg_optimize__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     pg_optimize__service: "{{ mawus__env }}-postgres-optimize-idsrv"
-    pg_optimize__pod: "{{ mawus_config.podman_podname }}"
-    pg_optimize__envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
-    pg_optimize__postgres_image: "{{ mawus_config.podman_image_postgres }}"
+    pg_optimize__pod: "{{ mawus__podman_pod }}"
+    pg_optimize__envfile: "{{ mawus__podman_env_dir }}/maw-postgres.env"
+    pg_optimize__postgres_image: "{{ mawus__podman_image_postgres }}"
     pg_optimize__db: idsrv
     pg_optimize__calendar: '01:15:00'
 
@@ -106,8 +106,8 @@
   vars:
     pg_clean__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     pg_clean__service: "{{ mawus__env }}-postgres-cleanup"
-    pg_clean__postgres_image: "{{ mawus_config.podman_image_postgres }}"
-    pg_clean__pod: "{{ mawus_config.podman_podname }}"
+    pg_clean__postgres_image: "{{ mawus__podman_image_postgres }}"
+    pg_clean__pod: "{{ mawus__podman_pod }}"
     pg_clean__volume: "{{ postgres_backup_volume.volume.Name }}"
     pg_clean__calendar: '01:20:00'
 
@@ -117,11 +117,11 @@
   vars:
     pg_archive__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     pg_archive__service: "{{ mawus__env }}-postgres-archive-daily"
-    pg_archive__pod: "{{ mawus_config.podman_podname }}"
+    pg_archive__pod: "{{ mawus__podman_pod }}"
     pg_archive__files_to_archive_volume: "{{ postgres_backup_volume.volume.Name }}"
     pg_archive__credentials_volume: "{{ gdrive_creds_volume.volume.Name }}"
-    pg_archive__gdrive_image: "{{ mawus_config.podman_image_gdrive }}"
-    pg_archive__archive_folder: "{{ mawus_config.podman_podname }}-{{ ansible_host }}-pg_backup"
+    pg_archive__gdrive_image: "{{ mawus__podman_image_gdrive }}"
+    pg_archive__archive_folder: "{{ mawus__podman_pod }}-{{ ansible_host }}-pg_backup"
     pg_archive__retain_duration: '10d'
     pg_archive__calendar: '01:25:00'
 
@@ -131,10 +131,10 @@
   vars:
     pg_archive__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
     pg_archive__service: "{{ mawus__env }}-postgres-archive-monthly"
-    pg_archive__pod: "{{ mawus_config.podman_podname }}"
+    pg_archive__pod: "{{ mawus__podman_pod }}"
     pg_archive__files_to_archive_volume: "{{ postgres_backup_volume.volume.Name }}"
     pg_archive__credentials_volume: "{{ gdrive_creds_volume.volume.Name }}"
-    pg_archive__gdrive_image: "{{ mawus_config.podman_image_gdrive }}"
-    pg_archive__archive_folder: "{{ mawus_config.podman_podname }}-{{ ansible_host }}-pg_backup-monthly"
+    pg_archive__gdrive_image: "{{ mawus__podman_image_gdrive }}"
+    pg_archive__archive_folder: "{{ mawus__podman_pod }}-{{ ansible_host }}-pg_backup-monthly"
     pg_archive__retain_duration: '2y'
     pg_archive__calendar: '*-*-01 01:30:00'

@@ -47,36 +47,34 @@ mawus__pg_backup_roles: roles.sql
 mawus__pg_backup_idsrv: idsrv.20220307.dump
 mawus__pg_backup_www: maw_website.20220307.dump
 
+mawus__version_redis: 6
+mawus__version_postgres: 14
+mawus__version_solr: 8
+mawus__podman_image_redis: docker.io/redis:6-alpine
+mawus__podman_image_postgres: docker.io/postgres:14-alpine
+mawus__podman_image_solr: docker.io/solr:8
+
+mawus__podman_pod: dev-maw-pod
+mawus__podman_env_dir: "{{ remote_mawus_root }}/podman-env"
+mawus__podman_image_photos: ""
+mawus__podman_image_files: ""
+mawus__podman_image_auth: ""
+mawus__podman_image_api: ""
+mawus__podman_image_www: ""
+mawus__podman_image_gateway: ""
+mawus__podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
+mawus__podman_image_certbot: docker.io/certbot/certbot:latest
+mawus__podman_image_cache_sync: docker.io/aerisg222/maw-cache-sync:latest
+mawus__podman_image_solr_indexer: docker.io/aerisg222/maw-solr-indexer:latest
+mawus__podman_image_reverse_geocode: ""
+mawus__podman_image_gdrive: ""
+mawus__podman_publish_ports:
+  - 8983:8983  # solr
+  - 5432:5432  # postgres
+  - 6379:6379  # redis
+
 
 mawus_config_dev:
-  # dependency versions
-  version_redis: 6
-  version_postgres: 14
-  version_solr: 8
-
-  podman_image_redis: docker.io/redis:6-alpine
-  podman_image_postgres: docker.io/postgres:14-alpine
-  podman_image_solr: docker.io/solr:8
-
-  podman_podname: dev-maw-pod
-  podman_env_dir: "{{ remote_mawus_root }}/podman-env"
-  podman_image_photos: ""
-  podman_image_files: ""
-  podman_image_auth: ""
-  podman_image_api: ""
-  podman_image_www: ""
-  podman_image_gateway: ""
-  podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
-  podman_image_certbot: docker.io/certbot/certbot:latest
-  podman_image_cache_sync: docker.io/aerisg222/maw-cache-sync:latest
-  podman_image_solr_indexer: docker.io/aerisg222/maw-solr-indexer:latest
-  podman_image_reverse_geocode: ""
-  podman_image_gdrive: ""
-  podman_publish_ports:
-    - 8983:8983  # solr
-    - 5432:5432  # postgres
-    - 6379:6379  # redis
-
   # postgres sql accounts for site
   sql_username: svc_www_maw
   sql_password: "{{ vault_password_sql_svc_www_maw }}"

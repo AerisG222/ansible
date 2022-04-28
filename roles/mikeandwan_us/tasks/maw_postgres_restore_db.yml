@@ -1,9 +1,9 @@
 - name: "test if {{ db_name }} database exists"
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-pginit-restore-test"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "{{ mawus_config.podman_image_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pod: "{{ mawus__podman_pod }}"
+    image: "{{ mawus__podman_image_postgres }}"
+    env_file: "{{ mawus__podman_env_dir }}/maw-postgres.env"
     command:
       - psql
       - '-h'
@@ -31,9 +31,9 @@
 - name: "restore {{ db_name }} database"
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-pginit-restore"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "{{ mawus_config.podman_image_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pod: "{{ mawus__podman_pod }}"
+    image: "{{ mawus__podman_image_postgres }}"
+    env_file: "{{ mawus__podman_env_dir }}/maw-postgres.env"
     command: "pg_restore -h 127.0.0.1 -U postgres -C -d postgres /postgres_backup/{{ backup_file }}"
     state: started
     interactive: true
@@ -59,9 +59,9 @@
 - name: "optimize {{ db_name }} database"
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-pginit-optimize"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "{{ mawus_config.podman_image_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pod: "{{ mawus__podman_pod }}"
+    image: "{{ mawus__podman_image_postgres }}"
+    env_file: "{{ mawus__podman_env_dir }}/maw-postgres.env"
     command:
       - psql
       - '-h'

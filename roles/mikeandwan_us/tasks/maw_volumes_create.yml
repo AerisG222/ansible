@@ -1,19 +1,19 @@
 ---
 - name: create redis volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-redis-{{ mawus_config.version_redis }}"
+    name: "{{ mawus__env }}-maw-redis-{{ mawus__version_redis }}"
     state: present
   register: redis_volume
 
 - name: create postgres volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-postgres-{{ mawus_config.version_postgres }}"
+    name: "{{ mawus__env }}-maw-postgres-{{ mawus__version_postgres }}"
     state: present
   register: postgres_volume
 
 - name: create postgres initialization volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-postgres-{{ mawus_config.version_postgres }}-init"
+    name: "{{ mawus__env }}-maw-postgres-{{ mawus__version_postgres }}-init"
     state: present
   register: postgres_volume_init
 
@@ -25,7 +25,7 @@
 
 - name: create solr volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-solr-{{ mawus_config.version_solr }}"
+    name: "{{ mawus__env }}-maw-solr-{{ mawus__version_solr }}"
     state: present
   register: solr_volume
 

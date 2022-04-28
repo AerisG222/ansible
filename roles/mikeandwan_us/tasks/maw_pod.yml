@@ -22,7 +22,7 @@
 # stop pod via systemd, otherwise systemd and podman fight
 - name: Disable mawus via systemd
   ansible.builtin.systemd:
-    name: "pod-{{ mawus_config.podman_podname }}"
+    name: "pod-{{ mawus__podman_pod }}"
     enabled: false
     state: stopped
     scope: user
@@ -31,26 +31,26 @@
 
 - name: get pod info
   containers.podman.podman_pod_info:
-    name: "{{ mawus_config.podman_podname }}"
+    name: "{{ mawus__podman_pod }}"
   register: podinfo
 
 - name: stop pod if running
   containers.podman.podman_pod:
-    name: "{{ mawus_config.podman_podname }}"
+    name: "{{ mawus__podman_pod }}"
     state: stopped
   when: (podinfo.pods | length > 0) and (podinfo.pods[0].State == 'Running')
 
-- name: "create {{ mawus_config.podman_podname }} pod"
+- name: "create {{ mawus__podman_pod }} pod"
   containers.podman.podman_pod:
-    name: "{{ mawus_config.podman_podname }}"
+    name: "{{ mawus__podman_pod }}"
     state: started
-    publish: "{{ mawus_config.podman_publish_ports if mawus_config.podman_publish_ports is iterable else [] }}"
+    publish: "{{ mawus__podman_publish_ports if mawus__podman_publish_ports is iterable else [] }}"
 
 - name: redis container
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-redis"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "{{ mawus_config.podman_image_redis }}"
+    pod: "{{ mawus__podman_pod }}"
+    image: "{{ mawus__podman_image_redis }}"
     command: redis-server --save 60 1
     state: started
     volume:
@@ -67,10 +67,10 @@
 - name: maw-postgres container
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-postgres"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "{{ mawus_config.podman_image_postgres }}"
+    pod: "{{ mawus__podman_pod }}"
+    image: "{{ mawus__podman_image_postgres }}"
     state: started
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    env_file: "{{ mawus__podman_env_dir }}/maw-postgres.env"
     volume:
       - "{{ postgres_volume_init.volume.Name }}:/docker-entrypoint-initdb.d:ro,z"
       - "{{ postgres_volume.volume.Name }}:/var/lib/postgresql/data:rw,z"
@@ -89,9 +89,9 @@
 - name: maw-cache-sync container
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-cache-sync"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "{{ mawus_config.podman_image_cache_sync }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env"
+    pod: "{{ mawus__podman_pod }}"
+    image: "{{ mawus__podman_image_cache_sync }}"
+    env_file: "{{ mawus__podman_env_dir }}/maw-cache-sync.env"
     state: started
     label:
       io.containers.autoupdate: image
@@ -105,8 +105,8 @@
 - name: maw-solr container
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-solr"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "{{ mawus_config.podman_image_solr }}"
+    pod: "{{ mawus__podman_pod }}"
+    image: "{{ mawus__podman_image_solr }}"
     state: started
     volume:
       - "{{ solr_volume.volume.Name }}:/var/solr:rw,z"
@@ -137,10 +137,10 @@
     - name: maw-auth container
       containers.podman.podman_container:
         name: "{{ mawus__env }}-maw-auth"
-        pod: "{{ mawus_config.podman_podname }}"
-        image: "{{ mawus_config.podman_image_auth }}"
+        pod: "{{ mawus__podman_pod }}"
+        image: "{{ mawus__podman_image_auth }}"
         state: started
-        env_file: "{{ mawus_config.podman_env_dir }}/maw-auth.env"
+        env_file: "{{ mawus__podman_env_dir }}/maw-auth.env"
         volume:
           - "{{ cert_vol }}:/certs:ro,z"
           - "{{ auth_dataprotection_vol }}:/dataprotection:rw,Z"
@@ -154,7 +154,7 @@
       vars:
         container_name: "{{ auth_container.container.Name }}"
 
-  when: mawus_config.podman_image_auth | length > 0
+  when: mawus__podman_image_auth | length > 0
 
 - name: api container block
   block:
@@ -162,10 +162,10 @@
     - name: maw-api container
       containers.podman.podman_container:
         name: "{{ mawus__env }}-maw-api"
-        pod: "{{ mawus_config.podman_podname }}"
-        image: "{{ mawus_config.podman_image_api }}"
+        pod: "{{ mawus__podman_pod }}"
+        image: "{{ mawus__podman_image_api }}"
         state: started
-        env_file: "{{ mawus_config.podman_env_dir }}/maw-api.env"
+        env_file: "{{ mawus__podman_env_dir }}/maw-api.env"
         security_opt:
           - label=disable
         volume:
@@ -182,7 +182,7 @@
       vars:
         container_name: "{{ api_container.container.Name }}"
 
-  when: mawus_config.podman_image_api | length > 0
+  when: mawus__podman_image_api | length > 0
 
 - name: www container block
   block:
@@ -190,10 +190,10 @@
     - name: maw-www container
       containers.podman.podman_container:
         name: "{{ mawus__env }}-maw-www"
-        pod: "{{ mawus_config.podman_podname }}"
-        image: "{{ mawus_config.podman_image_www }}"
+        pod: "{{ mawus__podman_pod }}"
+        image: "{{ mawus__podman_image_www }}"
         state: started
-        env_file: "{{ mawus_config.podman_env_dir }}/maw-www.env"
+        env_file: "{{ mawus__podman_env_dir }}/maw-www.env"
         security_opt:
           - label=disable
         volume:
@@ -211,7 +211,7 @@
       vars:
         container_name: "{{ www_container.container.Name }}"
 
-  when: mawus_config.podman_image_www | length > 0
+  when: mawus__podman_image_www | length > 0
 
 - name: files container block
   block:
@@ -219,8 +219,8 @@
     - name: maw-files container
       containers.podman.podman_container:
         name: "{{ mawus__env }}-maw-files"
-        pod: "{{ mawus_config.podman_podname }}"
-        image: "{{ mawus_config.podman_image_files }}"
+        pod: "{{ mawus__podman_pod }}"
+        image: "{{ mawus__podman_image_files }}"
         state: started
         volume:
           - "{{ cert_vol }}:/certs:ro,z"
@@ -233,7 +233,7 @@
       vars:
         container_name: "{{ files_container.container.Name }}"
 
-  when: mawus_config.podman_image_files | length > 0
+  when: mawus__podman_image_files | length > 0
 
 - name: photos container block
   block:
@@ -241,8 +241,8 @@
     - name: maw-photos container
       containers.podman.podman_container:
         name: "{{ mawus__env }}-maw-photos"
-        pod: "{{ mawus_config.podman_podname }}"
-        image: "{{ mawus_config.podman_image_photos }}"
+        pod: "{{ mawus__podman_pod }}"
+        image: "{{ mawus__podman_image_photos }}"
         state: started
         volume:
           - "{{ cert_vol }}:/certs:ro,z"
@@ -255,7 +255,7 @@
       vars:
         container_name: "{{ photos_container.container.Name }}"
 
-  when: mawus_config.podman_image_photos | length > 0
+  when: mawus__podman_image_photos | length > 0
 
 - name: gateway container block
   block:
@@ -281,8 +281,8 @@
     - name: maw-gateway container
       containers.podman.podman_container:
         name: "{{ mawus__env }}-maw-gateway"
-        pod: "{{ mawus_config.podman_podname }}"
-        image: "{{ mawus_config.podman_image_gateway }}"
+        pod: "{{ mawus__podman_pod }}"
+        image: "{{ mawus__podman_image_gateway }}"
         state: started
         volume: "{{ gateway_volumes }}"
         security_opt:
@@ -296,7 +296,7 @@
       vars:
         container_name: "{{ gateway_container.container.Name }}"
 
-  when: mawus_config.podman_image_gateway | length > 0
+  when: mawus__podman_image_gateway | length > 0
 
 - name: Ensure user systemd directory exists
   ansible.builtin.file:
@@ -308,7 +308,7 @@
 # producing the individual container service files for some reason
 - name: Create systemd unit files (manually)
   ansible.builtin.command:
-    cmd: "podman generate systemd -f -n --new {{ mawus_config.podman_podname }}"
+    cmd: "podman generate systemd -f -n --new {{ mawus__podman_pod }}"
     chdir: "{{ mawus__systemd_dir }}"
   changed_when: true
 
@@ -339,7 +339,7 @@
 - name: Start and/or Enable mawus via systemd
   ansible.builtin.systemd:
     daemon_reload: true
-    name: "pod-{{ mawus_config.podman_podname }}"
+    name: "pod-{{ mawus__podman_pod }}"
     enabled: "{{ mawus__env == 'prod' }}"
     state: started
     scope: user

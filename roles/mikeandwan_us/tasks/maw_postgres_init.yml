@@ -52,9 +52,9 @@
 - name: create roles
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-pginit-roles"
-    pod: "{{ mawus_config.podman_podname }}"
-    image: "{{ mawus_config.podman_image_postgres }}"
-    env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
+    pod: "{{ mawus__podman_pod }}"
+    image: "{{ mawus__podman_image_postgres }}"
+    env_file: "{{ mawus__podman_env_dir }}/maw-postgres.env"
     command: "psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /postgres_backup/{{ mawus__pg_backup_roles }}.safer.sql"
     state: started
     interactive: true

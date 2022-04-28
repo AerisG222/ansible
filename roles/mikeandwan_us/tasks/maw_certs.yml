@@ -16,7 +16,7 @@
 - name: initialize internal certs
   containers.podman.podman_container:
     name: maw-certs
-    image: "{{ mawus_config.podman_image_maw_certs }}"
+    image: "{{ mawus__podman_image_maw_certs }}"
     command: "{{ mawus__env }} {{ cert_fqdn_prefix }}"
     state: started
     interactive: true

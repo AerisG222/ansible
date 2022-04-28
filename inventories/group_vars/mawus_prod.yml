@@ -48,35 +48,34 @@ mawus__pg_backup_roles: roles.sql
 mawus__pg_backup_idsrv: idsrv.20220307.dump
 mawus__pg_backup_www: maw_website.20220307.dump
 
+mawus__version_redis: 6
+mawus__version_postgres: 14
+mawus__version_solr: 8
+
+mawus__podman_image_redis: docker.io/redis:6-alpine
+mawus__podman_image_postgres: docker.io/postgres:14-alpine
+mawus__podman_image_solr: docker.io/solr:8
+
+mawus__podman_pod: prod-maw-pod
+mawus__podman_env_dir: "{{ remote_mawus_root }}/podman-env"
+mawus__podman_image_photos: docker.io/aerisg222/maw-photos:latest
+mawus__podman_image_files: docker.io/aerisg222/maw-files:latest
+mawus__podman_image_auth: docker.io/aerisg222/maw-auth:latest
+mawus__podman_image_api: docker.io/aerisg222/maw-api:latest
+mawus__podman_image_www: docker.io/aerisg222/maw-www:latest
+mawus__podman_image_gateway: docker.io/aerisg222/maw-gateway:latest
+mawus__podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
+mawus__podman_image_certbot: docker.io/certbot/certbot:latest
+mawus__podman_image_cache_sync: docker.io/aerisg222/maw-cache-sync:latest
+mawus__podman_image_solr_indexer: docker.io/aerisg222/maw-solr-indexer:latest
+mawus__podman_image_reverse_geocode: docker.io/aerisg222/maw-reverse-geocode:latest
+mawus__podman_image_gdrive: docker.io/d0whc3r/gdrive:latest
+mawus__podman_publish_ports:
+  - 80:80
+  - 443:443
+
 
 mawus_config_prod:
-  # dependency versions
-  version_redis: 6
-  version_postgres: 14
-  version_solr: 8
-
-  podman_image_redis: docker.io/redis:6-alpine
-  podman_image_postgres: docker.io/postgres:14-alpine
-  podman_image_solr: docker.io/solr:8
-
-  podman_podname: prod-maw-pod
-  podman_env_dir: "{{ remote_mawus_root }}/podman-env"
-  podman_image_photos: docker.io/aerisg222/maw-photos:latest
-  podman_image_files: docker.io/aerisg222/maw-files:latest
-  podman_image_auth: docker.io/aerisg222/maw-auth:latest
-  podman_image_api: docker.io/aerisg222/maw-api:latest
-  podman_image_www: docker.io/aerisg222/maw-www:latest
-  podman_image_gateway: docker.io/aerisg222/maw-gateway:latest
-  podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
-  podman_image_certbot: docker.io/certbot/certbot:latest
-  podman_image_cache_sync: docker.io/aerisg222/maw-cache-sync:latest
-  podman_image_solr_indexer: docker.io/aerisg222/maw-solr-indexer:latest
-  podman_image_reverse_geocode: docker.io/aerisg222/maw-reverse-geocode:latest
-  podman_image_gdrive: docker.io/d0whc3r/gdrive:latest
-  podman_publish_ports:
-    - 80:80
-    - 443:443
-
   # postgres sql accounts for site
   sql_username: svc_www_maw
   sql_password: "{{ vault_password_sql_svc_www_maw }}"
