@@ -14,9 +14,9 @@ asset_dir_root: /srv/www/website_assets
 
 # mawus
 mawus__username: "{{ ansible_user_id }}"
+mawus__env: dev
 
 mawus_config_dev:
-  env: dev
   aspnet_env: development
 
   bash_profile: "{{ controller_home_dir }}/.bash_profile"

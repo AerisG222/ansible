@@ -342,7 +342,7 @@
 
 - name: run indexer
   ansible.builtin.systemd:
-    name: "{{ mawus_config.env }}-solr-indexer"
+    name: "{{ mawus__env }}-solr-indexer"
     enabled: false
     state: started
     scope: user

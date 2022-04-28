@@ -1,6 +1,6 @@
 - name: "test if {{ db_name }} database exists"
   containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-restore-test"
+    name: "{{ mawus__env }}-maw-pginit-restore-test"
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
@@ -21,7 +21,7 @@
 - name: "get {{ db_name }} exists test result"
   ansible.builtin.include_tasks: wait_for_container_to_stop.yml
   vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-restore-test"
+    container_name: "{{ mawus__env }}-maw-pginit-restore-test"
     exit_code_varname: sql_test_result
 
 - name: set variable to determine if restore steps should be executed
@@ -30,7 +30,7 @@
 
 - name: "restore {{ db_name }} database"
   containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-restore"
+    name: "{{ mawus__env }}-maw-pginit-restore"
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
@@ -46,7 +46,7 @@
 - name: "wait for {{ db_name }} restore"
   ansible.builtin.include_tasks: wait_for_container_to_stop.yml
   vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-restore"
+    container_name: "{{ mawus__env }}-maw-pginit-restore"
     exit_code_varname: restore_result
   when: do_restore_steps
 
@@ -58,7 +58,7 @@
 
 - name: "optimize {{ db_name }} database"
   containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-optimize"
+    name: "{{ mawus__env }}-maw-pginit-optimize"
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
@@ -79,7 +79,7 @@
 - name: wait for idsrv optimization
   ansible.builtin.include_tasks: wait_for_container_to_stop.yml
   vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-optimize"
+    container_name: "{{ mawus__env }}-maw-pginit-optimize"
     exit_code_varname: optimize_result
   when: do_restore_steps
 

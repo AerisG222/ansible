@@ -15,7 +15,7 @@
   become: true
   ansible.builtin.lineinfile:
     path: /etc/hosts
-    backup: "{{ mawus_config.env == 'prod' }}"
+    backup: "{{ mawus__env == 'prod' }}"
     backrefs: true
     regex: "^127\\.0\\.0\\.1\\s+(.*)$"
     line: "127.0.0.1 \\1 {{ item }}"

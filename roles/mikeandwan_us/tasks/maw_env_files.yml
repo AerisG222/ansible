@@ -14,7 +14,7 @@
 
 - name: Prepare environment files
   ansible.builtin.template:
-    backup: "{{ mawus_config.env == 'prod' }}"
+    backup: "{{ mawus__env == 'prod' }}"
     src: "maw_env/{{ item }}.j2"
     dest: "{{ mawus_config.podman_env_dir }}/{{ item }}"
     mode: u+rw
@@ -43,4 +43,4 @@
       [ -f "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env" ] && load_dotenv "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env"
 
       set +o allexport
-  when: mawus_config.env == 'dev'
+  when: mawus__env == 'dev'

@@ -1,97 +1,97 @@
 ---
 - name: create redis volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-redis-{{ mawus_config.version_redis }}"
+    name: "{{ mawus__env }}-maw-redis-{{ mawus_config.version_redis }}"
     state: present
   register: redis_volume
 
 - name: create postgres volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-postgres-{{ mawus_config.version_postgres }}"
+    name: "{{ mawus__env }}-maw-postgres-{{ mawus_config.version_postgres }}"
     state: present
   register: postgres_volume
 
 - name: create postgres initialization volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-postgres-{{ mawus_config.version_postgres }}-init"
+    name: "{{ mawus__env }}-maw-postgres-{{ mawus_config.version_postgres }}-init"
     state: present
   register: postgres_volume_init
 
 - name: create postgres backup volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-postgres-backup"
+    name: "{{ mawus__env }}-maw-postgres-backup"
     state: present
   register: postgres_backup_volume
 
 - name: create solr volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-solr-{{ mawus_config.version_solr }}"
+    name: "{{ mawus__env }}-maw-solr-{{ mawus_config.version_solr }}"
     state: present
   register: solr_volume
 
 - name: create maw cert volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-certs"
+    name: "{{ mawus__env }}-maw-certs"
     state: present
   when: mawus_config.certs_dir | length == 0
   register: maw_cert_volume
 
 - name: create auth dataprotection volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-auth-dataprotection"
+    name: "{{ mawus__env }}-maw-auth-dataprotection"
     state: present
   when: mawus_config.dataprotection_dir | length == 0
   register: auth_dataprotection_volume
 
 - name: create api dataprotection volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-api-dataprotection"
+    name: "{{ mawus__env }}-maw-api-dataprotection"
     state: present
   when: mawus_config.dataprotection_dir | length == 0
   register: api_dataprotection_volume
 
 - name: create uploads volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-uploads"
+    name: "{{ mawus__env }}-maw-uploads"
     state: present
   when: mawus_config.upload_dir | length == 0
   register: uploads_volume
 
 - name: create www dataprotection volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-www-dataprotection"
+    name: "{{ mawus__env }}-maw-www-dataprotection"
     state: present
   when: mawus_config.dataprotection_dir | length == 0
   register: www_dataprotection_volume
 
 - name: create maw-google-creds volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-google-creds"
+    name: "{{ mawus__env }}-maw-google-creds"
     state: present
   register: google_creds_volume
 
 - name: create maw-gdrive-creds volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-gdrive-creds"
+    name: "{{ mawus__env }}-maw-gdrive-creds"
     state: present
   register: gdrive_creds_volume
 
 - name: create maw-reverse-geocode volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-reverse-geocode"
+    name: "{{ mawus__env }}-maw-reverse-geocode"
     state: present
   register: reverse_geocode_volume
 
 - name: create maw-certbot-validation volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-certbot-validation"
+    name: "{{ mawus__env }}-maw-certbot-validation"
     state: present
-  when: mawus_config.env == 'prod'
+  when: mawus__env == 'prod'
   register: certbot_validation_volume
 
 - name: create maw-certbot-certs volume
   containers.podman.podman_volume:
-    name: "{{ mawus_config.env }}-maw-certbot-certs"
+    name: "{{ mawus__env }}-maw-certbot-certs"
     state: present
-  when: mawus_config.env == 'prod'
+  when: mawus__env == 'prod'
   register: certbot_certs_volume

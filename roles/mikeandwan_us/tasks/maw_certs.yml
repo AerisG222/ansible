@@ -2,7 +2,7 @@
 - name: set the cert dir / volume name and fqdn prefix
   ansible.builtin.set_fact:
     cert_vol: "{{ (maw_cert_volume.volume is defined) | ternary(maw_cert_volume.volume.Name, mawus_config.certs_dir) }}"
-    cert_fqdn_prefix: "{{ (mawus_config.env == 'prod') | ternary('', mawus_config.env) }}"
+    cert_fqdn_prefix: "{{ (mawus__env == 'prod') | ternary('', mawus__env) }}"
 
 - name: ensure cert dir exists for local projects
   ansible.builtin.file:
@@ -17,7 +17,7 @@
   containers.podman.podman_container:
     name: maw-certs
     image: "{{ mawus_config.podman_image_maw_certs }}"
-    command: "{{ mawus_config.env }} {{ cert_fqdn_prefix }}"
+    command: "{{ mawus__env }} {{ cert_fqdn_prefix }}"
     state: started
     interactive: true
     volume:
@@ -43,7 +43,7 @@
       become_user: root
       become: true
       ansible.builtin.copy:
-        dest: "/usr/share/pki/ca-trust-source/anchors/maw_{{ mawus_config.env }}_{{ item | basename }}"
+        dest: "/usr/share/pki/ca-trust-source/anchors/maw_{{ mawus__env }}_{{ item | basename }}"
         src: "{{ item }}"
         mode: u+rw,go+r
       with_fileglob:

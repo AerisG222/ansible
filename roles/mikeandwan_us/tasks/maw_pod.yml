@@ -48,7 +48,7 @@
 
 - name: redis container
   containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-redis"
+    name: "{{ mawus__env }}-maw-redis"
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_redis }}"
     command: redis-server --save 60 1
@@ -66,7 +66,7 @@
 
 - name: maw-postgres container
   containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-postgres"
+    name: "{{ mawus__env }}-maw-postgres"
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_postgres }}"
     state: started
@@ -88,7 +88,7 @@
 
 - name: maw-cache-sync container
   containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-cache-sync"
+    name: "{{ mawus__env }}-maw-cache-sync"
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_cache_sync }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-cache-sync.env"
@@ -104,7 +104,7 @@
 
 - name: maw-solr container
   containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-solr"
+    name: "{{ mawus__env }}-maw-solr"
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_solr }}"
     state: started
@@ -136,7 +136,7 @@
 
     - name: maw-auth container
       containers.podman.podman_container:
-        name: "{{ mawus_config.env }}-maw-auth"
+        name: "{{ mawus__env }}-maw-auth"
         pod: "{{ mawus_config.podman_podname }}"
         image: "{{ mawus_config.podman_image_auth }}"
         state: started
@@ -161,7 +161,7 @@
 
     - name: maw-api container
       containers.podman.podman_container:
-        name: "{{ mawus_config.env }}-maw-api"
+        name: "{{ mawus__env }}-maw-api"
         pod: "{{ mawus_config.podman_podname }}"
         image: "{{ mawus_config.podman_image_api }}"
         state: started
@@ -189,7 +189,7 @@
 
     - name: maw-www container
       containers.podman.podman_container:
-        name: "{{ mawus_config.env }}-maw-www"
+        name: "{{ mawus__env }}-maw-www"
         pod: "{{ mawus_config.podman_podname }}"
         image: "{{ mawus_config.podman_image_www }}"
         state: started
@@ -218,7 +218,7 @@
 
     - name: maw-files container
       containers.podman.podman_container:
-        name: "{{ mawus_config.env }}-maw-files"
+        name: "{{ mawus__env }}-maw-files"
         pod: "{{ mawus_config.podman_podname }}"
         image: "{{ mawus_config.podman_image_files }}"
         state: started
@@ -240,7 +240,7 @@
 
     - name: maw-photos container
       containers.podman.podman_container:
-        name: "{{ mawus_config.env }}-maw-photos"
+        name: "{{ mawus__env }}-maw-photos"
         pod: "{{ mawus_config.podman_podname }}"
         image: "{{ mawus_config.podman_image_photos }}"
         state: started
@@ -271,16 +271,16 @@
         gateway_volumes_prod:
           - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
           - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
-      when: mawus_config.env == 'prod'
+      when: mawus__env == 'prod'
 
     - name: merge all volumes needed for gateway
       ansible.builtin.set_fact:
         gateway_volumes: "{{ gateway_volumes + gateway_volumes_prod }}"
-      when: mawus_config.env == 'prod'
+      when: mawus__env == 'prod'
 
     - name: maw-gateway container
       containers.podman.podman_container:
-        name: "{{ mawus_config.env }}-maw-gateway"
+        name: "{{ mawus__env }}-maw-gateway"
         pod: "{{ mawus_config.podman_podname }}"
         image: "{{ mawus_config.podman_image_gateway }}"
         state: started
@@ -318,28 +318,28 @@
     insertafter: ^After=.*$
     line: "Before={{ item.before }}"
   loop:
-    - unitfile: "container-{{ mawus_config.env }}-maw-api.service"
-      before: "container-{{ mawus_config.env }}-maw-gateway.service"
-    - unitfile: "container-{{ mawus_config.env }}-maw-auth.service"
-      before: "container-{{ mawus_config.env }}-maw-gateway.service"
-    - unitfile: "container-{{ mawus_config.env }}-maw-files.service"
-      before: "container-{{ mawus_config.env }}-maw-gateway.service"
-    - unitfile: "container-{{ mawus_config.env }}-maw-photos.service"
-      before: "container-{{ mawus_config.env }}-maw-gateway.service"
-    - unitfile: "container-{{ mawus_config.env }}-maw-postgres.service"
-      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-auth.service container-{{ mawus_config.env }}-maw-www.service container-{{ mawus_config.env }}-maw-cache-sync.service"
-    - unitfile: "container-{{ mawus_config.env }}-maw-redis.service"
-      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service container-{{ mawus_config.env }}-maw-cache-sync.service"
-    - unitfile: "container-{{ mawus_config.env }}-maw-solr.service"
-      before: "container-{{ mawus_config.env }}-maw-api.service container-{{ mawus_config.env }}-maw-www.service"
-    - unitfile: "container-{{ mawus_config.env }}-maw-www.service"
-      before: "container-{{ mawus_config.env }}-maw-gateway.service"
-  when: (mawus_config.env == 'prod') or (mawus_config.env == 'test')
+    - unitfile: "container-{{ mawus__env }}-maw-api.service"
+      before: "container-{{ mawus__env }}-maw-gateway.service"
+    - unitfile: "container-{{ mawus__env }}-maw-auth.service"
+      before: "container-{{ mawus__env }}-maw-gateway.service"
+    - unitfile: "container-{{ mawus__env }}-maw-files.service"
+      before: "container-{{ mawus__env }}-maw-gateway.service"
+    - unitfile: "container-{{ mawus__env }}-maw-photos.service"
+      before: "container-{{ mawus__env }}-maw-gateway.service"
+    - unitfile: "container-{{ mawus__env }}-maw-postgres.service"
+      before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-auth.service container-{{ mawus__env }}-maw-www.service container-{{ mawus__env }}-maw-cache-sync.service"
+    - unitfile: "container-{{ mawus__env }}-maw-redis.service"
+      before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-www.service container-{{ mawus__env }}-maw-cache-sync.service"
+    - unitfile: "container-{{ mawus__env }}-maw-solr.service"
+      before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-www.service"
+    - unitfile: "container-{{ mawus__env }}-maw-www.service"
+      before: "container-{{ mawus__env }}-maw-gateway.service"
+  when: (mawus__env == 'prod') or (mawus__env == 'test')
 
 - name: Start and/or Enable mawus via systemd
   ansible.builtin.systemd:
     daemon_reload: true
     name: "pod-{{ mawus_config.podman_podname }}"
-    enabled: "{{ mawus_config.env == 'prod' }}"
+    enabled: "{{ mawus__env == 'prod' }}"
     state: started
     scope: user

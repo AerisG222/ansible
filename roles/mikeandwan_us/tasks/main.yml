@@ -28,7 +28,7 @@
       become_user: "{{ mawus__username }}"
   vars:
     maw_as__dir: "{{ remote_mawus_root }}/admin_scripts"
-    maw_as__do_backup: "{{ mawus_config.env == 'prod' }}"
+    maw_as__do_backup: "{{ mawus__env == 'prod' }}"
     maw_as__pod: "{{ mawus_config.podman_podname }}"
     maw_as__postgres_envfile: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
     maw_as__postgres_image: "{{ mawus_config.podman_image_postgres }}"

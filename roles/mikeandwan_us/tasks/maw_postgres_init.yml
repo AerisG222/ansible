@@ -51,7 +51,7 @@
 
 - name: create roles
   containers.podman.podman_container:
-    name: "{{ mawus_config.env }}-maw-pginit-roles"
+    name: "{{ mawus__env }}-maw-pginit-roles"
     pod: "{{ mawus_config.podman_podname }}"
     image: "{{ mawus_config.podman_image_postgres }}"
     env_file: "{{ mawus_config.podman_env_dir }}/maw-postgres.env"
@@ -66,7 +66,7 @@
 - name: get create_roles result
   ansible.builtin.include_tasks: wait_for_container_to_stop.yml
   vars:
-    container_name: "{{ mawus_config.env }}-maw-pginit-roles"
+    container_name: "{{ mawus__env }}-maw-pginit-roles"
     exit_code_varname: create_roles_result
 
 - name: fail if roles not created
