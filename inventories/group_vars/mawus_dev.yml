@@ -18,15 +18,15 @@ mawus__env: dev
 mawus__aspnet_env: development
 mawus__bash_profile: "{{ controller_home_dir }}/.bash_profile"
 
+mawus__fqdn_naked: dev.mikeandwan.us
+mawus__fqdn_api: dev.api.mikeandwan.us
+mawus__fqdn_auth: dev.auth.mikeandwan.us
+mawus__fqdn_files: dev.files.mikeandwan.us
+mawus__fqdn_photos: dev.photos.mikeandwan.us
+mawus__fqdn_www: dev.www.mikeandwan.us
+
 
 mawus_config_dev:
-  fqdn_naked: dev.mikeandwan.us
-  fqdn_api: dev.api.mikeandwan.us
-  fqdn_auth: dev.auth.mikeandwan.us
-  fqdn_files: dev.files.mikeandwan.us
-  fqdn_photos: dev.photos.mikeandwan.us
-  fqdn_www: dev.www.mikeandwan.us
-
   pfx_api: "{{ remote_mawus_root }}/certs/api/api.pfx"
   pfx_auth: "{{ remote_mawus_root }}/certs/auth/auth.pfx"
   pfx_signing: "{{ remote_mawus_root }}/certs/signing/signing.pfx"

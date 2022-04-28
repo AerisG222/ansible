@@ -2,12 +2,12 @@
 - name: Include maw_hostnames.yml
   ansible.builtin.include_tasks: maw_hostnames.yml
   loop:
-    - "{{ mawus_config.fqdn_naked }}"
-    - "{{ mawus_config.fqdn_api }}"
-    - "{{ mawus_config.fqdn_auth }}"
-    - "{{ mawus_config.fqdn_files }}"
-    - "{{ mawus_config.fqdn_photos }}"
-    - "{{ mawus_config.fqdn_www }}"
+    - "{{ mawus__fqdn_naked }}"
+    - "{{ mawus__fqdn_api }}"
+    - "{{ mawus__fqdn_auth }}"
+    - "{{ mawus__fqdn_files }}"
+    - "{{ mawus__fqdn_photos }}"
+    - "{{ mawus__fqdn_www }}"
 
 - name: Include port_mapping.yml
   ansible.builtin.include_tasks: port_mapping.yml

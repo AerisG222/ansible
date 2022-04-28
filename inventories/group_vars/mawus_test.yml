@@ -15,15 +15,15 @@ mawus__env: test
 mawus__aspnet_env: test
 mawus__bash_profile: "{{ controller_home_dir }}/.bash_profile"
 
+mawus__fqdn_naked: test.mikeandwan.us
+mawus__fqdn_api: test.api.mikeandwan.us
+mawus__fqdn_auth: test.auth.mikeandwan.us
+mawus__fqdn_files: test.files.mikeandwan.us
+mawus__fqdn_photos: test.photos.mikeandwan.us
+mawus__fqdn_www: test.www.mikeandwan.us
+
 
 mawus_config_test:
-  fqdn_naked: test.mikeandwan.us
-  fqdn_api: test.api.mikeandwan.us
-  fqdn_auth: test.auth.mikeandwan.us
-  fqdn_files: test.files.mikeandwan.us
-  fqdn_photos: test.photos.mikeandwan.us
-  fqdn_www: test.www.mikeandwan.us
-
   pfx_api: /certs/api/api.pfx
   pfx_auth: /certs/auth/auth.pfx
   pfx_signing: /certs/signing/signing.pfx
