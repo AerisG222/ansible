@@ -74,7 +74,7 @@
 
 - name: migrate maw-gdrive-creds
   ansible.builtin.include_role:
-    name: podman_migrate_volume_data
+    name: podman_copy
   when: gdrive_creds_volume.changed
   vars:
     pod_cp__skip_if_src_not_exists: true
