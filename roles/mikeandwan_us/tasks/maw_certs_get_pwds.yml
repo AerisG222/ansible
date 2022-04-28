@@ -1,11 +1,11 @@
 ---
 - name: copy certificate files from volume to server/host
   ansible.builtin.include_role:
-    name: podman_copy_from_volume
+    name: podman_copy
   vars:
-    pod_cfv__volume: "{{ cert_vol }}"
-    pod_cfv__src_path: "{{ item }}"
-    pod_cfv__dest_path: "{{ remote_home_dir }}"
+    pod_cp__src_dir_or_volume: "{{ cert_vol }}"
+    pod_cp__dest_dir_or_volume: "{{ remote_home_dir }}"
+    pod_cp__command: "cp /src/{{ item }} /dest"
   loop:
     - api/api.pfx.pwd
     - auth/auth.pfx.pwd

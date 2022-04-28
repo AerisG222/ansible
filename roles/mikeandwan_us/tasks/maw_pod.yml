@@ -1,22 +1,30 @@
 ---
+- name: Define tmp dir variable
+  ansible.builtin.set_fact:
+    mawus_pod__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_pod"
+
+- name: Prepare temp dir
+  ansible.builtin.file:
+    path: "{{ mawus_pod__tempdir }}"
+    state: directory
+    mode: u+rw
+
 - name: Prepare postgres init script
   ansible.builtin.template:
     src: postgres_init/configure_pg_hba.sh.j2
-    dest: "{{ remote_home_dir }}/configure_pg_hba.sh"
+    dest: "{{ mawus_pod__tempdir }}/configure_pg_hba.sh"
     mode: u+x
 
 - name: Copy init script to volume
   ansible.builtin.include_role:
-    name: podman_copy_to_volume
+    name: podman_copy
   vars:
-    podman_copy_remote_src: true
-    podman_copy_remote_temp_dir: "{{ remote_home_dir }}/_tmp_ansible"
-    podman_copy_volume_name: "{{ postgres_volume_init.volume.Name }}"
-    podman_copy_src_path: "{{ remote_home_dir }}/configure_pg_hba.sh"
+    pod_cp__src_dir_or_volume: "{{ mawus_pod__tempdir }}"
+    pod_cp__dest_dir_or_volume: "{{ postgres_volume_init.volume.Name }}"
 
-- name: Delete temp file
+- name: Delete temp dir
   ansible.builtin.file:
-    path: "{{ remote_home_dir }}/configure_pg_hba.sh"
+    path: "{{ mawus_pod__tempdir }}"
     state: absent
 
 # stop pod via systemd, otherwise systemd and podman fight
