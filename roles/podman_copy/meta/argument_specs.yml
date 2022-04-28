@@ -33,7 +33,7 @@ argument_specs:
         default: false
         description: this will check to see if the source directory/volume exist, and if not, will skip the task gracefully
 
-      pod_cp__result:
-        type: bool
-        default: false
-        description: this is the output variable indicating if files were copied or not
+      pod_cp__result_varname:
+        type: str
+        default: pod_cp__result
+        description: variable name to use to store exit code of the container process

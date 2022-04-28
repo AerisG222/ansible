@@ -33,7 +33,7 @@ argument_specs:
         required: true
         description: the name of the gdrive docker image
 
-      pg_archive__archive_folder:
+      pg_archive__gdrive_folder:
         type: str
         required: true
         description: the folder on gdrive where archives will be written

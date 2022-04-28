@@ -1,10 +1,20 @@
 ---
+- name: define temp dir var
+  ansible.builtin.set_fact:
+    maw_certs__tempdir: "{{ remote_home_dir }}/_tmp_ansible_cert_pwds"
+
+- name: ensure temp dir exists
+  ansible.builtin.file:
+    path: "{{ maw_certs__tempdir }}"
+    state: directory
+    mode: u+rw
+
 - name: copy certificate files from volume to server/host
   ansible.builtin.include_role:
     name: podman_copy
   vars:
     pod_cp__src_dir_or_volume: "{{ cert_vol }}"
-    pod_cp__dest_dir_or_volume: "{{ remote_home_dir }}"
+    pod_cp__dest_dir_or_volume: "{{ maw_certs__tempdir }}"
     pod_cp__command: "cp /src/{{ item }} /dest"
   loop:
     - api/api.pfx.pwd
@@ -13,17 +23,17 @@
 
 - name: get api cert pwd
   ansible.builtin.slurp:
-    src: "{{ remote_home_dir }}/api.pfx.pwd"
+    src: "{{ maw_certs__tempdir }}/api.pfx.pwd"
   register: api_pwd
 
 - name: get auth cert pwd
   ansible.builtin.slurp:
-    src: "{{ remote_home_dir }}/auth.pfx.pwd"
+    src: "{{ maw_certs__tempdir }}/auth.pfx.pwd"
   register: auth_pwd
 
 - name: get www cert pwd
   ansible.builtin.slurp:
-    src: "{{ remote_home_dir }}/www.pfx.pwd"
+    src: "{{ maw_certs__tempdir }}/www.pfx.pwd"
   register: www_pwd
 
 - name: set cert pwd variables
@@ -32,13 +42,9 @@
     mawus__pfx_pwd_auth: "{{ auth_pwd.content | b64decode }}"
     mawus__pfx_pwd_www: "{{ www_pwd.content | b64decode }}"
 
-- name: delete temp files
+- name: delete temp dir
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ maw_certs__tempdir }}"
     state: absent
-  loop:
-    - "{{ remote_home_dir }}/api.pfx.pwd"
-    - "{{ remote_home_dir }}/auth.pfx.pwd"
-    - "{{ remote_home_dir }}/www.pfx.pwd"
 
   when: mawus__certs_dir | length == 0

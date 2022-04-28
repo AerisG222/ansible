@@ -80,6 +80,7 @@
     pod_cp__skip_if_src_not_exists: true
     pod_cp__src_dir_or_volume: maw-gdrive-creds
     pod_cp__dest_dir_or_volume: "{{ gdrive_creds_volume.volume.Name }}"
+    pod_cp__result_varname: _maw_gdrive__migrated
 
 - name: copy gdrive credentials when not migrated
   block:
@@ -112,7 +113,7 @@
         path: "{{ mawus_gdrive__tempdir }}"
         state: absent
 
-  when: gdrive_creds_volume.changed and (not pod_cp__result)
+  when: gdrive_creds_volume.changed and (_maw_gdrive__migrated is defined) and (not _maw_gdrive__migrated)
 
 - name: migrate maw-google-creds
   ansible.builtin.include_role:
@@ -122,6 +123,7 @@
     pod_cp__skip_if_src_not_exists: true
     pod_cp__src_dir_or_volume: maw-google-creds
     pod_cp__dest_dir_or_volume: "{{ google_creds_volume.volume.Name }}"
+    pod_cp__result_varname: _maw_google__migrated
 
 - name: copy google credentials when not migrated
   block:
@@ -155,4 +157,4 @@
         path: "{{ mawus_google__tempdir }}"
         state: absent
 
-  when: google_creds_volume.changed and (not pod_cp__result)
+  when: google_creds_volume.changed and (_maw_google__migrated is defined) and (not _maw_google__migrated)

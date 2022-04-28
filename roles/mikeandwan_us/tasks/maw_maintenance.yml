@@ -121,7 +121,7 @@
     pg_archive__files_to_archive_volume: "{{ postgres_backup_volume.volume.Name }}"
     pg_archive__credentials_volume: "{{ gdrive_creds_volume.volume.Name }}"
     pg_archive__gdrive_image: "{{ mawus__podman_image_gdrive }}"
-    pg_archive__archive_folder: "{{ mawus__podman_pod }}-{{ ansible_host }}-pg_backup"
+    pg_archive__gdrive_folder: "{{ mawus__podman_pod }}-{{ ansible_host }}-pg_backup"
     pg_archive__retain_duration: '10d'
     pg_archive__calendar: '01:25:00'
 
@@ -135,6 +135,6 @@
     pg_archive__files_to_archive_volume: "{{ postgres_backup_volume.volume.Name }}"
     pg_archive__credentials_volume: "{{ gdrive_creds_volume.volume.Name }}"
     pg_archive__gdrive_image: "{{ mawus__podman_image_gdrive }}"
-    pg_archive__archive_folder: "{{ mawus__podman_pod }}-{{ ansible_host }}-pg_backup-monthly"
+    pg_archive__gdrive_folder: "{{ mawus__podman_pod }}-{{ ansible_host }}-pg_backup-monthly"
     pg_archive__retain_duration: '2y'
     pg_archive__calendar: '*-*-01 01:30:00'
