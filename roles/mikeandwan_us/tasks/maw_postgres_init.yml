@@ -79,10 +79,10 @@
   loop_control:
     label: "{{ item.username }}"
   loop:
-    - username: "{{ mawus_config.sql_username }}"
-      password: "{{ mawus_config.sql_password }}"
-    - username: "{{ mawus_config.sql_solr_username }}"
-      password: "{{ mawus_config.sql_solr_password }}"
+    - username: "{{ mawus__sql_username }}"
+      password: "{{ mawus__sql_password }}"
+    - username: "{{ mawus__sql_solr_username }}"
+      password: "{{ mawus__sql_solr_password }}"
 
 - name: restore idsrv if needed
   ansible.builtin.include_tasks: maw_postgres_restore_db.yml

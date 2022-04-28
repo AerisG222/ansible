@@ -73,30 +73,28 @@ mawus__podman_publish_ports:
   - 5432:5432  # postgres
   - 6379:6379  # redis
 
+# postgres sql accounts for site
+mawus__sql_username: svc_www_maw
+mawus__sql_password: "{{ vault_password_sql_svc_www_maw }}"
+mawus__sql_postgres_password: "{{ vault_password_sql_postgres }}"
+mawus__sql_solr_username: svc_solr
+mawus__sql_solr_password: "{{ vault_password_sql_solr }}"
 
-mawus_config_dev:
-  # postgres sql accounts for site
-  sql_username: svc_www_maw
-  sql_password: "{{ vault_password_sql_svc_www_maw }}"
-  sql_postgres_password: "{{ vault_password_sql_postgres }}"
-  sql_solr_username: svc_solr
-  sql_solr_password: "{{ vault_password_sql_solr }}"
+# auth secrets
+mawus__google_plus_client_id: "{{ vault_google_plus_client_id }}"
+mawus__google_plus_client_secret: "{{ vault_google_plus_client_secret }}"
+mawus__twitter_client_id: "{{ vault_twitter_client_id }}"
+mawus__twitter_client_secret: "{{ vault_twitter_client_secret }}"
+mawus__microsoft_client_id: "{{ vault_microsoft_client_id }}"
+mawus__microsoft_client_secret: "{{ vault_microsoft_client_secret }}"
+mawus__github_client_id: "{{ vault_github_client_id }}"
+mawus__github_client_secret: "{{ vault_github_client_secret }}"
+mawus__www_auth_client_secret: "{{ vault_www_auth_client_secret }}"
+mawus__www_auth_client_id: "{{ vault_www_auth_client_id }}"
 
-  # auth secrets
-  google_plus_client_id: "{{ vault_google_plus_client_id }}"
-  google_plus_client_secret: "{{ vault_google_plus_client_secret }}"
-  twitter_client_id: "{{ vault_twitter_client_id }}"
-  twitter_client_secret: "{{ vault_twitter_client_secret }}"
-  microsoft_client_id: "{{ vault_microsoft_client_id }}"
-  microsoft_client_secret: "{{ vault_microsoft_client_secret }}"
-  github_client_id: "{{ vault_github_client_id }}"
-  github_client_secret: "{{ vault_github_client_secret }}"
-  www_auth_client_secret: "{{ vault_www_auth_client_secret }}"
-  www_auth_client_id: "{{ vault_www_auth_client_id }}"
+# google recaptcha key
+mawus__google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
+mawus__google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"
 
-  # google recaptcha key
-  google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
-  google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"
-
-  # google api key (maps / reverse geocode)
-  google_api_key: "{{ vault_google_api_key }}"
+# google api key (maps / reverse geocode)
+mawus__google_api_key: "{{ vault_google_api_key }}"
