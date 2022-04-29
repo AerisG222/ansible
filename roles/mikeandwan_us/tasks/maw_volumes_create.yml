@@ -1,10 +1,4 @@
 ---
-- name: create redis volume
-  containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-redis-{{ mawus__version_redis }}"
-    state: present
-  register: redis_volume
-
 - name: create postgres volume
   containers.podman.podman_volume:
     name: "{{ mawus__env }}-maw-postgres-{{ mawus__version_postgres }}"

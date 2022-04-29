@@ -22,7 +22,6 @@
     - maw-postgres.env
     - maw-api.env
     - maw-auth.env
-    - maw-cache-sync.env
     - maw-reverse-geocode.env
     - maw-www.env
 

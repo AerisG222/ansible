@@ -54,25 +54,6 @@
     state: started
     publish: "{{ mawus__podman_publish_ports if mawus__podman_publish_ports is iterable else [] }}"
 
-- name: redis container
-  containers.podman.podman_container:
-    name: "{{ mawus__env }}-maw-redis"
-    pod: "{{ mawus__podman_pod }}"
-    image: "{{ mawus__podman_image_redis }}"
-    command: redis-server --save 60 1
-    state: started
-    volume:
-      - "{{ redis_volume.volume.Name }}:/data:rw,z"
-    label:
-      io.containers.autoupdate: image
-  register: redis_container
-
-- name: wait for redis container
-  ansible.builtin.include_role:
-    name: podman_wait_for_start
-  vars:
-    pod_start__container_name: "{{ redis_container.container.Name }}"
-
 - name: maw-postgres container
   containers.podman.podman_container:
     name: "{{ mawus__env }}-maw-postgres"
@@ -95,23 +76,6 @@
 
 - name: include maw_postgres_init.yml
   ansible.builtin.include_tasks: maw_postgres_init.yml
-
-- name: maw-cache-sync container
-  containers.podman.podman_container:
-    name: "{{ mawus__env }}-maw-cache-sync"
-    pod: "{{ mawus__podman_pod }}"
-    image: "{{ mawus__podman_image_cache_sync }}"
-    env_file: "{{ mawus__podman_env_dir }}/maw-cache-sync.env"
-    state: started
-    label:
-      io.containers.autoupdate: image
-  register: cache_sync_container
-
-- name: wait for maw-cache-sync container
-  ansible.builtin.include_role:
-    name: podman_wait_for_start
-  vars:
-    pod_start__container_name: "{{ cache_sync_container.container.Name }}"
 
 - name: maw-solr container
   containers.podman.podman_container:
@@ -346,7 +310,7 @@
       before: "container-{{ mawus__env }}-maw-gateway.service"
     - unitfile: "container-{{ mawus__env }}-maw-postgres.service"
       before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-auth.service container-{{ mawus__env }}-maw-www.service container-{{ mawus__env }}-maw-cache-sync.service"
-    - unitfile: "container-{{ mawus__env }}-maw-redis.service"
+    - unitfile: "container-{{ mawus_redis__name }}.service"
       before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-www.service container-{{ mawus__env }}-maw-cache-sync.service"
     - unitfile: "container-{{ mawus__env }}-maw-solr.service"
       before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-www.service"

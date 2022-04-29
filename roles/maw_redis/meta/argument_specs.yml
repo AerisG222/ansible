@@ -1,0 +1,39 @@
+---
+argument_specs:
+  main:
+    short_description: Creates redis server and supporting objects for mikeandwan.us
+    options:
+      mawus_redis__version:
+        type: int
+        required: true
+        description: Major redis version that will be run
+
+      mawus_redis__image:
+        type: str
+        required: true
+        description: Fully qualified redis image to use
+
+      mawus_redis__name:
+        type: str
+        required: true
+        description: Name of the container
+
+      mawus_redis__volume:
+        type: str
+        required: true
+        description: Name of the volume that is used to back the redis database
+
+      mawus_redis__cache_sync_image:
+        type: str
+        required: true
+        description: Fully qualified image for the cache sync container
+
+      mawus_redis__cache_sync_name:
+        type: str
+        required: true
+        description: Name of the container
+
+      mawus_redis__cache_sync_envfile:
+        type: str
+        required: true
+        description: Full path to the environment file for the cache sync container

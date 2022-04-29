@@ -3,7 +3,6 @@
   containers.podman.podman_image:
     name: "{{ item }}"
   loop:
-    - "{{ mawus__podman_image_redis }}"
     - "{{ mawus__podman_image_postgres }}"
     - "{{ mawus__podman_image_solr }}"
     - "{{ mawus__podman_image_photos }}"
@@ -14,7 +13,6 @@
     - "{{ mawus__podman_image_gateway }}"
     - "{{ mawus__podman_image_maw_certs }}"
     - "{{ mawus__podman_image_certbot }}"
-    - "{{ mawus__podman_image_cache_sync }}"
     - "{{ mawus__podman_image_solr_indexer }}"
     - "{{ mawus__podman_image_reverse_geocode }}"
     - "{{ mawus__podman_image_gdrive }}"
