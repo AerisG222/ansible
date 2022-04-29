@@ -1,0 +1,44 @@
+---
+- name: create solr volume
+  containers.podman.podman_volume:
+    name: "{{ mawus_solr__volume }}"
+    state: present
+
+- name: maw-solr container
+  containers.podman.podman_container:
+    name: "{{ mawus_solr__container }}"
+    pod: "{{ mawus_solr__pod }}"
+    image: "{{ mawus_solr__image }}"
+    state: started
+    volume:
+      - "{{ mawus_solr__volume }}:/var/solr:rw,z"
+    label:
+      io.containers.autoupdate: image
+
+- name: wait for solr container
+  ansible.builtin.include_role:
+    name: podman_wait_for_start
+  vars:
+    pod_start__container_name: "{{ mawus_solr__container }}"
+
+- name: include configure_solr.yml
+  ansible.builtin.include_tasks: configure_solr.yml
+
+- name: Configure Solr Indexer
+  ansible.builtin.include_role:
+    name: solr_indexer
+  vars:
+    solr_idx__systemd_dir: "{{ mawus_solr__systemd_dir }}"
+    solr_idx__service: "{{ mawus_solr__indexer_container }}"
+    solr_idx__pod: "{{ mawus_solr__pod }}"
+    solr_idx__image: "{{ mawus_solr__indexer_image }}"
+    solr_idx__sql_username: "{{ mawus_solr__indexer_sql_username }}"
+    solr_idx__sql_password: "{{ mawus_solr__indexer_sql_password }}"
+    solr_idx__calendar: "{{ mawus_solr__indexer_calendar }}"
+
+- name: run indexer
+  ansible.builtin.systemd:
+    name: "{{ mawus_solr__indexer_container }}"
+    enabled: false
+    state: started
+    scope: user

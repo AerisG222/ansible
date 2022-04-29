@@ -51,10 +51,7 @@ mawus__pg_backup_idsrv: idsrv.20220307.dump
 mawus__pg_backup_www: maw_website.20220307.dump
 
 mawus__version_postgres: 14
-mawus__version_solr: 8
-
 mawus__podman_image_postgres: "docker.io/postgres:{{ mawus__version_postgres }}-alpine"
-mawus__podman_image_solr: "docker.io/solr:{{ mawus__version_solr }}"
 
 mawus__podman_pod: test-maw-pod
 mawus__podman_env_dir: "{{ remote_mawus_root }}/podman-env"
@@ -66,7 +63,6 @@ mawus__podman_image_www: localhost/maw-www-test
 mawus__podman_image_gateway: localhost/maw-gateway-test
 mawus__podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
 mawus__podman_image_certbot: ""
-mawus__podman_image_solr_indexer: docker.io/aerisg222/maw-solr-indexer:latest
 mawus__podman_image_reverse_geocode: docker.io/aerisg222/maw-reverse-geocode:latest
 mawus__podman_image_gdrive: ""
 mawus__podman_publish_ports:
@@ -101,9 +97,27 @@ mawus__google_api_key: "{{ vault_google_api_key }}"
 
 # mawus redis settings
 mawus_redis__version: 6
+mawus_redis__pod: "{{ mawus__podman_pod }}"
 mawus_redis__image: "docker.io/redis:{{ mawus_redis__version }}-alpine"
-mawus_redis__name: "{{ mawus__env }}-maw-redis"
+mawus_redis__container: "{{ mawus__env }}-maw-redis"
 mawus_redis__volume: "{{ mawus__env }}-maw-redis-{{ mawus_redis__version }}"
 mawus_redis__cache_sync_image: docker.io/aerisg222/maw-cache-sync:latest
-mawus_redis__cache_sync_name: "{{ mawus__env }}-maw-cache-sync"
+mawus_redis__cache_sync_container: "{{ mawus__env }}-maw-cache-sync"
 mawus_redis__cache_sync_envfile: "{{ mawus__podman_env_dir }}/maw-cache-sync.env"
+mawus_redis__cache_sync_envfile_backup: false
+mawus_redis__cache_sync_sql_username: "{{ mawus__sql_username }}"
+mawus_redis__cache_sync_sql_password: "{{ mawus__sql_password }}"
+
+# mawus solr settings
+mawus_solr__version: 8
+mawus_solr__systemd_dir: "{{ mawus__systemd_dir }}"
+mawus_solr__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_solr"
+mawus_solr__pod: "{{ mawus__podman_pod }}"
+mawus_solr__image: "docker.io/solr:{{ mawus_solr__version }}"
+mawus_solr__container: "{{ mawus__env }}-maw-solr"
+mawus_solr__volume: "{{ mawus__env }}-maw-solr-{{ mawus__version_solr }}"
+mawus_solr__indexer_image: docker.io/aerisg222/maw-solr-indexer:latest
+mawus_solr__indexer_container: "{{ mawus__env }}-solr-indexer"
+mawus_solr__indexer_sql_username: "{{ mawus__sql_solr_username }}"
+mawus_solr__indexer_sql_password: "{{ mawus__sql_solr_password }}"
+mawus_solr__indexer_calendar: '00:50:00'

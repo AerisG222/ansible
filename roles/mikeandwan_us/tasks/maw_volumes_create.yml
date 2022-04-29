@@ -17,12 +17,6 @@
     state: present
   register: postgres_backup_volume
 
-- name: create solr volume
-  containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-solr-{{ mawus__version_solr }}"
-    state: present
-  register: solr_volume
-
 - name: create maw cert volume
   containers.podman.podman_volume:
     name: "{{ mawus__env }}-maw-certs"

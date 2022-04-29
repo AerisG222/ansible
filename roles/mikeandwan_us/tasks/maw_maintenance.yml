@@ -26,18 +26,6 @@
     rev_geo__image: "{{ mawus__podman_image_reverse_geocode }}"
     rev_geo__calendar: '00:45:00'
 
-- name: Configure Solr Indexer
-  ansible.builtin.include_role:
-    name: solr_indexer
-  vars:
-    solr_idx__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-    solr_idx__service: "{{ mawus__env }}-solr-indexer"
-    solr_idx__pod: "{{ mawus__podman_pod }}"
-    solr_idx__image: "{{ mawus__podman_image_solr_indexer }}"
-    solr_idx__sql_username: "{{ mawus__sql_solr_username }}"
-    solr_idx__sql_password: "{{ mawus__sql_solr_password }}"
-    solr_idx__calendar: '00:50:00'
-
 - name: Configure Postgres Role Backup
   ansible.builtin.include_role:
     name: postgres_backup_roles

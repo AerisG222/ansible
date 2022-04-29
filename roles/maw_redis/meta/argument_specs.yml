@@ -8,12 +8,17 @@ argument_specs:
         required: true
         description: Major redis version that will be run
 
+      mawus_redis__pod:
+        type: str
+        required: true
+        description: Name of the pod in which the redis container should run
+
       mawus_redis__image:
         type: str
         required: true
         description: Fully qualified redis image to use
 
-      mawus_redis__name:
+      mawus_redis__container:
         type: str
         required: true
         description: Name of the container
@@ -28,7 +33,7 @@ argument_specs:
         required: true
         description: Fully qualified image for the cache sync container
 
-      mawus_redis__cache_sync_name:
+      mawus_redis__cache_sync_container:
         type: str
         required: true
         description: Name of the container
@@ -37,3 +42,18 @@ argument_specs:
         type: str
         required: true
         description: Full path to the environment file for the cache sync container
+
+      mawus_redis__cache_sync_envfile_backup:
+        type: str
+        required: true
+        description: Indicates if the existing envfile should be backed up before being overwritten
+
+      mawus_redis__cache_sync_sql_username:
+        type: str
+        required: true
+        description: The username when connecting to postgres
+
+      mawus_redis__cache_sync_sql_password:
+        type: str
+        required: true
+        description: The password when connecting to postgres

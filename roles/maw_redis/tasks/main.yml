@@ -15,8 +15,8 @@
 
 - name: redis container
   containers.podman.podman_container:
-    name: "{{ mawus_redis__name }}"
-    pod: "{{ mawus__podman_pod }}"
+    name: "{{ mawus_redis__container }}"
+    pod: "{{ mawus_redis__pod }}"
     image: "{{ mawus_redis__image }}"
     command: redis-server --save 60 1
     state: started
@@ -29,7 +29,7 @@
   ansible.builtin.include_role:
     name: podman_wait_for_start
   vars:
-    pod_start__container_name: "{{ mawus_redis__name }}"
+    pod_start__container_name: "{{ mawus_redis__container }}"
 
 - name: prepare cache sync environment file
   ansible.builtin.include_role:
@@ -37,12 +37,12 @@
   vars:
     mawus_env__template: maw-cache-sync.env.j2
     mawus_env__path: "{{ mawus_redis__cache_sync_envfile }}"
-    mawus_env__backup: "{{ mawus__env == 'prod' }}"
+    mawus_env__backup: "{{ mawus_redis__cache_sync_envfile_backup }}"
 
 - name: maw-cache-sync container
   containers.podman.podman_container:
-    name: "{{ mawus_redis__cache_sync_name }}"
-    pod: "{{ mawus__podman_pod }}"
+    name: "{{ mawus_redis__cache_sync_container }}"
+    pod: "{{ mawus_redis__pod }}"
     image: "{{ mawus_redis__cache_sync_image }}"
     env_file: "{{ mawus_redis__cache_sync_envfile }}"
     state: started
@@ -53,4 +53,4 @@
   ansible.builtin.include_role:
     name: podman_wait_for_start
   vars:
-    pod_start__container_name: "{{ mawus_redis__cache_sync_name }}"
+    pod_start__container_name: "{{ mawus_redis__cache_sync_container }}"

@@ -1,0 +1,64 @@
+---
+argument_specs:
+  main:
+    short_description: Creates solr objects for mikeandwan.us
+    options:
+      mawus_solr__version:
+        type: int
+        required: true
+        description: Major version number of Solr
+
+      mawus_solr__systemd_dir:
+        type: str
+        required: true
+        description: The user systemd dir where service and timer files will be written
+
+      mawus_solr__tempdir:
+        type: str
+        required: true
+        description: A path to a temp directory that can be used.  This should be a subdirectory of a user's homedir.
+
+      mawus_solr__pod:
+        type: str
+        required: true
+        description: Then name of the pod in which to run Solr
+
+      mawus_solr__image:
+        type: str
+        required: true
+        description: Fully qualified image name for solr
+
+      mawus_solr__container:
+        type: str
+        required: true
+        description: The name to give to the container running solr
+
+      mawus_solr__volume:
+        type: str
+        required: true
+        description: The podman volume where solr configuration and index data will be stored
+
+      mawus_solr__indexer_image:
+        type: str
+        required: true
+        description: Fully qualified image name for the solr indexer
+
+      mawus_solr__indexer_container:
+        type: str
+        required: true
+        description: The name to give the solr indexer container
+
+      mawus_solr__indexer_sql_username:
+        type: str
+        required: true
+        description: The postgres username that the solr indexer should use when connecting to postgres
+
+      mawus_solr__indexer_sql_password:
+        type: str
+        required: true
+        description: The password for the postgres username
+
+      mawus_solr__indexer_calendar:
+        type: str
+        required: true
+        description: The systemd calendar specification that identifies when the indexer will run
