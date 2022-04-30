@@ -33,7 +33,7 @@
 
 - name: prepare cache sync environment file
   ansible.builtin.include_role:
-    name: mawus_envfile
+    name: maw_envfile
   vars:
     mawus_env__template: maw-cache-sync.env.j2
     mawus_env__path: "{{ mawus_redis__cache_sync_envfile }}"

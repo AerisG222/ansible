@@ -1,7 +1,7 @@
 ---
 - name: prepare api environment file
   ansible.builtin.include_role:
-    name: mawus_envfile
+    name: maw_envfile
   vars:
     mawus_env__template: maw-api.env.j2
     mawus_env__path: "{{ mawus_api__envfile }}"
