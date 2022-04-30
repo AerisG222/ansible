@@ -18,12 +18,12 @@ argument_specs:
         required: true
         description: Name of the container
 
-      mawus_auth__cert_dir:
+      maw_auth__cert_dir:
         type: str
         required: true
         description: Local directory where the certificates are stored
 
-      mawus_auth__cert_volume:
+      maw_auth__cert_volume:
         type: str
         required: true
         description: Name of the volume where certificates are stored

@@ -1,37 +1,37 @@
 ---
 - name: pull auth image
   containers.podman.podman_image:
-    name: "{{ mawus_auth__image }}"
+    name: "{{ maw_auth__image }}"
 
 - name: create auth dataprotection volume
   containers.podman.podman_volume:
-    name: "{{ mawus_auth__dataprotection_volume }}"
+    name: "{{ maw_auth__dataprotection_volume }}"
     state: present
-  register: _mawus_auth__dataprotection_volume_result
+  register: _maw_auth__dataprotection_volume_result
 
 - name: migrate auth dataprotection files from original volume
   ansible.builtin.include_role:
     name: podman_copy
   when: >
-    _mawus_auth__dataprotection_volume_result.changed
+    _maw_auth__dataprotection_volume_result.changed
     and
-    mawus_auth__dataprotection_volume_to_migrate | length > 0
+    maw_auth__dataprotection_volume_to_migrate | length > 0
   vars:
     pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: "{{ mawus_auth__dataprotection_volume_to_migrate }}"
-    pod_cp__dest_dir_or_volume: "{{ mawus_auth__dataprotection_volume }}"
+    pod_cp__src_dir_or_volume: "{{ maw_auth__dataprotection_volume_to_migrate }}"
+    pod_cp__dest_dir_or_volume: "{{ maw_auth__dataprotection_volume }}"
 
 - name: maw-auth container
   containers.podman.podman_container:
-    name: "{{ mawus_auth__container }}"
-    pod: "{{ mawus_auth__pod }}"
-    image: "{{ mawus_auth__image }}"
+    name: "{{ maw_auth__container }}"
+    pod: "{{ maw_auth__pod }}"
+    image: "{{ maw_auth__image }}"
     state: started
-    env_file: "{{ mawus_auth__envfile }}"
+    env_file: "{{ maw_auth__envfile }}"
     volume:
-      - "{{ mawus_auth__cert_volume }}:/certs:ro,z"
-      - "{{ mawus_auth__dataprotection_volume }}:/dataprotection:rw,Z"
-      - "{{ mawus_auth__google_creds_volume }}:/google-creds:ro,z"
+      - "{{ maw_auth__cert_volume }}:/certs:ro,z"
+      - "{{ maw_auth__dataprotection_volume }}:/dataprotection:rw,Z"
+      - "{{ maw_auth__google_creds_volume }}:/google-creds:ro,z"
     label:
       io.containers.autoupdate: image
 
@@ -39,4 +39,4 @@
   ansible.builtin.include_role:
     name: podman_wait_for_start
   vars:
-    pod_start__container_name: "{{ mawus_auth__container }}"
+    pod_start__container_name: "{{ maw_auth__container }}"

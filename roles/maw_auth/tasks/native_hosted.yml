@@ -1,6 +1,6 @@
 ---
 - name: create auth dataprotection directory
   ansible.builtin.file:
-    path: "{{ mawus_auth__dataprotection_dir }}"
+    path: "{{ maw_auth__dataprotection_dir }}"
     state: directory
     mode: u+rwx
