@@ -91,18 +91,18 @@ maw_redis__cache_sync_sql_username: "{{ maw__sql_username }}"
 maw_redis__cache_sync_sql_password: "{{ maw__sql_password }}"
 
 # mawus solr settings
-mawus_solr__version: 8
-mawus_solr__systemd_dir: "{{ maw__systemd_dir }}"
-mawus_solr__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_solr"
-mawus_solr__pod: "{{ maw__podman_pod }}"
-mawus_solr__image: "docker.io/solr:{{ mawus_solr__version }}"
-mawus_solr__container: "{{ maw__env }}-maw-solr"
-mawus_solr__volume: "{{ maw__env }}-maw-solr-{{ maw__version_solr }}"
-mawus_solr__indexer_image: docker.io/aerisg222/maw-solr-indexer:latest
-mawus_solr__indexer_container: "{{ maw__env }}-solr-indexer"
-mawus_solr__indexer_sql_username: "{{ maw__sql_solr_username }}"
-mawus_solr__indexer_sql_password: "{{ maw__sql_solr_password }}"
-mawus_solr__indexer_calendar: '00:50:00'
+maw_solr__version: 8
+maw_solr__systemd_dir: "{{ maw__systemd_dir }}"
+maw_solr__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_solr"
+maw_solr__pod: "{{ maw__podman_pod }}"
+maw_solr__image: "docker.io/solr:{{ maw_solr__version }}"
+maw_solr__container: "{{ maw__env }}-maw-solr"
+maw_solr__volume: "{{ maw__env }}-maw-solr-{{ maw__version_solr }}"
+maw_solr__indexer_image: docker.io/aerisg222/maw-solr-indexer:latest
+maw_solr__indexer_container: "{{ maw__env }}-solr-indexer"
+maw_solr__indexer_sql_username: "{{ maw__sql_solr_username }}"
+maw_solr__indexer_sql_password: "{{ maw__sql_solr_password }}"
+maw_solr__indexer_calendar: '00:50:00'
 
 # mawus api settings
 mawus_api__pod: "{{ maw__podman_pod }}"
