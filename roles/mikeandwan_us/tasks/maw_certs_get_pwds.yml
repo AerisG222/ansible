@@ -38,13 +38,13 @@
 
 - name: set cert pwd variables
   ansible.builtin.set_fact:
-    mawus__pfx_pwd_api: "{{ api_pwd.content | b64decode }}"
-    mawus__pfx_pwd_auth: "{{ auth_pwd.content | b64decode }}"
-    mawus__pfx_pwd_www: "{{ www_pwd.content | b64decode }}"
+    maw__pfx_pwd_api: "{{ api_pwd.content | b64decode }}"
+    maw__pfx_pwd_auth: "{{ auth_pwd.content | b64decode }}"
+    maw__pfx_pwd_www: "{{ www_pwd.content | b64decode }}"
 
 - name: delete temp dir
   ansible.builtin.file:
     path: "{{ maw_certs__tempdir }}"
     state: absent
 
-  when: mawus__certs_dir | length == 0
+  when: maw__certs_dir | length == 0

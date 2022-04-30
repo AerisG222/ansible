@@ -12,8 +12,8 @@
     - name: Add Service Accounts
       become: true
       ansible.builtin.user:
-        name: "{{ mawus__username }}"
-        password: "{{ mawus__password | password_hash('sha512') }}"
+        name: "{{ maw__username }}"
+        password: "{{ maw__password | password_hash('sha512') }}"
         update_password: always
         state: present
 
@@ -31,14 +31,14 @@
       vars:
         sshd_allow_users:
           - "{{ ansible_user }}"
-          - "{{ mawus__username }}"
+          - "{{ maw__username }}"
 
     - name: Initialize podman
       ansible.builtin.include_role:
         name: podman_init
       vars:
         pod_init__linger_users:
-          - "{{ mawus__username }}"
+          - "{{ maw__username }}"
 
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:

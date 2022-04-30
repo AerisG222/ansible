@@ -11,7 +11,7 @@
         name: podman_init
       vars:
         pod_init__linger_users:
-          - "{{ mawus__username }}"
+          - "{{ maw__username }}"
 
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:

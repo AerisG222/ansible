@@ -1,15 +1,15 @@
 ---
 - name: Make sure maw_env directory exists
   ansible.builtin.file:
-    path: "{{ mawus__podman_env_dir }}"
+    path: "{{ maw__podman_env_dir }}"
     state: directory
     mode: u+rwx
 
 - name: Prepare environment files
   ansible.builtin.template:
-    backup: "{{ mawus__env == 'prod' }}"
+    backup: "{{ maw__env == 'prod' }}"
     src: "maw_env/{{ item }}.j2"
-    dest: "{{ mawus__podman_env_dir }}/{{ item }}"
+    dest: "{{ maw__podman_env_dir }}/{{ item }}"
     mode: u+rw
   loop:
     - maw-postgres.env
@@ -17,7 +17,7 @@
 
 - name: Add env files to .bash_profile for dev
   ansible.builtin.blockinfile:
-    path: "{{ mawus__bash_profile }}"
+    path: "{{ maw__bash_profile }}"
     block: |
       function load_dotenv(){
         # https://stackoverflow.com/a/66118031/134904
@@ -26,10 +26,10 @@
 
       set -o allexport
 
-      [ -f "{{ mawus__podman_env_dir }}/maw-api.env" ] && load_dotenv "{{ mawus__podman_env_dir }}/maw-api.env"
-      [ -f "{{ mawus__podman_env_dir }}/maw-auth.env" ] && load_dotenv "{{ mawus__podman_env_dir }}/maw-auth.env"
-      [ -f "{{ mawus__podman_env_dir }}/maw-www.env" ] && load_dotenv "{{ mawus__podman_env_dir }}/maw-www.env"
-      [ -f "{{ mawus__podman_env_dir }}/maw-cache-sync.env" ] && load_dotenv "{{ mawus__podman_env_dir }}/maw-cache-sync.env"
+      [ -f "{{ maw__podman_env_dir }}/maw-api.env" ] && load_dotenv "{{ maw__podman_env_dir }}/maw-api.env"
+      [ -f "{{ maw__podman_env_dir }}/maw-auth.env" ] && load_dotenv "{{ maw__podman_env_dir }}/maw-auth.env"
+      [ -f "{{ maw__podman_env_dir }}/maw-www.env" ] && load_dotenv "{{ maw__podman_env_dir }}/maw-www.env"
+      [ -f "{{ maw__podman_env_dir }}/maw-cache-sync.env" ] && load_dotenv "{{ maw__podman_env_dir }}/maw-cache-sync.env"
 
       set +o allexport
-  when: mawus__env == 'dev'
+  when: maw__env == 'dev'

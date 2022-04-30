@@ -63,7 +63,7 @@
         src: "{{ item }}"
         dest: "{{ mawus_gdrive__tempdir }}"
         mode: u+rw
-      with_fileglob: "{{ mawus__gdrive_creds_dir }}/*"
+      with_fileglob: "{{ maw__gdrive_creds_dir }}/*"
 
     - name: copy google drive credentials to volume
       ansible.builtin.include_role:
@@ -107,7 +107,7 @@
         src: "{{ item }}"
         dest: "{{ mawus_google__tempdir }}"
         mode: u+rw
-      with_fileglob: "{{ mawus__google_email_creds_dir }}/*"
+      with_fileglob: "{{ maw__google_email_creds_dir }}/*"
 
     - name: copy google drive credentials to volume
       ansible.builtin.include_role:

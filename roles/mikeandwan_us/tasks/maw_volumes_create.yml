@@ -1,57 +1,57 @@
 ---
 - name: create postgres volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-postgres-{{ mawus__version_postgres }}"
+    name: "{{ maw__env }}-maw-postgres-{{ maw__version_postgres }}"
     state: present
   register: postgres_volume
 
 - name: create postgres initialization volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-postgres-{{ mawus__version_postgres }}-init"
+    name: "{{ maw__env }}-maw-postgres-{{ maw__version_postgres }}-init"
     state: present
   register: postgres_volume_init
 
 - name: create postgres backup volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-postgres-backup"
+    name: "{{ maw__env }}-maw-postgres-backup"
     state: present
   register: postgres_backup_volume
 
 - name: create maw cert volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-certs"
+    name: "{{ maw__env }}-maw-certs"
     state: present
-  when: mawus__certs_dir | length == 0
+  when: maw__certs_dir | length == 0
   register: maw_cert_volume
 
 - name: create maw-google-creds volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-google-creds"
+    name: "{{ maw__env }}-maw-google-creds"
     state: present
   register: google_creds_volume
 
 - name: create maw-gdrive-creds volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-gdrive-creds"
+    name: "{{ maw__env }}-maw-gdrive-creds"
     state: present
   register: gdrive_creds_volume
 
 - name: create maw-reverse-geocode volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-reverse-geocode"
+    name: "{{ maw__env }}-maw-reverse-geocode"
     state: present
   register: reverse_geocode_volume
 
 - name: create maw-certbot-validation volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-certbot-validation"
+    name: "{{ maw__env }}-maw-certbot-validation"
     state: present
-  when: mawus__env == 'prod'
+  when: maw__env == 'prod'
   register: certbot_validation_volume
 
 - name: create maw-certbot-certs volume
   containers.podman.podman_volume:
-    name: "{{ mawus__env }}-maw-certbot-certs"
+    name: "{{ maw__env }}-maw-certbot-certs"
     state: present
-  when: mawus__env == 'prod'
+  when: maw__env == 'prod'
   register: certbot_certs_volume

@@ -30,7 +30,7 @@
 # stop pod via systemd, otherwise systemd and podman fight
 - name: Disable mawus via systemd
   ansible.builtin.systemd:
-    name: "pod-{{ mawus__podman_pod }}"
+    name: "pod-{{ maw__podman_pod }}"
     enabled: false
     state: stopped
     scope: user
@@ -39,28 +39,28 @@
 
 - name: get pod info
   containers.podman.podman_pod_info:
-    name: "{{ mawus__podman_pod }}"
+    name: "{{ maw__podman_pod }}"
   register: podinfo
 
 - name: stop pod if running
   containers.podman.podman_pod:
-    name: "{{ mawus__podman_pod }}"
+    name: "{{ maw__podman_pod }}"
     state: stopped
   when: (podinfo.pods | length > 0) and (podinfo.pods[0].State == 'Running')
 
-- name: "create {{ mawus__podman_pod }} pod"
+- name: "create {{ maw__podman_pod }} pod"
   containers.podman.podman_pod:
-    name: "{{ mawus__podman_pod }}"
+    name: "{{ maw__podman_pod }}"
     state: started
-    publish: "{{ mawus__podman_publish_ports if mawus__podman_publish_ports is iterable else [] }}"
+    publish: "{{ maw__podman_publish_ports if maw__podman_publish_ports is iterable else [] }}"
 
 - name: maw-postgres container
   containers.podman.podman_container:
-    name: "{{ mawus__env }}-maw-postgres"
-    pod: "{{ mawus__podman_pod }}"
-    image: "{{ mawus__podman_image_postgres }}"
+    name: "{{ maw__env }}-maw-postgres"
+    pod: "{{ maw__podman_pod }}"
+    image: "{{ maw__podman_image_postgres }}"
     state: started
-    env_file: "{{ mawus__podman_env_dir }}/maw-postgres.env"
+    env_file: "{{ maw__podman_env_dir }}/maw-postgres.env"
     volume:
       - "{{ postgres_volume_init.volume.Name }}:/docker-entrypoint-initdb.d:ro,z"
       - "{{ postgres_volume.volume.Name }}:/var/lib/postgresql/data:rw,z"
@@ -79,7 +79,7 @@
 
 - name: set the dir / volume variables
   ansible.builtin.set_fact:
-    cert_vol: "{{ maw_cert_volume.volume is defined | ternary(maw_cert_volume.volume.Name, mawus__certs_dir) }}"
+    cert_vol: "{{ maw_cert_volume.volume is defined | ternary(maw_cert_volume.volume.Name, maw__certs_dir) }}"
     google_creds_vol: "{{ google_creds_volume.volume.Name }}"
 
 - name: files container block
@@ -87,9 +87,9 @@
 
     - name: maw-files container
       containers.podman.podman_container:
-        name: "{{ mawus__env }}-maw-files"
-        pod: "{{ mawus__podman_pod }}"
-        image: "{{ mawus__podman_image_files }}"
+        name: "{{ maw__env }}-maw-files"
+        pod: "{{ maw__podman_pod }}"
+        image: "{{ maw__podman_image_files }}"
         state: started
         volume:
           - "{{ cert_vol }}:/certs:ro,z"
@@ -103,16 +103,16 @@
       vars:
         pod_start__container_name: "{{ files_container.container.Name }}"
 
-  when: mawus__podman_image_files | length > 0
+  when: maw__podman_image_files | length > 0
 
 - name: photos container block
   block:
 
     - name: maw-photos container
       containers.podman.podman_container:
-        name: "{{ mawus__env }}-maw-photos"
-        pod: "{{ mawus__podman_pod }}"
-        image: "{{ mawus__podman_image_photos }}"
+        name: "{{ maw__env }}-maw-photos"
+        pod: "{{ maw__podman_pod }}"
+        image: "{{ maw__podman_image_photos }}"
         state: started
         volume:
           - "{{ cert_vol }}:/certs:ro,z"
@@ -126,7 +126,7 @@
       vars:
         pod_start__container_name: "{{ photos_container.container.Name }}"
 
-  when: mawus__podman_image_photos | length > 0
+  when: maw__podman_image_photos | length > 0
 
 - name: gateway container block
   block:
@@ -142,18 +142,18 @@
         gateway_volumes_prod:
           - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
           - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
-      when: mawus__env == 'prod'
+      when: maw__env == 'prod'
 
     - name: merge all volumes needed for gateway
       ansible.builtin.set_fact:
         gateway_volumes: "{{ gateway_volumes + gateway_volumes_prod }}"
-      when: mawus__env == 'prod'
+      when: maw__env == 'prod'
 
     - name: maw-gateway container
       containers.podman.podman_container:
-        name: "{{ mawus__env }}-maw-gateway"
-        pod: "{{ mawus__podman_pod }}"
-        image: "{{ mawus__podman_image_gateway }}"
+        name: "{{ maw__env }}-maw-gateway"
+        pod: "{{ maw__podman_pod }}"
+        image: "{{ maw__podman_image_gateway }}"
         state: started
         volume: "{{ gateway_volumes }}"
         security_opt:
@@ -168,11 +168,11 @@
       vars:
         pod_start__container_name: "{{ gateway_container.container.Name }}"
 
-  when: mawus__podman_image_gateway | length > 0
+  when: maw__podman_image_gateway | length > 0
 
 - name: Ensure user systemd directory exists
   ansible.builtin.file:
-    path: "{{ mawus__systemd_dir }}"
+    path: "{{ maw__systemd_dir }}"
     state: directory
     mode: u+rwx
 
@@ -180,38 +180,38 @@
 # producing the individual container service files for some reason
 - name: Create systemd unit files (manually)
   ansible.builtin.command:
-    cmd: "podman generate systemd -f -n --new {{ mawus__podman_pod }}"
-    chdir: "{{ mawus__systemd_dir }}"
+    cmd: "podman generate systemd -f -n --new {{ maw__podman_pod }}"
+    chdir: "{{ maw__systemd_dir }}"
   changed_when: true
 
 - name: Configure container order
   ansible.builtin.lineinfile:
-    path: "{{ mawus__systemd_dir }}/{{ item.unitfile }}"
+    path: "{{ maw__systemd_dir }}/{{ item.unitfile }}"
     insertafter: ^After=.*$
     line: "Before={{ item.before }}"
   loop:
-    - unitfile: "container-{{ mawus__env }}-maw-api.service"
-      before: "container-{{ mawus__env }}-maw-gateway.service"
-    - unitfile: "container-{{ mawus__env }}-maw-auth.service"
-      before: "container-{{ mawus__env }}-maw-gateway.service"
-    - unitfile: "container-{{ mawus__env }}-maw-files.service"
-      before: "container-{{ mawus__env }}-maw-gateway.service"
-    - unitfile: "container-{{ mawus__env }}-maw-photos.service"
-      before: "container-{{ mawus__env }}-maw-gateway.service"
-    - unitfile: "container-{{ mawus__env }}-maw-postgres.service"
-      before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-auth.service container-{{ mawus__env }}-maw-www.service container-{{ mawus__env }}-maw-cache-sync.service"
+    - unitfile: "container-{{ maw__env }}-maw-api.service"
+      before: "container-{{ maw__env }}-maw-gateway.service"
+    - unitfile: "container-{{ maw__env }}-maw-auth.service"
+      before: "container-{{ maw__env }}-maw-gateway.service"
+    - unitfile: "container-{{ maw__env }}-maw-files.service"
+      before: "container-{{ maw__env }}-maw-gateway.service"
+    - unitfile: "container-{{ maw__env }}-maw-photos.service"
+      before: "container-{{ maw__env }}-maw-gateway.service"
+    - unitfile: "container-{{ maw__env }}-maw-postgres.service"
+      before: "container-{{ maw__env }}-maw-api.service container-{{ maw__env }}-maw-auth.service container-{{ maw__env }}-maw-www.service container-{{ maw__env }}-maw-cache-sync.service"
     - unitfile: "container-{{ mawus_redis__container }}.service"
-      before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-www.service container-{{ mawus__env }}-maw-cache-sync.service"
-    - unitfile: "container-{{ mawus__env }}-maw-solr.service"
-      before: "container-{{ mawus__env }}-maw-api.service container-{{ mawus__env }}-maw-www.service"
-    - unitfile: "container-{{ mawus__env }}-maw-www.service"
-      before: "container-{{ mawus__env }}-maw-gateway.service"
-  when: (mawus__env == 'prod') or (mawus__env == 'test')
+      before: "container-{{ maw__env }}-maw-api.service container-{{ maw__env }}-maw-www.service container-{{ maw__env }}-maw-cache-sync.service"
+    - unitfile: "container-{{ maw__env }}-maw-solr.service"
+      before: "container-{{ maw__env }}-maw-api.service container-{{ maw__env }}-maw-www.service"
+    - unitfile: "container-{{ maw__env }}-maw-www.service"
+      before: "container-{{ maw__env }}-maw-gateway.service"
+  when: (maw__env == 'prod') or (maw__env == 'test')
 
 - name: Start and/or Enable mawus via systemd
   ansible.builtin.systemd:
     daemon_reload: true
-    name: "pod-{{ mawus__podman_pod }}"
-    enabled: "{{ mawus__env == 'prod' }}"
+    name: "pod-{{ maw__podman_pod }}"
+    enabled: "{{ maw__env == 'prod' }}"
     state: started
     scope: user
