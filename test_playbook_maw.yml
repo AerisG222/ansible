@@ -1,6 +1,6 @@
 ---
 - name: Configure mikeandwan.us prod environment
-  hosts: mawus_prod
+  hosts: maw_prod
   vars_files:
     - "{{ controller_secrets_file }}"
 

@@ -2,7 +2,7 @@
 all:
   children:
 
-    mawus_test:
+    maw_test:
       hosts:
         barett:
         aeris:

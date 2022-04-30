@@ -5,8 +5,8 @@ MAWUS_ENV=$(get_mawus_env)
 HOST=$(get_value "Workstation hostname (must exist in inventory file): " 'n')
 FIRST_RUN=$(get_value "First Run - need to prompt for sshd password?  (y/N): " 'n' 'n')
 VERBOSE=$(get_value "Verbose?  (y/N): " 'n' 'n')
-INVENTORY="inventories/inventory_mawus_${MAWUS_ENV}.yml"
-PLAYBOOK="playbook_mawus_${MAWUS_ENV}.yml"
+INVENTORY="inventories/inventory_maw_${MAWUS_ENV}.yml"
+PLAYBOOK="playbook_maw_${MAWUS_ENV}.yml"
 PLAYBOOK_ARGS=("--ask-become-pass")
 
 if [ "${FIRST_RUN}" == 'y' ]; then

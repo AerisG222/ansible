@@ -2,7 +2,7 @@
 all:
   children:
 
-    mawus_prod:
+    maw_prod:
       hosts:
         tifa:
         vmtest2:
