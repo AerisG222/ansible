@@ -4,15 +4,15 @@
     name: maw_envfile
   vars:
     mawus_env__template: maw-api.env.j2
-    mawus_env__path: "{{ mawus_api__envfile }}"
-    mawus_env__backup: "{{ mawus_api__envfile_backup }}"
+    mawus_env__path: "{{ maw_api__envfile }}"
+    mawus_env__backup: "{{ maw_api__envfile_backup }}"
 
 - name: configure natively hosted api site
   ansible.builtin.include_tasks:
     file: native_hosted.yml
-  when: mawus_api__image | length == 0
+  when: maw_api__image | length == 0
 
 - name: configure container hosted api site
   ansible.builtin.include_tasks:
     file: container_hosted.yml
-  when: mawus_api__image | length > 0
+  when: maw_api__image | length > 0

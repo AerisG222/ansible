@@ -3,92 +3,92 @@ argument_specs:
   main:
     short_description: Creates api service and supporting objects for mikeandwan.us
     options:
-      mawus_api__pod:
+      maw_api__pod:
         type: str
         required: true
         description: Name of the pod in which the api container should run
 
-      mawus_api__image:
+      maw_api__image:
         type: str
         required: true
         description: Fully qualified api image to use
 
-      mawus_api__container:
+      maw_api__container:
         type: str
         required: true
         description: Name of the container
 
-      mawus_api__cert_dir:
+      maw_api__cert_dir:
         type: str
         required: true
         description: Local directory where the certificates are stored
 
-      mawus_api__cert_volume:
+      maw_api__cert_volume:
         type: str
         required: true
         description: Name of the volume where certificates are stored
 
-      mawus_api__dataprotection_dir:
+      maw_api__dataprotection_dir:
         type: str
         required: true
         description: Full path to directory where dataprotection files will be written
 
-      mawus_api__dataprotection_volume:
+      maw_api__dataprotection_volume:
         type: str
         required: true
         description: Name of the volume where data protection files are stored
 
-      mawus_api__dataprotection_volume_to_migrate:
+      maw_api__dataprotection_volume_to_migrate:
         type: str
         required: true
         description: Name of the previous volume where data protection files are stored and should be copied to the new volume
 
-      mawus_api__envfile:
+      maw_api__envfile:
         type: str
         required: true
         description: Path to the api environment file
 
-      mawus_api__envfile_backup:
+      maw_api__envfile_backup:
         type: bool
         required: true
         description: Indicates if the existing envfile should be backed up before being overwritten
 
-      mawus_api__aspnet_env:
+      maw_api__aspnet_env:
         type: str
         required: true
         description: Specifies the environment for the aspnet application
 
-      mawus_api__pfx:
+      maw_api__pfx:
         type: str
         required: true
         description: Path to the api pfx file
 
-      mawus_api__pfx_pwd:
+      maw_api__pfx_pwd:
         type: str
         required: true
         description: The password for the api pfx
 
-      mawus_api__sql_username:
+      maw_api__sql_username:
         type: str
         required: true
         description: The name of the user to connect to postgres
 
-      mawus_api__sql_password:
+      maw_api__sql_password:
         type: str
         required: true
         description: The password for the postgres user
 
-      mawus_api__upload_dir:
+      maw_api__upload_dir:
         type: str
         required: true
         description: The path to the uploads directory
 
-      mawus_api__upload_volume:
+      maw_api__upload_volume:
         type: str
         required: true
         description: The name of the uploads volume
 
-      mawus_api__asset_dir_images:
+      maw_api__asset_dir_images:
         type: str
         required: true
         description: Absolute path to the photos / images asset directory

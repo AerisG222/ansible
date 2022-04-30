@@ -1,12 +1,12 @@
 ---
 - name: create api dataprotection directory
   ansible.builtin.file:
-    path: "{{ mawus_api__dataprotection_dir }}"
+    path: "{{ maw_api__dataprotection_dir }}"
     state: directory
     mode: u+rwx
 
 - name: create upload directory
   ansible.builtin.file:
-    path: "{{ mawus_api__upload_dir }}"
+    path: "{{ maw_api__upload_dir }}"
     state: directory
     mode: u+rwx
