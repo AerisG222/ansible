@@ -1,31 +1,4 @@
 ---
-- name: migrate auth dataprotection files
-  ansible.builtin.include_role:
-    name: podman_copy
-  when: auth_dataprotection_volume.changed
-  vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: maw-auth-dataprotection
-    pod_cp__dest_dir_or_volume: "{{ auth_dataprotection_volume.volume.Name }}"
-
-- name: migrate api dataprotection files
-  ansible.builtin.include_role:
-    name: podman_copy
-  when: api_dataprotection_volume.changed
-  vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: maw-api-dataprotection
-    pod_cp__dest_dir_or_volume: "{{ api_dataprotection_volume.volume.Name }}"
-
-- name: migrate www dataprotection files
-  ansible.builtin.include_role:
-    name: podman_copy
-  when: www_dataprotection_volume.changed
-  vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: maw-www-dataprotection
-    pod_cp__dest_dir_or_volume: "{{ www_dataprotection_volume.volume.Name }}"
-
 - name: migrate certbot certs
   ansible.builtin.include_role:
     name: podman_copy
@@ -62,15 +35,6 @@
     pod_cp__skip_if_src_not_exists: true
     pod_cp__src_dir_or_volume: maw-reverse-geocode
     pod_cp__dest_dir_or_volume: "{{ reverse_geocode_volume.volume.Name }}"
-
-- name: migrate maw-uploads
-  ansible.builtin.include_role:
-    name: podman_copy
-  when: uploads_volume.changed
-  vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: maw-uploads
-    pod_cp__dest_dir_or_volume: "{{ uploads_volume.volume.Name }}"
 
 - name: migrate maw-gdrive-creds
   ansible.builtin.include_role:

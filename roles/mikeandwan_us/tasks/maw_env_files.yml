@@ -5,13 +5,6 @@
     state: directory
     mode: u+rwx
 
-- name: Make sure dataprotection dir exists for local site as it doesn't use managed volume
-  ansible.builtin.file:
-    path: "{{ mawus__dataprotection_dir }}"
-    state: directory
-    mode: u+rwx
-  when: mawus__dataprotection_dir | length > 0
-
 - name: Prepare environment files
   ansible.builtin.template:
     backup: "{{ mawus__env == 'prod' }}"
@@ -20,10 +13,7 @@
     mode: u+rw
   loop:
     - maw-postgres.env
-    - maw-api.env
-    - maw-auth.env
     - maw-reverse-geocode.env
-    - maw-www.env
 
 - name: Add env files to .bash_profile for dev
   ansible.builtin.blockinfile:

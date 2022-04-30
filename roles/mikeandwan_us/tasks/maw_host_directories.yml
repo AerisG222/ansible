@@ -9,11 +9,4 @@
     mode: u+rwx,go+rx
   loop: "{{ asset_dirs }}"
 
-- name: ensure maw-uploads directory exists
-  ansible.builtin.file:
-    path: "{{ mawus__upload_dir }}"
-    state: directory
-    mode: u+rwx,go+rx
-  when: mawus__upload_dir | length > 0
-
 # todo: copy files for prod

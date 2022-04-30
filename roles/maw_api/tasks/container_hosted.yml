@@ -1,0 +1,60 @@
+---
+- name: pull api image
+  containers.podman.podman_image:
+    name: "{{ mawus_api__image }}"
+
+- name: create api dataprotection volume
+  containers.podman.podman_volume:
+    name: "{{ mawus_api__dataprotection_volume }}"
+    state: present
+  register: _mawus_api__dataprotection_volume_result
+
+- name: migrate api dataprotection files from original volume
+  ansible.builtin.include_role:
+    name: podman_copy
+  when: >
+    _mawus_api__dataprotection_volume_result.changed
+    and
+    mawus_api__dataprotection_volume_to_migrate | length > 0
+  vars:
+    pod_cp__skip_if_src_not_exists: true
+    pod_cp__src_dir_or_volume: "{{ mawus_api__dataprotection_volume_to_migrate }}"
+    pod_cp__dest_dir_or_volume: "{{ mawus_api__dataprotection_volume }}"
+
+- name: create uploads volume
+  containers.podman.podman_volume:
+    name: "{{ mawus_api__upload_volume }}"
+    state: present
+  register: _mawus_api__uploads_volume
+
+- name: migrate maw-uploads
+  ansible.builtin.include_role:
+    name: podman_copy
+  when: _mawus_api__uploads_volume.changed
+  vars:
+    pod_cp__skip_if_src_not_exists: true
+    pod_cp__src_dir_or_volume: "{{ mawus_api__upload_volume_to_migrate }}"
+    pod_cp__dest_dir_or_volume: "{{ mawus_api__upload_volume }}"
+
+- name: maw-api container
+  containers.podman.podman_container:
+    name: "{{ mawus_api__container }}"
+    pod: "{{ mawus_api__pod }}"
+    image: "{{ mawus_api__image }}"
+    state: started
+    env_file: "{{ mawus_api__envfile }}"
+    security_opt:
+      - label=disable
+    volume:
+      - "{{ mawus_api__cert_volume }}:/certs:ro,z"
+      - "{{ mawus_api__dataprotection_volume }}:/dataprotection:rw,Z"
+      - "{{ mawus_api__upload_volume }}:/maw-uploads:rw,z"
+      - "{{ mawus_api__asset_dir_images }}:/srv/www/website_assets/images:ro"
+    label:
+      io.containers.autoupdate: image
+
+- name: wait for api container
+  ansible.builtin.include_role:
+    name: podman_wait_for_start
+  vars:
+    pod_start__container_name: "{{ mawus_api__container }}"

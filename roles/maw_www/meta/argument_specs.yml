@@ -1,0 +1,119 @@
+---
+argument_specs:
+  main:
+    short_description: Creates www service and supporting objects for mikeandwan.us
+    options:
+      mawus_www__pod:
+        type: str
+        required: true
+        description: Name of the pod in which the www container should run
+
+      mawus_www__image:
+        type: str
+        required: true
+        description: Fully qualified www image to use
+
+      mawus_www__container:
+        type: str
+        required: true
+        description: Name of the container
+
+      mawus_auth__cert_dir:
+        type: str
+        required: true
+        description: Local directory where the certificates are stored
+
+      mawus_auth__cert_volume:
+        type: str
+        required: true
+        description: Name of the volume where certificates are stored
+
+      mawus_www__dataprotection_dir:
+        type: str
+        required: true
+        description: Full path to directory where dataprotection files will be written
+
+      mawus_www__dataprotection_volume:
+        type: str
+        required: true
+        description: Name of the volume where data protection files are stored
+
+      mawus_www__dataprotection_volume_to_migrate:
+        type: str
+        required: true
+        description: Name of the previous volume where data protection files are stored and should be copied to the new volume
+
+      mawus_www__google_creds_volume:
+        type: str
+        required: true
+        description: The volume where the google credentials are stored
+
+      mawus_www__envfile:
+        type: str
+        required: true
+        description: Path to the www environment file
+
+      mawus_www__envfile_backup:
+        type: bool
+        required: true
+        description: Indicates if the existing envfile should be backed up before being overwritten
+
+      mawus_www__pfx:
+        type: str
+        required: true
+        description: Path to the www pfx file
+
+      mawus_www__pfx_pwd:
+        type: str
+        required: true
+        description: The password for the auth pfx
+
+      mawus_www__aspnet_env:
+        type: str
+        required: true
+        description: Specifies the environment for the aspnet application
+
+      mawus_www__google_email_creds_file:
+        type: str
+        required: true
+        description: The path to the google credentials file
+
+      mawus_www__sql_username:
+        type: str
+        required: true
+        description: The name of the user to connect to postgres
+
+      mawus_www__sql_password:
+        type: str
+        required: true
+        description: The password for the postgres user
+
+      mawus_www__auth_client_id:
+        type: str
+        required: true
+        description: The client id for the www site for OAuth
+
+      mawus_www__auth_client_secret:
+        type: str
+        required: true
+        description: The client secret for the www site for OAuth
+
+      mawus_www__google_recaptcha_site_key:
+        type: str
+        required: true
+        description: The google recaptcha site key
+
+      mawus_www__google_recaptcha_secret_key:
+        type: str
+        required: true
+        description: The google recaptcha secret
+
+      mawus_www__asset_dir_images:
+        type: str
+        required: true
+        description: The host directory containing the image assets
+
+      mawus_www__asset_dir_movies:
+        type: str
+        required: true
+        description: The host directory containing the video assets

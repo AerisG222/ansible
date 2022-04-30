@@ -39,10 +39,10 @@ mawus__pfx_pwd_www:
 mawus__gdrive_creds_dir:  # not needed for dev
 mawus__google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
 mawus__google_email_creds_file: "{{ controller_mawus_env_root }}/google-creds/www_emailer.json"
+mawus__google_creds_volume: "{{ mawus__env }}-maw-google-creds"
 
 mawus__certs_dir: "{{ remote_mawus_root }}/certs"
 mawus__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection"
-mawus__upload_dir: "{{ remote_mawus_root }}/maw-uploads"
 mawus__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
 mawus__asset_dir_images: "{{ asset_dir_root }}/images"
 mawus__asset_dir_movies: "{{ asset_dir_root }}/movies"
@@ -59,9 +59,6 @@ mawus__podman_pod: dev-maw-pod
 mawus__podman_env_dir: "{{ remote_mawus_root }}/podman-env"
 mawus__podman_image_photos: ""
 mawus__podman_image_files: ""
-mawus__podman_image_auth: ""
-mawus__podman_image_api: ""
-mawus__podman_image_www: ""
 mawus__podman_image_gateway: ""
 mawus__podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
 mawus__podman_image_certbot: docker.io/certbot/certbot:latest
@@ -78,22 +75,6 @@ mawus__sql_password: "{{ vault_password_sql_svc_www_maw }}"
 mawus__sql_postgres_password: "{{ vault_password_sql_postgres }}"
 mawus__sql_solr_username: svc_solr
 mawus__sql_solr_password: "{{ vault_password_sql_solr }}"
-
-# auth secrets
-mawus__google_plus_client_id: "{{ vault_google_plus_client_id }}"
-mawus__google_plus_client_secret: "{{ vault_google_plus_client_secret }}"
-mawus__twitter_client_id: "{{ vault_twitter_client_id }}"
-mawus__twitter_client_secret: "{{ vault_twitter_client_secret }}"
-mawus__microsoft_client_id: "{{ vault_microsoft_client_id }}"
-mawus__microsoft_client_secret: "{{ vault_microsoft_client_secret }}"
-mawus__github_client_id: "{{ vault_github_client_id }}"
-mawus__github_client_secret: "{{ vault_github_client_secret }}"
-mawus__www_auth_client_secret: "{{ vault_www_auth_client_secret }}"
-mawus__www_auth_client_id: "{{ vault_www_auth_client_id }}"
-
-# google recaptcha key
-mawus__google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
-mawus__google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"
 
 # google api key (maps / reverse geocode)
 mawus__google_api_key: "{{ vault_google_api_key }}"
@@ -124,3 +105,78 @@ mawus_solr__indexer_container: "{{ mawus__env }}-solr-indexer"
 mawus_solr__indexer_sql_username: "{{ mawus__sql_solr_username }}"
 mawus_solr__indexer_sql_password: "{{ mawus__sql_solr_password }}"
 mawus_solr__indexer_calendar: '00:50:00'
+
+# mawus api settings
+mawus_api__pod: ""
+mawus_api__image: ""
+mawus_api__container: ""
+mawus_api__cert_dir: "{{ mawus__certs_dir }}"
+mawus_api__cert_volume: ""
+mawus_api__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection/api"
+mawus_api__dataprotection_volume: ""
+mawus_api__dataprotection_volume_to_migrate: ""
+mawus_api__envfile: "{{ mawus__podman_env_dir }}/maw-api.env"
+mawus_api__envfile_backup: false
+mawus_api__aspnet_env: "{{ mawus__aspnet_env }}"
+mawus_api__pfx: "{{ mawus__pfx_api }}"
+mawus_api__pfx_pwd: ""
+mawus_api__sql_username: "{{ mawus__sql_username }}"
+mawus_api__sql_password: "{{ mawus__sql_password }}"
+mawus_api__upload_dir: "{{ mawus__upload_dir }}"
+mawus_api__upload_volume: ""
+mawus_api__upload_volume_to_migrate: ""
+mawus_api__asset_dir_images: "{{ mawus__asset_dir_images }}"
+
+# mawus auth settings
+mawus_auth__pod: ""
+mawus_auth__image: ""
+mawus_auth__container: ""
+mawus_auth__cert_dir: "{{ mawus__certs_dir }}"
+mawus_auth__cert_volume: ""
+mawus_auth__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection/auth"
+mawus_auth__dataprotection_volume: ""
+mawus_auth__dataprotection_volume_to_migrate: ""
+mawus_auth__envfile: "{{ mawus__podman_env_dir }}/maw-auth.env"
+mawus_auth__envfile_backup: false
+mawus_auth__aspnet_env: "{{ mawus__aspnet_env }}"
+mawus_auth__google_creds_volume: ""
+mawus_auth__google_email_creds_file:
+mawus_auth__pfx: "{{ mawus__pfx_auth }}"
+mawus_auth__pfx_pwd:
+mawus_auth__sql_username: "{{ mawus__sql_username }}"
+mawus_auth__sql_password: "{{ mawus__sql_password }}"
+mawus_auth__www_auth_client_secret: "{{ vault_www_auth_client_secret }}"
+mawus_auth__google_plus_client_id: "{{ vault_google_plus_client_id }}"
+mawus_auth__google_plus_client_secret: "{{ vault_google_plus_client_secret }}"
+mawus_auth__twitter_client_id: "{{ vault_twitter_client_id }}"
+mawus_auth__twitter_client_secret: "{{ vault_twitter_client_secret }}"
+mawus_auth__microsoft_client_id: "{{ vault_microsoft_client_id }}"
+mawus_auth__microsoft_client_secret: "{{ vault_microsoft_client_secret }}"
+mawus_auth__github_client_id: "{{ vault_github_client_id }}"
+mawus_auth__github_client_secret: "{{ vault_github_client_secret }}"
+mawus_auth__pfx_signing: "{{ mawus__pfx_signing }}"
+
+# mawus www settings
+mawus_www__pod: ""
+mawus_www__image: ""
+mawus_www__container: ""
+mawus_www__cert_dir: "{{ mawus__certs_dir }}"
+mawus_www__cert_volume: ""
+mawus_www__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection/www"
+mawus_www__dataprotection_volume: ""
+mawus_www__dataprotection_volume_to_migrate: ""
+mawus_www__envfile: "{{ mawus__podman_env_dir }}/maw-www.env"
+mawus_www__envfile_backup: false
+mawus_www__pfx: "{{ mawus__pfx_www }}"
+mawus_www__pfx_pwd:
+mawus_www__aspnet_env: "{{ mawus__aspnet_env }}"
+mawus_www__google_creds_volume: ""
+mawus_www__google_email_creds_file: "{{ mawus__google_email_creds_file }}"
+mawus_www__sql_username: "{{ mawus__sql_username }}"
+mawus_www__sql_password: "{{ mawus__sql_password }}"
+mawus_www__auth_client_id: "{{ vault_www_auth_client_id }}"
+mawus_www__auth_client_secret: "{{ vault_www_auth_client_secret }}"
+mawus_www__google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
+mawus_www__google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"
+mawus_www__asset_dir_images: "{{ mawus__asset_dir_images }}"
+mawus_www__asset_dir_movies: "{{ mawus__asset_dir_movies }}"
