@@ -3,57 +3,57 @@ argument_specs:
   main:
     short_description: Creates redis server and supporting objects for mikeandwan.us
     options:
-      mawus_redis__version:
+      maw_redis__version:
         type: int
         required: true
         description: Major redis version that will be run
 
-      mawus_redis__pod:
+      maw_redis__pod:
         type: str
         required: true
         description: Name of the pod in which the redis container should run
 
-      mawus_redis__image:
+      maw_redis__image:
         type: str
         required: true
         description: Fully qualified redis image to use
 
-      mawus_redis__container:
+      maw_redis__container:
         type: str
         required: true
         description: Name of the container
 
-      mawus_redis__volume:
+      maw_redis__volume:
         type: str
         required: true
         description: Name of the volume that is used to back the redis database
 
-      mawus_redis__cache_sync_image:
+      maw_redis__cache_sync_image:
         type: str
         required: true
         description: Fully qualified image for the cache sync container
 
-      mawus_redis__cache_sync_container:
+      maw_redis__cache_sync_container:
         type: str
         required: true
         description: Name of the container
 
-      mawus_redis__cache_sync_envfile:
+      maw_redis__cache_sync_envfile:
         type: str
         required: true
         description: Full path to the environment file for the cache sync container
 
-      mawus_redis__cache_sync_envfile_backup:
+      maw_redis__cache_sync_envfile_backup:
         type: str
         required: true
         description: Indicates if the existing envfile should be backed up before being overwritten
 
-      mawus_redis__cache_sync_sql_username:
+      maw_redis__cache_sync_sql_username:
         type: str
         required: true
         description: The username when connecting to postgres
 
-      mawus_redis__cache_sync_sql_password:
+      maw_redis__cache_sync_sql_password:
         type: str
         required: true
         description: The password when connecting to postgres

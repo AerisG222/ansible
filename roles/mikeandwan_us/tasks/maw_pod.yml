@@ -200,7 +200,7 @@
       before: "container-{{ maw__env }}-maw-gateway.service"
     - unitfile: "container-{{ maw__env }}-maw-postgres.service"
       before: "container-{{ maw__env }}-maw-api.service container-{{ maw__env }}-maw-auth.service container-{{ maw__env }}-maw-www.service container-{{ maw__env }}-maw-cache-sync.service"
-    - unitfile: "container-{{ mawus_redis__container }}.service"
+    - unitfile: "container-{{ maw_redis__container }}.service"
       before: "container-{{ maw__env }}-maw-api.service container-{{ maw__env }}-maw-www.service container-{{ maw__env }}-maw-cache-sync.service"
     - unitfile: "container-{{ maw__env }}-maw-solr.service"
       before: "container-{{ maw__env }}-maw-api.service container-{{ maw__env }}-maw-www.service"

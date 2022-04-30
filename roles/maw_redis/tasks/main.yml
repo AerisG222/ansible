@@ -1,27 +1,27 @@
 ---
 - name: pull images
   containers.podman.podman_image:
-    name: "{{ _mawus_redis__item }}"
+    name: "{{ _maw_redis__item }}"
   loop_control:
-    loop_var: _mawus_redis__item
+    loop_var: _maw_redis__item
   loop:
-    - "{{ mawus_redis__image }}"
-    - "{{ mawus_redis__cache_sync_image }}"
+    - "{{ maw_redis__image }}"
+    - "{{ maw_redis__cache_sync_image }}"
 
 - name: create redis volume
   containers.podman.podman_volume:
-    name: "{{ mawus_redis__volume }}"
+    name: "{{ maw_redis__volume }}"
     state: present
 
 - name: redis container
   containers.podman.podman_container:
-    name: "{{ mawus_redis__container }}"
-    pod: "{{ mawus_redis__pod }}"
-    image: "{{ mawus_redis__image }}"
+    name: "{{ maw_redis__container }}"
+    pod: "{{ maw_redis__pod }}"
+    image: "{{ maw_redis__image }}"
     command: redis-server --save 60 1
     state: started
     volume:
-      - "{{ mawus_redis__volume }}:/data:rw,z"
+      - "{{ maw_redis__volume }}:/data:rw,z"
     label:
       io.containers.autoupdate: image
 
@@ -29,22 +29,22 @@
   ansible.builtin.include_role:
     name: podman_wait_for_start
   vars:
-    pod_start__container_name: "{{ mawus_redis__container }}"
+    pod_start__container_name: "{{ maw_redis__container }}"
 
 - name: prepare cache sync environment file
   ansible.builtin.include_role:
     name: maw_envfile
   vars:
     mawus_env__template: maw-cache-sync.env.j2
-    mawus_env__path: "{{ mawus_redis__cache_sync_envfile }}"
-    mawus_env__backup: "{{ mawus_redis__cache_sync_envfile_backup }}"
+    mawus_env__path: "{{ maw_redis__cache_sync_envfile }}"
+    mawus_env__backup: "{{ maw_redis__cache_sync_envfile_backup }}"
 
 - name: maw-cache-sync container
   containers.podman.podman_container:
-    name: "{{ mawus_redis__cache_sync_container }}"
-    pod: "{{ mawus_redis__pod }}"
-    image: "{{ mawus_redis__cache_sync_image }}"
-    env_file: "{{ mawus_redis__cache_sync_envfile }}"
+    name: "{{ maw_redis__cache_sync_container }}"
+    pod: "{{ maw_redis__pod }}"
+    image: "{{ maw_redis__cache_sync_image }}"
+    env_file: "{{ maw_redis__cache_sync_envfile }}"
     state: started
     label:
       io.containers.autoupdate: image
@@ -53,4 +53,4 @@
   ansible.builtin.include_role:
     name: podman_wait_for_start
   vars:
-    pod_start__container_name: "{{ mawus_redis__cache_sync_container }}"
+    pod_start__container_name: "{{ maw_redis__cache_sync_container }}"
