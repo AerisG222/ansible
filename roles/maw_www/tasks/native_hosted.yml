@@ -1,6 +1,6 @@
 ---
 - name: create www dataprotection directory
   ansible.builtin.file:
-    path: "{{ mawus_www__dataprotection_dir }}"
+    path: "{{ maw_www__dataprotection_dir }}"
     state: directory
     mode: u+rwx
