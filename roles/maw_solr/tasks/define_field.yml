@@ -1,15 +1,15 @@
 - name: "check if solr field {{ item.name }} exists"
   ansible.builtin.command:
-    cmd: "podman exec -it {{ mawus_solr__container }} curl 'http://localhost:8983/solr/multimedia-categories/schema/fields/{{ item.name }}'"
+    cmd: "podman exec -it {{ maw_solr__container }} curl 'http://localhost:8983/solr/multimedia-categories/schema/fields/{{ item.name }}'"
   changed_when: false
   register: solr_field_exists_result
 
 - name: "create field {{ item.name }}"
   ansible.builtin.command:
-    cmd: "podman exec -it {{ mawus_solr__container }} curl -X POST -H 'Content-type:application/json' --data-binary '{ \"add-field\": {{ item | to_json }} }' http://localhost:8983/solr/multimedia-categories/schema"
+    cmd: "podman exec -it {{ maw_solr__container }} curl -X POST -H 'Content-type:application/json' --data-binary '{ \"add-field\": {{ item | to_json }} }' http://localhost:8983/solr/multimedia-categories/schema"
   when: (solr_field_exists_result.stdout | from_json).error is defined
 
 - name: "update field {{ item.name }}"
   ansible.builtin.command:
-    cmd: "podman exec -it {{ mawus_solr__container }} curl -X POST -H 'Content-type:application/json' --data-binary '{ \"replace-field\": {{ item | to_json }} }' http://localhost:8983/solr/multimedia-categories/schema"
+    cmd: "podman exec -it {{ maw_solr__container }} curl -X POST -H 'Content-type:application/json' --data-binary '{ \"replace-field\": {{ item | to_json }} }' http://localhost:8983/solr/multimedia-categories/schema"
   when: (solr_field_exists_result.stdout | from_json).field is defined and item != (solr_field_exists_result.stdout | from_json).field
