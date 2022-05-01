@@ -3,7 +3,6 @@
   containers.podman.podman_image:
     name: "{{ item }}"
   loop:
-    - "{{ maw__podman_image_postgres }}"
     - "{{ maw__podman_image_photos }}"
     - "{{ maw__podman_image_files }}"
     - "{{ maw__podman_image_gateway }}"

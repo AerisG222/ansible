@@ -1,0 +1,90 @@
+- name: "test if {{ pg_res_db__db }} database exists"
+  containers.podman.podman_container:
+    name: "{{ pg_res_db__container }}"
+    pod: "{{ pg_res_db__pod }}"
+    image: "{{ pg_res_db__image }}"
+    env_file: "{{ pg_res_db__envfile }}"
+    command:
+      - psql
+      - '-h'
+      - 127.0.0.1
+      - '-U'
+      - postgres
+      - '-d'
+      - "{{ pg_res_db__db }}"
+      - '-c'
+      - SELECT 1;
+    state: started
+  ignore_errors: true
+  tags: skip_ansible_lint
+
+- name: "get {{ pg_res_db__db }} exists test result"
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
+  vars:
+    pod_stop__container_name: "{{ pg_res_db__container }}"
+    pod_stop__result_varname: _pg_res_db__sql_test_result
+
+- name: set variable to determine if restore steps should be executed
+  ansible.builtin.set_fact:
+    _pg_res_db__do_restore_steps: "{{ _pg_res_db__sql_test_result | int == 2 }}"
+
+- name: perform all restore steps
+  block:
+    - name: "restore {{ pg_res_db__db }} database"
+      containers.podman.podman_container:
+        name: "{{ pg_res_db__container }}"
+        pod: "{{ pg_res_db__pod }}"
+        image: "{{ pg_res_db__image }}"
+        env_file: "{{ pg_res_db__envfile }}"
+        command: "pg_restore -h 127.0.0.1 -U postgres -C -d postgres /postgres_backup/{{ pg_res_db__backup_file | basename }}"
+        state: started
+        interactive: true
+        security_opt:
+          - label=disable
+        volume:
+          - "{{ pg_res_db__backup_file | dirname }}:/postgres_backup:ro"
+
+    - name: "wait for {{ pg_res_db__db }} restore"
+      ansible.builtin.include_role:
+        name: podman_wait_for_stop
+      vars:
+        pod_stop__container_name: "{{ pg_res_db__container }}"
+        pod_stop__result_varname: _pg_res_db__restore_result
+
+    - name: fail if restore failed
+      ansible.builtin.fail:
+        msg: "failed to restore database {{ pg_res_db__db }}"
+      failed_when: _pg_res_db__restore_result | int != 0
+
+    - name: "optimize {{ pg_res_db__db }} database"
+      containers.podman.podman_container:
+        name: "{{ pg_res_db__container }}"
+        pod: "{{ pg_res_db__pod }}"
+        image: "{{ pg_res_db__image }}"
+        env_file: "{{ pg_res_db__envfile }}"
+        command:
+          - psql
+          - '-h'
+          - 127.0.0.1
+          - '-U'
+          - postgres
+          - '-d'
+          - "{{ pg_res_db__db }}"
+          - '-c'
+          - VACUUM ANALYZE;
+        state: started
+        interactive: true
+
+    - name: "wait for {{ pg_res_db__db }} optimization"
+      ansible.builtin.include_role:
+        name: podman_wait_for_stop
+      vars:
+        pod_stop__container_name: "{{ pg_res_db__container }}e"
+        pod_stop__result_varname: _pg_res_db__optimize_result
+
+    - name: fail if optimization failed
+      ansible.builtin.fail:
+        msg: "failed to optimize database {{ pg_res_db__db }}"
+      failed_when: _pg_res_db__optimize_result | int != 0
+  when: _pg_res_db__do_restore_steps

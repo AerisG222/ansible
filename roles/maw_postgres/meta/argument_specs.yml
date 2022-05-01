@@ -1,0 +1,244 @@
+---
+argument_specs:
+  main:
+    short_description: Creates redis server and supporting objects for mikeandwan.us
+    options:
+      maw_postgres__version:
+        type: int
+        required: true
+        description: version of postgres to run
+
+      maw_postgres__pod:
+        type: str
+        required: true
+        description: name of the pod in which to run the postgres container
+
+      maw_postgres__image:
+        type: str
+        required: true
+        description: fully qualified docker image name for postgres to run
+
+      maw_postgres__container:
+        type: str
+        required: true
+        description: then name to give the running postgres container
+
+      maw_postgres__volume:
+        type: str
+        required: true
+        description: the data volume for the postgres container
+
+      maw_postgres__init_volume:
+        type: str
+        required: true
+        description: the initialization volume name for the postgres container
+
+      maw_postgres__backup_volume:
+        type: str
+        required: true
+        description: the name of the backup volume
+
+      maw_postgres__envfile:
+        type: str
+        required: true
+        description: the full path to the postgres environment variable
+
+      maw_postgres__envfile_backup:
+        type: bool
+        required: true
+        description: indicates if the environment variable should be backed up before being overwritten
+
+      maw_postgres__password:
+        type: str
+        required: true
+        description: the password for the postgres user
+
+      maw_postgres__tempdir:
+        type: str
+        required: true
+        description: a temp directory that can be used for preparing postgres container resources
+
+      maw_postgres__systemd_dir:
+        type: str
+        required: true
+        description: the directory where service and timer files should be written
+
+      maw_postgres__backup_roles_service:
+        type: str
+        required: true
+        description: the name of the backup role service
+
+      maw_postgres__backup_roles_container:
+        type: str
+        required: true
+        description: the name of the running backup role container
+
+      maw_postgres__backup_maw_service:
+        type: str
+        required: true
+        description: the name of the backup maw service
+
+      maw_postgres__backup_maw_container:
+        type: str
+        required: true
+        description: the name of the runnin gbackup maw container
+
+      maw_postgres__backup_idsrv_service:
+        type: str
+        required: true
+        description: the name of the backup idsrv service
+
+      maw_postgres__backup_idsrv_container:
+        type: str
+        required: true
+        description: the name of the running backup idsrv container
+
+      maw_postgres__optimize_maw_service:
+        type: str
+        required: true
+        description: the name of the optimize maw service
+
+      maw_postgres__optimize_maw_container:
+        type: str
+        required: true
+        description: the name of the running optimize maw container
+
+      maw_postgres__optimize_idsrv_service:
+        type: str
+        required: true
+        description: the name of the optimize idsrv service
+
+      maw_postgres__optimize_idsrv_container:
+        type: str
+        required: true
+        description: the name of the running optimize idsrv container
+
+      maw_postgres__cleanup_service:
+        type: str
+        required: true
+        description: the name of the backup cleanup service
+
+      maw_postgres__cleanup_container:
+        type: str
+        required: true
+        description: the name of the running backup cleanup container
+
+      maw_postgres__daily_archive_service:
+        type: str
+        required: true
+        description: the name of the daily archive service
+
+      maw_postgres__daily_archive_container:
+        type: str
+        required: true
+        description: the name of the running daily archive container
+
+      maw_postgres__monthly_archive_service:
+        type: str
+        required: true
+        description: the name of the monthly archive service
+
+      maw_postgres__monthly_archive_container:
+        type: str
+        required: true
+        description: the name of the running monthly archive container
+
+      maw_postgres__gdrive_creds_volume:
+        type: str
+        required: true
+        description: the name of the volume containing the gdrive credentials
+
+      maw_postgres__gdrive_image:
+        type: str
+        required: true
+        description: the full name of the docker image for gdrive
+
+      maw_postgres__gdrive_folder_daily:
+        type: str
+        required: true
+        description: the name of the folder in gdrive where daily backups should be archived
+
+      maw_postgres__gdrive_folder_monthly:
+        type: str
+        required: true
+        description: the name of the folder in gdrive where monthly backups should be archived
+
+      maw_postgres__calendar_role_backup:
+        type: str
+        required: true
+        description: the systemd calender that defines when the role backup occurs
+
+      maw_postgres__calendar_maw_backup:
+        type: str
+        required: true
+        description: the systemd calender that defines when the maw database backup occurs
+
+      maw_postgres__calendar_idsrv_backup:
+        type: str
+        required: true
+        description: the systemd calender that defines when the idsrv database backup occurs
+
+      maw_postgres__calendar_maw_optimize:
+        type: str
+        required: true
+        description: the systemd calender that defines when the maw database is optimized
+
+      maw_postgres__calendar_idsrv_optimize:
+        type: str
+        required: true
+        description: the systemd calender that defines when the idsrv database is optimized
+
+      maw_postgres__calendar_backup_cleanup:
+        type: str
+        required: true
+        description: the systemd calendar that defines when the backup cleanup job runs
+
+      maw_postgres__calendar_archive_daily:
+        type: str
+        required: true
+        description: the systemd calendar that defines when the daily archive runs
+
+      maw_postgres__calendar_archive_monthly:
+        type: str
+        required: true
+        description: the systemd calendar that defines when the monthly archive runs
+
+      maw_postgres__controller_backup_dir:
+        type: str
+        required: true
+        description: the directory on the controller where backup files may be found
+
+      maw_postgres__backup_file_maw:
+        type: str
+        required: true
+        description: the full path to the maw backup file to be restored
+
+      maw_postgres__backup_file_idsrv:
+        type: str
+        required: true
+        description: the full path to the idsrv backup file to be restored
+
+      maw_postgres__backup_file_roles:
+        type: str
+        required: true
+        description: the full path to the role backup file to be restored
+
+      maw_postgres__sql_username_maw:
+        type: str
+        required: true
+        description: the postgres username for the maw website service account
+
+      maw_postgres__sql_password_maw:
+        type: str
+        required: true
+        description: the postgres password for the maw website service account
+
+      maw_postgres__sql_username_solr:
+        type: str
+        required: true
+        description: the postgres username for the solr indexer service account
+
+      maw_postgres__sql_password_solr:
+        type: str
+        required: true
+        description: the postgres password for the solr indexer service account

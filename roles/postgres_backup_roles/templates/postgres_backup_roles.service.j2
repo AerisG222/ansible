@@ -3,4 +3,4 @@ Description=PostgreSQL backup roles
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pod {{ pg_bu_roles__pod }} --volume {{ pg_bu_roles__volume }}:/pg_backup:rw,z --env-file {{ pg_bu_roles__envfile }} {{ pg_bu_roles__postgres_image }} /bin/bash -c "pg_dumpall -h localhost -U postgres --roles-only --no-role-passwords > /pg_backup/roles.$(date +%%Y%%m%%d).dump"
+ExecStart=podman run -it --rm --pod {{ pg_bu_roles__pod }} --name {{ pg_bu_roles__container }} --volume {{ pg_bu_roles__volume }}:/pg_backup:rw,z --env-file {{ pg_bu_roles__envfile }} {{ pg_bu_roles__image }} /bin/bash -c "pg_dumpall -h localhost -U postgres --roles-only --no-role-passwords > /pg_backup/roles.$(date +%%Y%%m%%d).dump"

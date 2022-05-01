@@ -18,15 +18,20 @@ argument_specs:
         required: true
         description: the name of the pod to run this container in
 
+      pg_clean__image:
+        type: str
+        required: true
+        description: the name of the postgres docker image
+
+      pg_clean__container:
+        type: str
+        required: true
+        description: the name to give the running container
+
       pg_clean__volume:
         type: str
         required: true
         description: the name of the volume containing backups
-
-      pg_clean__postgres_image:
-        type: str
-        required: true
-        description: the name of the postgres docker image
 
       pg_clean__calendar:
         type: str

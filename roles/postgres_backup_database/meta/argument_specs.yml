@@ -18,6 +18,16 @@ argument_specs:
         required: true
         description: the name of the pod to run this container in
 
+      pg_bu_db__image:
+        type: str
+        required: true
+        description: the name of the postgres docker image
+
+      pg_bu_db__container:
+        type: str
+        required: true
+        description: the name to give the container when it runs
+
       pg_bu_db__volume:
         type: str
         required: true
@@ -27,11 +37,6 @@ argument_specs:
         type: str
         required: true
         description: the path to the environment file containing the postgres user password
-
-      pg_bu_db__postgres_image:
-        type: str
-        required: true
-        description: the name of the postgres docker image
 
       pg_bu_db__db:
         type: str

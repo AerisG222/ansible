@@ -1,22 +1,4 @@
 ---
-- name: create postgres volume
-  containers.podman.podman_volume:
-    name: "{{ maw__env }}-maw-postgres-{{ maw__version_postgres }}"
-    state: present
-  register: postgres_volume
-
-- name: create postgres initialization volume
-  containers.podman.podman_volume:
-    name: "{{ maw__env }}-maw-postgres-{{ maw__version_postgres }}-init"
-    state: present
-  register: postgres_volume_init
-
-- name: create postgres backup volume
-  containers.podman.podman_volume:
-    name: "{{ maw__env }}-maw-postgres-backup"
-    state: present
-  register: postgres_backup_volume
-
 - name: create maw cert volume
   containers.podman.podman_volume:
     name: "{{ maw__env }}-maw-certs"

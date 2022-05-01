@@ -47,14 +47,6 @@ maw__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
 maw__asset_dir_images: "{{ asset_dir_root }}/images"
 maw__asset_dir_movies: "{{ asset_dir_root }}/movies"
 
-maw__pg_backup_host_dir: "{{ controller_maw_root }}/db_backups"
-maw__pg_backup_roles: roles.sql
-maw__pg_backup_idsrv: idsrv.20220307.dump
-maw__pg_backup_www: maw_website.20220307.dump
-
-maw__version_postgres: 14
-maw__podman_image_postgres: docker.io/postgres:14-alpine
-
 maw__podman_pod: dev-maw-pod
 maw__podman_env_dir: "{{ remote_maw_root }}/podman-env"
 maw__podman_image_photos: ""
@@ -63,21 +55,69 @@ maw__podman_image_gateway: ""
 maw__podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
 maw__podman_image_certbot: docker.io/certbot/certbot:latest
 maw__podman_image_reverse_geocode: ""
-maw__podman_image_gdrive: ""
 maw__podman_publish_ports:
   - 8983:8983  # solr
   - 5432:5432  # postgres
   - 6379:6379  # redis
 
 # postgres sql accounts for site
-maw__sql_username: svc_www_maw
-maw__sql_password: "{{ vault_password_sql_svc_www_maw }}"
-maw__sql_postgres_password: "{{ vault_password_sql_postgres }}"
-maw__sql_solr_username: svc_solr
-maw__sql_solr_password: "{{ vault_password_sql_solr }}"
+maw__sql_username_maw: svc_www_maw
+maw__sql_password_maw: "{{ vault_password_sql_svc_www_maw }}"
+maw__sql_username_solr: svc_solr
+maw__sql_password_solr: "{{ vault_password_sql_solr }}"
 
 # google api key (maps / reverse geocode)
 maw__google_api_key: "{{ vault_google_api_key }}"
+
+# maw postgres settings
+maw_postgres__version: 14
+maw_postgres__pod: "{{ maw__podman_pod }}"
+maw_postgres__image: "docker.io/postgres:{{ maw_postgres__version }}-alpine"
+maw_postgres__container: "{{ maw__env }}-maw-postgres"
+maw_postgres__volume: "{{ maw__env }}-maw-postgres-{{ maw__version_postgres }}"
+maw_postgres__init_volume: "{{ maw__env }}-maw-postgres-{{ maw__version_postgres }}-init"
+maw_postgres__backup_volume: "{{ maw__env }}-maw-postgres-backup"
+maw_postgres__envfile: "{{ maw__podman_env_dir }}/maw-postgres.env"
+maw_postgres__envfile_backup: false
+maw_postgres__password: "{{ vault_password_sql_postgres }}"
+maw_postgres__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_postgres"
+maw_postgres__systemd_dir: "{{ maw__systemd_dir }}"
+maw_postgres__backup_roles_service: "{{ maw__env }}-postgres-backup-roles"
+maw_postgres__backup_roles_container: "{{ maw__env }}-postgres-backup-roles"
+maw_postgres__backup_maw_service: "{{ maw__env }}-postgres-backup-maw"
+maw_postgres__backup_maw_container: "{{ maw__env }}-postgres-backup-maw"
+maw_postgres__backup_idsrv_service: "{{ maw__env }}-postgres-backup-idsrv"
+maw_postgres__backup_idsrv_container: "{{ maw__env }}-postgres-backup-idsrv"
+maw_postgres__optimize_maw_service: "{{ maw__env }}-postgres-optimize-maw"
+maw_postgres__optimize_maw_container: "{{ maw__env }}-postgres-optimize-maw"
+maw_postgres__optimize_idsrv_service: "{{ maw__env }}-postgres-optimize-idsrv"
+maw_postgres__optimize_idsrv_container: "{{ maw__env }}-postgres-optimize-idsrv"
+maw_postgres__cleanup_service: "{{ maw__env }}-postgres-cleanup"
+maw_postgres__cleanup_container: "{{ maw__env }}-postgres-cleanup"
+maw_postgres__daily_archive_service: "{{ maw__env }}-postgres-archive-daily"
+maw_postgres__daily_archive_container: "{{ maw__env }}-postgres-archive-daily"
+maw_postgres__monthly_archive_service: "{{ maw__env }}-postgres-archive-monthly"
+maw_postgres__monthly_archive_container: "{{ maw__env }}-postgres-archive-monthly"
+maw_postgres__gdrive_creds_volume: ""
+maw_postgres__gdrive_image: ""
+maw_postgres__gdrive_folder_daily: "{{ maw__podman_pod }}-{{ ansible_host }}-pg_backup"
+maw_postgres__gdrive_folder_monthly: "{{ maw__podman_pod }}-{{ ansible_host }}-pg_backup_monthly"
+maw_postgres__calendar_role_backup: '00:55:00'
+maw_postgres__calendar_maw_backup: '01:00:00'
+maw_postgres__calendar_idsrv_backup: '01:05:00'
+maw_postgres__calendar_maw_optimize: '01:10:00'
+maw_postgres__calendar_idsrv_optimize: '01:15:00'
+maw_postgres__calendar_backup_cleanup: '01:20:00'
+maw_postgres__calendar_archive_daily: '01:25:00'
+maw_postgres__calendar_archive_monthly: '*-*-01 01:30:00'
+maw_postgres__controller_backup_dir: "{{ controller_maw_root }}/db_backups"
+maw_postgres__backup_file_maw: "maw_website.20220307.dump"
+maw_postgres__backup_file_idsrv: "idsrv.20220307.dump"
+maw_postgres__backup_file_roles: "roles.sql"
+maw_postgres__sql_username_maw: "{{ maw__sql_username_maw }}"
+maw_postgres__sql_password_maw: "{{ maw__sql_password_maw }}"
+maw_postgres__sql_username_solr: "{{ maw__sql_username_solr }}"
+maw_postgres__sql_password_solr: "{{ maw__sql_password_solr }}"
 
 # maw redis settings
 maw_redis__version: 6
@@ -89,8 +129,8 @@ maw_redis__cache_sync_image: docker.io/aerisg222/maw-cache-sync:latest
 maw_redis__cache_sync_container: "{{ maw__env }}-maw-cache-sync"
 maw_redis__cache_sync_envfile: "{{ maw__podman_env_dir }}/maw-cache-sync.env"
 maw_redis__cache_sync_envfile_backup: false
-maw_redis__cache_sync_sql_username: "{{ maw__sql_username }}"
-maw_redis__cache_sync_sql_password: "{{ maw__sql_password }}"
+maw_redis__cache_sync_sql_username: "{{ maw__sql_username_maw }}"
+maw_redis__cache_sync_sql_password: "{{ maw__sql_password_maw }}"
 
 # maw solr settings
 maw_solr__version: 8
@@ -105,8 +145,8 @@ maw_solr__volume: "{{ maw__env }}-maw-solr-{{ maw__version_solr }}"
 maw_solridx__pod: "{{ maw__podman_pod }}"
 maw_solridx__image: docker.io/aerisg222/maw-solr-indexer:latest
 maw_solridx__container: "{{ maw__env }}-solr-indexer"
-maw_solridx__sql_username: "{{ maw__sql_solr_username }}"
-maw_solridx__sql_password: "{{ maw__sql_solr_password }}"
+maw_solridx__sql_username: "{{ maw__sql_username_solr }}"
+maw_solridx__sql_password: "{{ maw__sql_password_solr }}"
 maw_solridx__systemd_dir: "{{ maw__systemd_dir }}"
 maw_solridx__service: "{{ maw_solridx__container }}"
 maw_solridx__calendar: '00:50:00'
@@ -125,8 +165,8 @@ maw_api__envfile_backup: false
 maw_api__aspnet_env: "{{ maw__aspnet_env }}"
 maw_api__pfx: "{{ maw__pfx_api }}"
 maw_api__pfx_pwd: ""
-maw_api__sql_username: "{{ maw__sql_username }}"
-maw_api__sql_password: "{{ maw__sql_password }}"
+maw_api__sql_username: "{{ maw__sql_username_maw }}"
+maw_api__sql_password: "{{ maw__sql_password_maw }}"
 maw_api__upload_dir: "{{ maw__upload_dir }}"
 maw_api__upload_volume: ""
 maw_api__upload_volume_to_migrate: ""
@@ -148,8 +188,8 @@ maw_auth__google_creds_volume: ""
 maw_auth__google_email_creds_file:
 maw_auth__pfx: "{{ maw__pfx_auth }}"
 maw_auth__pfx_pwd:
-maw_auth__sql_username: "{{ maw__sql_username }}"
-maw_auth__sql_password: "{{ maw__sql_password }}"
+maw_auth__sql_username: "{{ maw__sql_username_maw }}"
+maw_auth__sql_password: "{{ maw__sql_password_maw }}"
 maw_auth__www_auth_client_secret: "{{ vault_www_auth_client_secret }}"
 maw_auth__google_plus_client_id: "{{ vault_google_plus_client_id }}"
 maw_auth__google_plus_client_secret: "{{ vault_google_plus_client_secret }}"
@@ -177,8 +217,8 @@ maw_www__pfx_pwd:
 maw_www__aspnet_env: "{{ maw__aspnet_env }}"
 maw_www__google_creds_volume: ""
 maw_www__google_email_creds_file: "{{ maw__google_email_creds_file }}"
-maw_www__sql_username: "{{ maw__sql_username }}"
-maw_www__sql_password: "{{ maw__sql_password }}"
+maw_www__sql_username: "{{ maw__sql_username_maw }}"
+maw_www__sql_password: "{{ maw__sql_password_maw }}"
 maw_www__auth_client_id: "{{ vault_www_auth_client_id }}"
 maw_www__auth_client_secret: "{{ vault_www_auth_client_secret }}"
 maw_www__google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"

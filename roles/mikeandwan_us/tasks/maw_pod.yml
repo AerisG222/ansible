@@ -1,32 +1,4 @@
 ---
-- name: Define tmp dir variable
-  ansible.builtin.set_fact:
-    maw_pod__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_pod"
-
-- name: Prepare temp dir
-  ansible.builtin.file:
-    path: "{{ maw_pod__tempdir }}"
-    state: directory
-    mode: u+rw
-
-- name: Prepare postgres init script
-  ansible.builtin.template:
-    src: postgres_init/configure_pg_hba.sh.j2
-    dest: "{{ maw_pod__tempdir }}/configure_pg_hba.sh"
-    mode: u+x
-
-- name: Copy init script to volume
-  ansible.builtin.include_role:
-    name: podman_copy
-  vars:
-    pod_cp__src_dir_or_volume: "{{ maw_pod__tempdir }}"
-    pod_cp__dest_dir_or_volume: "{{ postgres_volume_init.volume.Name }}"
-
-- name: Delete temp dir
-  ansible.builtin.file:
-    path: "{{ maw_pod__tempdir }}"
-    state: absent
-
 # stop pod via systemd, otherwise systemd and podman fight
 - name: Disable maw via systemd
   ansible.builtin.systemd:
@@ -53,29 +25,6 @@
     name: "{{ maw__podman_pod }}"
     state: started
     publish: "{{ maw__podman_publish_ports if maw__podman_publish_ports is iterable else [] }}"
-
-- name: maw-postgres container
-  containers.podman.podman_container:
-    name: "{{ maw__env }}-maw-postgres"
-    pod: "{{ maw__podman_pod }}"
-    image: "{{ maw__podman_image_postgres }}"
-    state: started
-    env_file: "{{ maw__podman_env_dir }}/maw-postgres.env"
-    volume:
-      - "{{ postgres_volume_init.volume.Name }}:/docker-entrypoint-initdb.d:ro,z"
-      - "{{ postgres_volume.volume.Name }}:/var/lib/postgresql/data:rw,z"
-    label:
-      io.containers.autoupdate: image
-  register: postgres_container
-
-- name: wait for postgres container
-  ansible.builtin.include_role:
-    name: podman_wait_for_start
-  vars:
-    pod_start__container_name: "{{ postgres_container.container.Name }}"
-
-- name: include maw_postgres_init.yml
-  ansible.builtin.include_tasks: maw_postgres_init.yml
 
 - name: set the dir / volume variables
   ansible.builtin.set_fact:

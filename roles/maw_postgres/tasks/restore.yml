@@ -1,0 +1,53 @@
+---
+- name: "prepare temp {{ maw_postgres__tempdir }} directory"
+  ansible.builtin.file:
+    path: "{{ maw_postgres__tempdir }}"
+    state: directory
+    mode: u+rwx
+
+# to simplify, we copy the backups when the pg instance is also on the controller
+# trailing slash indicates parent dir itself is not copied - only contents
+- name: copy backup files
+  ansible.builtin.copy:
+    src: "{{ maw_postgres__controller_backup_dir }}/"
+    dest: "{{ maw_postgres__tempdir }}"
+    mode: u+rw
+
+- name: restore roles
+  ansible.builtin.include_role:
+    name: postgres_restore_roles
+  vars:
+    pg_res_role__pod: "{{ maw_postgres__pod }}"
+    pg_res_role__image: "{{ maw_postgres__image }}"
+    pg_res_role__envfile:  "{{ maw_postgres__envfile }}"
+    pg_res_role__backup_file: "{{ maw_postgres__tempdir }}/{{ maw_postgres__backup_file_roles }}"
+    pg_res_role__role_info_list:
+      - username: "{{ maw_postgres__sql_username_maw }}"
+        password: "{{ maw_postgres__sql_password_maw }}"
+      - username: "{{ maw_postgres__sql_username_solr }}"
+        password: "{{ maw_postgres__sql_password_solr }}"
+
+- name: restore idsrv if needed
+  ansible.builtin.include_role:
+    name: postgres_restore_database
+  vars:
+    pg_res_db__pod: "{{ maw_postgres__pod }}"
+    pg_res_db__image: "{{ maw_postgres__image }}"
+    pg_res_db__envfile: "{{ maw_postgres__envfile }}"
+    pg_res_db__backup_file: "{{ maw_postgres__tempdir }}/{{ maw_postgres__backup_file_idsrv }}"
+    pg_res_db__db: idsrv
+
+- name: restore maw_website if needed
+  ansible.builtin.include_role:
+    name: postgres_restore_database
+  vars:
+    pg_res_db__pod: "{{ maw_postgres__pod }}"
+    pg_res_db__image: "{{ maw_postgres__image }}"
+    pg_res_db__envfile: "{{ maw_postgres__envfile }}"
+    pg_res_db__backup_file: "{{ maw_postgres__tempdir }}/{{ maw_postgres__backup_file_maw }}"
+    pg_res_db__db: maw_website
+
+- name: "remove temp {{ maw_postgres__tempdir }} directory"
+  ansible.builtin.file:
+    path: "{{ maw_postgres__tempdir }}"
+    state: absent

@@ -1,0 +1,29 @@
+---
+- name: create postgres initialization volume
+  containers.podman.podman_volume:
+    name: "{{ maw_postgres__init_volume }}"
+    state: present
+
+- name: Prepare temp dir
+  ansible.builtin.file:
+    path: "{{ maw_postgres__tempdir }}"
+    state: directory
+    mode: u+rw
+
+- name: Prepare postgres init script
+  ansible.builtin.template:
+    src: configure_pg_hba.sh.j2
+    dest: "{{ maw_postgres__tempdir }}/configure_pg_hba.sh"
+    mode: u+x
+
+- name: Copy init script to volume
+  ansible.builtin.include_role:
+    name: podman_copy
+  vars:
+    pod_cp__src_dir_or_volume: "{{ maw_postgres__tempdir }}"
+    pod_cp__dest_dir_or_volume: "{{ maw_postgres__init_volume }}"
+
+- name: Delete temp dir
+  ansible.builtin.file:
+    path: "{{ maw_postgres__tempdir }}"
+    state: absent

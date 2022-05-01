@@ -3,4 +3,4 @@ Description=PostgreSQL optimizer job for {{ pg_optimize__db }} database
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pod {{ pg_optimize__pod }} --env-file {{ pg_optimize__envfile }} {{ pg_optimize__postgres_image }} vacuumdb -h localhost -U postgres --dbname {{ pg_optimize__db }} --analyze
+ExecStart=podman run -it --rm --pod {{ pg_optimize__pod }} --name {{ pg_optimize__container }} --env-file {{ pg_optimize__envfile }} {{ pg_optimize__image }} vacuumdb -h localhost -U postgres --dbname {{ pg_optimize__db }} --analyze

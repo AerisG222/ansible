@@ -3,4 +3,4 @@ Description=PostgreSQL backup job for {{ pg_bu_db__db }} database
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pod {{ pg_bu_db__pod }} --volume {{ pg_bu_db__volume }}:/pg_backup:rw,z --env-file {{ pg_bu_db__envfile }} {{ pg_bu_db__postgres_image }} /bin/bash -c "pg_dump -h localhost -U postgres -Fc {{ pg_bu_db__db }} > /pg_backup/{{ pg_bu_db__db }}.$(date +%%Y%%m%%d).dump"
+ExecStart=podman run -it --rm --pod {{ pg_bu_db__pod }} --name {{ pg_bu_db__container }} --volume {{ pg_bu_db__volume }}:/pg_backup:rw,z --env-file {{ pg_bu_db__envfile }} {{ pg_bu_db__image }} /bin/bash -c "pg_dump -h localhost -U postgres -Fc {{ pg_bu_db__db }} > /pg_backup/{{ pg_bu_db__db }}.$(date +%%Y%%m%%d).dump"

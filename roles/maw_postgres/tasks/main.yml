@@ -1,0 +1,54 @@
+---
+- name: prepare postgres environment file
+  ansible.builtin.include_role:
+    name: maw_envfile
+  vars:
+    maw_env__template: maw-postgres.env.j2
+    maw_env__path: "{{ maw_postgres__envfile }}"
+    maw_env__backup: "{{ maw_postgres__envfile_backup }}"
+
+- name: pull postgres image
+  containers.podman.podman_image:
+    name: "{{ maw_postgres__image }}"
+
+- name: create postgres volume
+  containers.podman.podman_volume:
+    name: "{{ maw_postgres__volume }}"
+    state: present
+
+- name: create postgres backup volume
+  containers.podman.podman_volume:
+    name: "{{ maw_postgres__backup_volume }}"
+    state: present
+
+- name: prepare postgres initialization volume
+  ansible.builtin.include_tasks:
+    file:
+      - init_volume.yml
+
+- name: maw-postgres container
+  containers.podman.podman_container:
+    name: "{{ maw_postgres__container }}"
+    pod: "{{ maw_postgres__pod }}"
+    image: "{{ maw_postgres__image }}"
+    state: started
+    env_file: "{{ maw_postgres__envfile }}"
+    volume:
+      - "{{ maw_postgres__init_volume }}:/docker-entrypoint-initdb.d:ro,z"
+      - "{{ maw_postgres__volume }}:/var/lib/postgresql/data:rw,z"
+    label:
+      io.containers.autoupdate: image
+
+- name: wait for postgres container
+  ansible.builtin.include_role:
+    name: podman_wait_for_start
+  vars:
+    pod_start__container_name: "{{ maw_postgres__container }}"
+
+- name: include restore.yml
+  ansible.builtin.include_tasks:
+    file: restore.yml
+
+- name: include maintenance_jobs.yml
+  ansible.builtin.include_tasks:
+    file: maintenance_jobs.yml

@@ -18,15 +18,20 @@ argument_specs:
         required: true
         description: the name of the pod to run this container in
 
+      pg_optimize__image:
+        type: str
+        required: true
+        description: the name of the postgres docker image
+
+      pg_optimize__container:
+        type: str
+        required: true
+        description: the name of the running container
+
       pg_optimize__envfile:
         type: str
         required: true
         description: the path to the environment file containing the postgres user password
-
-      pg_optimize__postgres_image:
-        type: str
-        required: true
-        description: the name of the postgres docker image
 
       pg_optimize__db:
         type: str

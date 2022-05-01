@@ -3,4 +3,4 @@ Description=Google Drive Archive job
 
 [Service]
 Type=oneshot
-ExecStart=bash -c "podman run -it --rm --pod {{ pg_archive__pod }} --volume {{ pg_archive__files_to_archive_volume }}:/files:ro,z --volume {{ pg_archive__credentials_volume }}:/app/secrets:ro,z {{ pg_archive__gdrive_image }} -b /files/\*.$(date +%%Y%%m%%d).dump -f {{ pg_archive__gdrive_folder }} -d {{ pg_archive__gdrive_folder }}={{ pg_archive__retain_duration }}"
+ExecStart=bash -c "podman run -it --rm --pod {{ pg_archive__pod }} --name {{ pg_archive__gdrive_container }} --volume {{ pg_archive__files_to_archive_volume }}:/files:ro,z --volume {{ pg_archive__credentials_volume }}:/app/secrets:ro,z {{ pg_archive__gdrive_image }} -b /files/\*.$(date +%%Y%%m%%d).dump -f {{ pg_archive__gdrive_folder }} -d {{ pg_archive__gdrive_folder }}={{ pg_archive__retain_duration }}"

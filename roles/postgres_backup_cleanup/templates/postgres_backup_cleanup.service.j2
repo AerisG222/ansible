@@ -3,4 +3,4 @@ Description=Delete old postgres backups
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pod {{ pg_clean__pod }} --volume {{ pg_clean__volume }}:/pg_backup:rw,z {{ pg_clean__postgres_image }} find /pg_backup -type f -mtime +5 -not -iname *01.dump -delete
+ExecStart=podman run -it --rm --pod {{ pg_clean__pod }} --name {{ pg_clean__container }} --volume {{ pg_clean__volume }}:/pg_backup:rw,z {{ pg_clean__image }} find /pg_backup -type f -mtime +5 -not -iname *01.dump -delete

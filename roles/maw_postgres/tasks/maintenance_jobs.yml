@@ -1,0 +1,109 @@
+---
+- name: Configure Postgres Role Backup
+  ansible.builtin.include_role:
+    name: postgres_backup_roles
+  vars:
+    pg_bu_roles__systemd_dir: "{{ maw_postgres__systemd_dir }}"
+    pg_bu_roles__service: "{{ maw_postgres__backup_roles_service }}"
+    pg_bu_roles__pod: "{{ maw_postgres__pod }}"
+    pg_bu_roles__image: "{{ maw_postgres__image }}"
+    pg_bu_roles__container: "{{ maw_postgres__backup_roles_container }}"
+    pg_bu_roles__volume: "{{ maw_postgres__backup_volume }}"
+    pg_bu_roles__envfile: "{{ maw_postgres__envfile }}"
+    pg_bu_roles__calendar: "{{ maw_postgres__calendar_role_backup }}"
+
+- name: Configure postgres backup for maw_website database
+  ansible.builtin.include_role:
+    name: postgres_backup_database
+  vars:
+    pg_bu_db__systemd_dir: "{{ maw_postgres__systemd_dir }}"
+    pg_bu_db__service: "{{ maw_postgres__backup_maw_service }}"
+    pg_bu_db__pod: "{{ maw_postgres__pod }}"
+    pg_bu_db__image: "{{ maw_postgres__image }}"
+    pg_bu_db__container: "{{ maw_postgres__backup_maw_container }}"
+    pg_bu_db__volume: "{{ maw_postgres__backup_volume }}"
+    pg_bu_db__envfile: "{{ maw_postgres__envfile }}"
+    pg_bu_db__db: maw_website
+    pg_bu_db__calendar: "{{ maw_postgres__calendar_maw_backup }}"
+
+- name: Configure postgres backup for idsrv database
+  ansible.builtin.include_role:
+    name: postgres_backup_database
+  vars:
+    pg_bu_db__systemd_dir: "{{ maw_postgres__systemd_dir }}"
+    pg_bu_db__service: "{{ maw_postgres__backup_idsrv_service }}"
+    pg_bu_db__pod: "{{ maw_postgres__pod }}"
+    pg_bu_db__image: "{{ maw_postgres__image }}"
+    pg_bu_db__container: "{{ maw_postgres__backup_idsrv_container }}"
+    pg_bu_db__volume: "{{ maw_postgres__backup_volume }}"
+    pg_bu_db__envfile: "{{ maw_postgres__envfile }}"
+    pg_bu_db__db: idsrv
+    pg_bu_db__calendar: "{{ maw_postgres__calendar_idsrv_backup }}"
+
+- name: Configure postgres optimizations for maw_website
+  ansible.builtin.include_role:
+    name: postgres_optimize
+  vars:
+    pg_optimize__systemd_dir: "{{ maw_postgres__systemd_dir }}"
+    pg_optimize__service: "{{ maw_postgres__optimize_maw_service }}"
+    pg_optimize__pod: "{{ maw_postgres__pod }}"
+    pg_optimize__image: "{{ maw_postgres__image }}"
+    pg_optimize__container: "{{ maw_postgres__optimize_maw_container }}"
+    pg_optimize__envfile: "{{ maw_postgres__envfile }}"
+    pg_optimize__db: maw_website
+    pg_optimize__calendar: "{{ maw_postgres__calendar_maw_optimize }}"
+
+- name: Configure postgres optimizations for idsrv
+  ansible.builtin.include_role:
+    name: postgres_optimize
+  vars:
+    pg_optimize__systemd_dir: "{{ maw_postgres__systemd_dir }}"
+    pg_optimize__service: "{{ maw_postgres__optimize_idsrv_service }}"
+    pg_optimize__pod: "{{ maw_postgres__pod }}"
+    pg_optimize__image: "{{ maw_postgres__image }}"
+    pg_optimize__container: "{{ maw_postgres__optimize_idsrv_container }}"
+    pg_optimize__envfile: "{{ maw_postgres__envfile }}"
+    pg_optimize__db: idsrv
+    pg_optimize__calendar: "{{ maw_postgres__calendar_idsrv_optimize }}"
+
+- name: Configure Postgres Backup Cleanup
+  ansible.builtin.include_role:
+    name: postgres_backup_cleanup
+  vars:
+    pg_clean__systemd_dir: "{{ maw_postgres__systemd_dir }}"
+    pg_clean__service: "{{ maw_postgres__cleanup_service }}"
+    pg_clean__pod: "{{ maw_postgres__pod }}"
+    pg_clean__image: "{{ maw_postgres__image }}"
+    pg_clean__container: "{{ maw_postgres__cleanup_container }}"
+    pg_clean__volume: "{{ maw_postgres__backup_volume }}"
+    pg_clean__calendar: "{{ maw_postgres__calendar_backup_cleanup }}"
+
+- name: Configure Postgres GDrive Daily Archive
+  ansible.builtin.include_role:
+    name: postgres_gdrive_archive
+  vars:
+    pg_archive__systemd_dir: "{{ maw_postgres__systemd_dir }}"
+    pg_archive__service: "{{ maw_postgres__daily_archive_service }}"
+    pg_archive__pod: "{{ maw_postgres__pod }}"
+    pg_archive__files_to_archive_volume: "{{ maw_postgres__backup_volume }}"
+    pg_archive__credentials_volume: "{{ maw_postgres__gdrive_creds_volume }}"
+    pg_archive__gdrive_image: "{{ maw_postgres__gdrive_image }}"
+    pg_archive__gdrive_container: "{{ maw_postgres__daily_archive_container }}"
+    pg_archive__gdrive_folder: "{{ maw_postgres__gdrive_folder_daily }}"
+    pg_archive__retain_duration: '10d'
+    pg_archive__calendar: "{{ maw_postgres__calendar_archive_daily }}"
+
+- name: Configure Postgres GDrive Monthly Archive
+  ansible.builtin.include_role:
+    name: postgres_gdrive_archive
+  vars:
+    pg_archive__systemd_dir: "{{ maw_postgres__systemd_dir }}"
+    pg_archive__service: "{{ maw_postgres__monthly_archive_service }}"
+    pg_archive__pod: "{{ maw_postgres__pod }}"
+    pg_archive__files_to_archive_volume: "{{ maw_postgres__backup_volume }}"
+    pg_archive__credentials_volume: "{{ maw_postgres__gdrive_creds_volume }}"
+    pg_archive__gdrive_image: "{{ maw_postgres__gdrive_image }}"
+    pg_archive__gdrive_container: "{{ maw_postgres__monthly_archive_container }}"
+    pg_archive__gdrive_folder: "{{ maw_postgres__gdrive_folder_monthly }}"
+    pg_archive__retain_duration: '2y'
+    pg_archive__calendar: "{{ maw_postgres__calendar_archive_monthly }}"

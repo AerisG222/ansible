@@ -1,0 +1,62 @@
+---
+- name: set var for full path to safe role restore script
+  ansible.builtin.set_fact:
+    _pg_res_role__safe_sql: "{{ pg_res_role__backup_file }}.safer.sql"
+
+- name: copy roles backup so we can safely edit
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ pg_res_role__backup_file }}"
+    dest: "{{ _pg_res_role__safe_sql }}"
+    force: true
+    mode: u+rw
+
+- name: make the role backup script more tolerant of existing users
+  ansible.builtin.command:
+    argv:
+      - sed
+      - -i
+      - -E
+      - "s/CREATE ROLE (.+);/\\nDO \\$\\$\\nBEGIN\\nCREATE ROLE \\1;\\nEXCEPTION WHEN duplicate_object THEN RAISE NOTICE '%, skipping', SQLERRM USING ERRCODE = SQLSTATE;\\nEND\\n\\$\\$;\\n/g"
+      - "{{ _pg_res_role__safe_sql }}"
+  changed_when: true
+  tags: skip_ansible_lint
+
+- name: create roles
+  containers.podman.podman_container:
+    name: "{{ pg_res_role__temp_container }}"
+    pod: "{{ pg_res_role__pod }}"
+    image: "{{ pg_res_role__image }}"
+    env_file: "{{ pg_res_role__envfile }}"
+    command: "psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /postgres_backup/{{ _pg_res_role__safe_sql }}"
+    state: started
+    interactive: true
+    security_opt:
+      - label=disable
+    volume:
+      - "{{ pg_res_role__backup_file | dirname }}:/postgres_backup:ro"
+
+- name: get create_roles result
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
+  vars:
+    pod_stop__container_name: "{{ {{ pg_res_role__temp_container }} }}"
+    pod_stop__result_varname: _pg_res_role__create_roles_result
+
+- name: fail if roles not created
+  ansible.builtin.fail:
+    msg: roles were not successfully created
+  failed_when: _pg_res_role__create_roles_result | int != 0
+
+- name: set role passwords block
+  ansible.builtin.include_tasks:
+    file: set_role_password.yml
+  loop_control:
+    loop_var: _pg_res_role__role_info
+    label: "{{ _pg_res_role__role_info.username }}"
+  loop: "{{ pg_res_role__role_info_list }}"
+
+- name: clean safer role script file
+  ansible.builtin.file:
+    path: "{{ _pg_res_role__safe_sql }}"
+    state: absent

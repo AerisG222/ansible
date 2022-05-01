@@ -1,0 +1,35 @@
+---
+argument_specs:
+  main:
+    short_description: Role to restore pg roles
+    options:
+      pg_res_role__temp_container:
+        type: str
+        default: pg-res-role-temp
+        description: name of temp containers used during role restore
+
+      pg_res_role__backup_file:
+        type: str
+        required: true
+        description: full path to the role backup file (on server where roles will be restored)
+
+      pg_res_role__pod:
+        type: str
+        required: true
+        description: name of the pod in which to run the temp postgres container
+
+      pg_res_role__image:
+        type: str
+        required: true
+        description: full name of the postgres docker image
+
+      pg_res_role__envfile:
+        type: str
+        required: true
+        description: full path to the postgres envfile
+
+      pg_res_role__role_info_list:
+        type: list
+        elements: dict
+        required: true
+        description: list of role details (username and password) that should be set as part of restoring roles
