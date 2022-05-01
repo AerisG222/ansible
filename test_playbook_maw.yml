@@ -166,13 +166,13 @@
     #   ansible.builtin.include_role:
     #     name: solr_indexer
     #   vars:
-    #     solr_idx__systemd_dir: /home/mmorano/.config/systemd/user
-    #     solr_idx__service: solridx
-    #     solr_idx__pod: test-pod
-    #     solr_idx__image: simg
-    #     solr_idx__sql_username: usr
-    #     solr_idx__sql_password: pwd
-    #     solr_idx__calendar: '00:00:00'
+    #     maw_solridx__systemd_dir: /home/mmorano/.config/systemd/user
+    #     maw_solridx__service: solridx
+    #     maw_solridx__pod: test-pod
+    #     maw_solridx__image: simg
+    #     maw_solridx__sql_username: usr
+    #     maw_solridx__sql_password: pwd
+    #     maw_solridx__calendar: '00:00:00'
 
     - name: test setting up sshd
       ansible.builtin.include_role:

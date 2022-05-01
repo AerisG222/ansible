@@ -3,8 +3,8 @@
   ansible.builtin.set_fact:
     sysd_job__service_template: "{{ role_path }}/templates/solr-indexer.service.j2"
     sysd_job__timer_template: "{{ role_path }}/templates/solr-indexer.timer.j2"
-    sysd_job__systemd_dir: "{{ solr_idx__systemd_dir }}"
-    sysd_job__service: "{{ solr_idx__service }}"
+    sysd_job__systemd_dir: "{{ maw_solridx__systemd_dir }}"
+    sysd_job__service: "{{ maw_solridx__service }}"
 
 - name: Configure systemd job to reindex the solr database
   ansible.builtin.include_role:

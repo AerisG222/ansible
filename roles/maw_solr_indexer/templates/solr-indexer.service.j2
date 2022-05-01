@@ -1,0 +1,6 @@
+[Unit]
+Description=Solr indexer job for mikeandwan.us
+
+[Service]
+Type=oneshot
+ExecStart=podman run -it --rm --pull always --pod {{ maw_solridx__pod }} --name {{ maw_solridx__container }} {{ maw_solridx__image }} 'Server=127.0.0.1;Port=5432;Database=maw_website;User Id={{ maw_solridx__sql_username }};Password={{ maw_solridx__sql_password }}' http://127.0.0.1:8983/solr/multimedia-categories/update/?commit=true
