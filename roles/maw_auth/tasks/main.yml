@@ -3,9 +3,9 @@
   ansible.builtin.include_role:
     name: maw_envfile
   vars:
-    mawus_env__template: maw-auth.env.j2
-    mawus_env__path: "{{ maw_auth__envfile }}"
-    mawus_env__backup: "{{ maw_auth__envfile_backup }}"
+    maw_env__template: maw-auth.env.j2
+    maw_env__path: "{{ maw_auth__envfile }}"
+    maw_env__backup: "{{ maw_auth__envfile_backup }}"
 
 - name: configure natively hosted api site
   ansible.builtin.include_tasks:

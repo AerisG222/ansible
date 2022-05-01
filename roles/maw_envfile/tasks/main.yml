@@ -1,13 +1,13 @@
 ---
 - name: Make sure maw_env directory exists
   ansible.builtin.file:
-    path: "{{ mawus_env__path | dirname }}"
+    path: "{{ maw_env__path | dirname }}"
     state: directory
     mode: u+rwx
 
 - name: Prepare environment files
   ansible.builtin.template:
-    backup: "{{ mawus_env__backup }}"
-    src: "{{ mawus_env__template }}"
-    dest: "{{ mawus_env__path }}"
+    backup: "{{ maw_env__backup }}"
+    src: "{{ maw_env__template }}"
+    dest: "{{ maw_env__path }}"
     mode: u+rw

@@ -1,10 +1,10 @@
 controller_home_dir: "{{ lookup('env', 'HOME') }}"
-controller_mawus_root: "{{ controller_home_dir }}/ansible/apps/mikeandwan.us"
-controller_mawus_env_root: "{{ controller_mawus_root }}/prod"
-controller_secrets_file: "{{ controller_mawus_env_root }}/ansible/secret-vars.yml"
+controller_maw_root: "{{ controller_home_dir }}/ansible/apps/mikeandwan.us"
+controller_maw_env_root: "{{ controller_maw_root }}/prod"
+controller_secrets_file: "{{ controller_maw_env_root }}/ansible/secret-vars.yml"
 
 remote_home_dir: /home/svc_www_maw
-remote_mawus_root: "{{ remote_home_dir }}/mawus"
+remote_maw_root: "{{ remote_home_dir }}/maw"
 
 # git root
 git_root: "{{ controller_home_dir }}/git"
@@ -12,7 +12,7 @@ git_root: "{{ controller_home_dir }}/git"
 # asset directory root
 asset_dir_root: /srv/www/website_assets
 
-# mawus
+# maw
 maw__username: svc_www_maw
 maw__password: "{{ vault_os_svc_www_maw }}"
 maw__env: prod
@@ -37,8 +37,8 @@ maw__pfx_pwd_api:
 maw__pfx_pwd_auth:
 maw__pfx_pwd_www:
 
-maw__gdrive_creds_dir: "{{ controller_mawus_env_root }}/gdrive-creds"
-maw__google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
+maw__gdrive_creds_dir: "{{ controller_maw_env_root }}/gdrive-creds"
+maw__google_email_creds_dir: "{{ controller_maw_env_root }}/google-creds"
 maw__google_email_creds_file: /google-creds/www_emailer.json
 
 maw__certs_dir: ""
@@ -49,7 +49,7 @@ maw__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
 maw__asset_dir_images: "{{ asset_dir_root }}/images"
 maw__asset_dir_movies: "{{ asset_dir_root }}/movies"
 
-maw__pg_backup_host_dir: "{{ controller_mawus_root }}/db_backups"
+maw__pg_backup_host_dir: "{{ controller_maw_root }}/db_backups"
 maw__pg_backup_roles: roles.sql
 maw__pg_backup_idsrv: idsrv.20220307.dump
 maw__pg_backup_www: maw_website.20220307.dump
@@ -58,7 +58,7 @@ maw__version_postgres: 14
 maw__podman_image_postgres: docker.io/postgres:14-alpine
 
 maw__podman_pod: prod-maw-pod
-maw__podman_env_dir: "{{ remote_mawus_root }}/podman-env"
+maw__podman_env_dir: "{{ remote_maw_root }}/podman-env"
 maw__podman_image_photos: docker.io/aerisg222/maw-photos:latest
 maw__podman_image_files: docker.io/aerisg222/maw-files:latest
 maw__podman_image_gateway: docker.io/aerisg222/maw-gateway:latest
@@ -80,7 +80,7 @@ maw__sql_solr_password: "{{ vault_password_sql_solr }}"
 # google api key (maps / reverse geocode)
 maw__google_api_key: "{{ vault_google_api_key }}"
 
-# mawus redis settings
+# maw redis settings
 maw_redis__version: 6
 maw_redis__pod: "{{ maw__podman_pod }}"
 maw_redis__image: "docker.io/redis:{{ maw_redis__version }}-alpine"
@@ -93,7 +93,7 @@ maw_redis__cache_sync_envfile_backup: true
 maw_redis__cache_sync_sql_username: "{{ maw__sql_username }}"
 maw_redis__cache_sync_sql_password: "{{ maw__sql_password }}"
 
-# mawus solr settings
+# maw solr settings
 maw_solr__version: 8
 maw_solr__systemd_dir: "{{ maw__systemd_dir }}"
 maw_solr__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_solr"
@@ -107,7 +107,7 @@ maw_solr__indexer_sql_username: "{{ maw__sql_solr_username }}"
 maw_solr__indexer_sql_password: "{{ maw__sql_solr_password }}"
 maw_solr__indexer_calendar: '00:50:00'
 
-# mawus api settings
+# maw api settings
 maw_api__pod: "{{ maw__podman_pod }}"
 maw_api__image: "docker.io/aerisg222/maw-api:latest"
 maw_api__container: "{{ maw__env }}-maw-api"
@@ -128,7 +128,7 @@ maw_api__upload_volume: "{{ maw__env }}-maw-upload"
 maw_api__upload_volume_to_migrate: ""
 maw_api__asset_dir_images: "{{ maw__asset_dir_images }}"
 
-# mawus auth settings
+# maw auth settings
 maw_auth__pod: "{{ maw__podman_pod }}"
 maw_auth__image: "docker.io/aerisg222/maw-auth:latest"
 maw_auth__container: "{{ maw__env }}-maw-auth"
@@ -157,7 +157,7 @@ maw_auth__github_client_id: "{{ vault_github_client_id }}"
 maw_auth__github_client_secret: "{{ vault_github_client_secret }}"
 maw_auth__pfx_signing: "{{ maw__pfx_signing }}"
 
-# mawus www settings
+# maw www settings
 maw_www__pod: "{{ maw__podman_pod }}"
 maw_www__image: "docker.io/aerisg222/maw-www:latest"
 maw_www__container: "{{ maw__env }}-maw-www"

@@ -3,17 +3,17 @@ argument_specs:
   main:
     short_description: Facilitates creating environment files for mikeandwan.us
     options:
-      mawus_env__template:
+      maw_env__template:
         type: str
         required: true
         description: The path to the environment file template
 
-      mawus_env__path:
+      maw_env__path:
         type: str
         required: true
         description: The full path to the environment file to create
 
-      mawus_env__backup:
+      maw_env__backup:
         type: bool
         default: false
         description: Indicates if a prior environment file should be retained / backed-up before being overwritten

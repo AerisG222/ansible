@@ -43,7 +43,7 @@
     name: postgres_backup_database
   vars:
     pg_bu_db__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-    pg_bu_db__service: "{{ maw__env }}-postgres-backup-mawus"
+    pg_bu_db__service: "{{ maw__env }}-postgres-backup-maw"
     pg_bu_db__pod: "{{ maw__podman_pod }}"
     pg_bu_db__volume: "{{ postgres_backup_volume.volume.Name }}"
     pg_bu_db__envfile: "{{ maw__podman_env_dir }}/maw-postgres.env"
@@ -69,7 +69,7 @@
     name: postgres_optimize
   vars:
     pg_optimize__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-    pg_optimize__service: "{{ maw__env }}-postgres-optimize-mawus"
+    pg_optimize__service: "{{ maw__env }}-postgres-optimize-maw"
     pg_optimize__pod: "{{ maw__podman_pod }}"
     pg_optimize__envfile: "{{ maw__podman_env_dir }}/maw-postgres.env"
     pg_optimize__postgres_image: "{{ maw__podman_image_postgres }}"

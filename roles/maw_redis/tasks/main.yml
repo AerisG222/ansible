@@ -35,9 +35,9 @@
   ansible.builtin.include_role:
     name: maw_envfile
   vars:
-    mawus_env__template: maw-cache-sync.env.j2
-    mawus_env__path: "{{ maw_redis__cache_sync_envfile }}"
-    mawus_env__backup: "{{ maw_redis__cache_sync_envfile_backup }}"
+    maw_env__template: maw-cache-sync.env.j2
+    maw_env__path: "{{ maw_redis__cache_sync_envfile }}"
+    maw_env__backup: "{{ maw_redis__cache_sync_envfile_backup }}"
 
 - name: maw-cache-sync container
   containers.podman.podman_container:

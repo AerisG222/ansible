@@ -1,34 +1,34 @@
 ---
 - name: Define tmp dir variable
   ansible.builtin.set_fact:
-    mawus_pod__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_pod"
+    maw_pod__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_pod"
 
 - name: Prepare temp dir
   ansible.builtin.file:
-    path: "{{ mawus_pod__tempdir }}"
+    path: "{{ maw_pod__tempdir }}"
     state: directory
     mode: u+rw
 
 - name: Prepare postgres init script
   ansible.builtin.template:
     src: postgres_init/configure_pg_hba.sh.j2
-    dest: "{{ mawus_pod__tempdir }}/configure_pg_hba.sh"
+    dest: "{{ maw_pod__tempdir }}/configure_pg_hba.sh"
     mode: u+x
 
 - name: Copy init script to volume
   ansible.builtin.include_role:
     name: podman_copy
   vars:
-    pod_cp__src_dir_or_volume: "{{ mawus_pod__tempdir }}"
+    pod_cp__src_dir_or_volume: "{{ maw_pod__tempdir }}"
     pod_cp__dest_dir_or_volume: "{{ postgres_volume_init.volume.Name }}"
 
 - name: Delete temp dir
   ansible.builtin.file:
-    path: "{{ mawus_pod__tempdir }}"
+    path: "{{ maw_pod__tempdir }}"
     state: absent
 
 # stop pod via systemd, otherwise systemd and podman fight
-- name: Disable mawus via systemd
+- name: Disable maw via systemd
   ansible.builtin.systemd:
     name: "pod-{{ maw__podman_pod }}"
     enabled: false
@@ -208,7 +208,7 @@
       before: "container-{{ maw__env }}-maw-gateway.service"
   when: (maw__env == 'prod') or (maw__env == 'test')
 
-- name: Start and/or Enable mawus via systemd
+- name: Start and/or Enable maw via systemd
   ansible.builtin.systemd:
     daemon_reload: true
     name: "pod-{{ maw__podman_pod }}"

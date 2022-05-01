@@ -50,18 +50,18 @@
   block:
     - name: Define tmp dir variable
       ansible.builtin.set_fact:
-        mawus_gdrive__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_gdrive"
+        maw_gdrive__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_gdrive"
 
     - name: Ensure temp dir exists
       ansible.builtin.file:
-        path: "{{ mawus_gdrive__tempdir }}"
+        path: "{{ maw_gdrive__tempdir }}"
         state: directory
         mode: u+rw
 
     - name: copy files to temp dir
       ansible.builtin.copy:
         src: "{{ item }}"
-        dest: "{{ mawus_gdrive__tempdir }}"
+        dest: "{{ maw_gdrive__tempdir }}"
         mode: u+rw
       with_fileglob: "{{ maw__gdrive_creds_dir }}/*"
 
@@ -69,12 +69,12 @@
       ansible.builtin.include_role:
         name: podman_copy
       vars:
-        pod_cp__src_dir_or_volume: "{{ mawus_gdrive__tempdir }}"
+        pod_cp__src_dir_or_volume: "{{ maw_gdrive__tempdir }}"
         pod_cp__dest_dir_or_volume: "{{ gdrive_creds_volume.volume.Name }}"
 
     - name: Cleanup temp dir
       ansible.builtin.file:
-        path: "{{ mawus_gdrive__tempdir }}"
+        path: "{{ maw_gdrive__tempdir }}"
         state: absent
 
   when: gdrive_creds_volume.changed and (_maw_gdrive__migrated is defined) and (not _maw_gdrive__migrated)
@@ -94,18 +94,18 @@
 
     - name: Define tmp dir variable
       ansible.builtin.set_fact:
-        mawus_google__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_google"
+        maw_google__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_google"
 
     - name: Ensure temp dir exists
       ansible.builtin.file:
-        path: "{{ mawus_google__tempdir }}"
+        path: "{{ maw_google__tempdir }}"
         state: directory
         mode: u+rw
 
     - name: copy files to temp dir
       ansible.builtin.copy:
         src: "{{ item }}"
-        dest: "{{ mawus_google__tempdir }}"
+        dest: "{{ maw_google__tempdir }}"
         mode: u+rw
       with_fileglob: "{{ maw__google_email_creds_dir }}/*"
 
@@ -113,12 +113,12 @@
       ansible.builtin.include_role:
         name: podman_copy
       vars:
-        pod_cp__src_dir_or_volume: "{{ mawus_google__tempdir }}"
+        pod_cp__src_dir_or_volume: "{{ maw_google__tempdir }}"
         pod_cp__dest_dir_or_volume: "{{ google_creds_volume.volume.Name }}"
 
     - name: Cleanup temp dir
       ansible.builtin.file:
-        path: "{{ mawus_google__tempdir }}"
+        path: "{{ maw_google__tempdir }}"
         state: absent
 
   when: google_creds_volume.changed and (_maw_google__migrated is defined) and (not _maw_google__migrated)

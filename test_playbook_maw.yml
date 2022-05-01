@@ -12,7 +12,7 @@
     #       become: true
     #       become_user: "{{ maw__username }}"
     #   vars:
-    #     maw_as__dir: "{{ remote_mawus_root }}/admin_scripts"
+    #     maw_as__dir: "{{ remote_maw_root }}/admin_scripts"
     #     maw_as__do_backup: "{{ maw__env == 'prod' }}"
     #     maw_as__pod: "{{ maw__podman_podname }}"
     #     maw_as__postgres_envfile: "{{ maw__podman_env_dir }}/maw-postgres.env"

@@ -32,12 +32,12 @@ get_file() {
     echo "${file}"
 }
 
-get_mawus_env() {
+get_maw_env() {
     local env=
 
     while [ "${env}" = "" ]
     do
-        env=$(get_value 'Enter environment for mawus [dev | test | prod]: ' 'n')
+        env=$(get_value 'Enter environment for maw [dev | test | prod]: ' 'n')
 
         if [ "${env}" != "dev" -a "${env}" != "test" -a "${env}" != "prod" ]; then
             env=

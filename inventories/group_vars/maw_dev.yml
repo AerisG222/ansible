@@ -1,10 +1,10 @@
 controller_home_dir: "{{ lookup('env', 'HOME') }}"
-controller_mawus_root: "{{ controller_home_dir }}/ansible/apps/mikeandwan.us"
-controller_mawus_env_root: "{{ controller_mawus_root }}/dev"
-controller_secrets_file: "{{ controller_mawus_env_root }}/ansible/secret-vars.yml"
+controller_maw_root: "{{ controller_home_dir }}/ansible/apps/mikeandwan.us"
+controller_maw_env_root: "{{ controller_maw_root }}/dev"
+controller_secrets_file: "{{ controller_maw_env_root }}/ansible/secret-vars.yml"
 
 remote_home_dir: "{{ controller_home_dir }}"
-remote_mawus_root: "{{ remote_home_dir }}/maw_dev"
+remote_maw_root: "{{ remote_home_dir }}/maw_dev"
 
 # git root
 git_root: "{{ controller_home_dir }}/git"
@@ -12,7 +12,7 @@ git_root: "{{ controller_home_dir }}/git"
 # asset directory root
 asset_dir_root: /srv/www/website_assets
 
-# mawus
+# maw
 maw__username: "{{ ansible_user_id }}"
 maw__env: dev
 maw__aspnet_env: development
@@ -26,10 +26,10 @@ maw__fqdn_files: dev.files.mikeandwan.us
 maw__fqdn_photos: dev.photos.mikeandwan.us
 maw__fqdn_www: dev.www.mikeandwan.us
 
-maw__pfx_api: "{{ remote_mawus_root }}/certs/api/api.pfx"
-maw__pfx_auth: "{{ remote_mawus_root }}/certs/auth/auth.pfx"
-maw__pfx_signing: "{{ remote_mawus_root }}/certs/signing/signing.pfx"
-maw__pfx_www: "{{ remote_mawus_root }}/certs/www/www.pfx"
+maw__pfx_api: "{{ remote_maw_root }}/certs/api/api.pfx"
+maw__pfx_auth: "{{ remote_maw_root }}/certs/auth/auth.pfx"
+maw__pfx_signing: "{{ remote_maw_root }}/certs/signing/signing.pfx"
+maw__pfx_www: "{{ remote_maw_root }}/certs/www/www.pfx"
 
 # to be set by cert process
 maw__pfx_pwd_api:
@@ -37,17 +37,17 @@ maw__pfx_pwd_auth:
 maw__pfx_pwd_www:
 
 maw__gdrive_creds_dir:  # not needed for dev
-maw__google_email_creds_dir: "{{ controller_mawus_env_root }}/google-creds"
-maw__google_email_creds_file: "{{ controller_mawus_env_root }}/google-creds/www_emailer.json"
+maw__google_email_creds_dir: "{{ controller_maw_env_root }}/google-creds"
+maw__google_email_creds_file: "{{ controller_maw_env_root }}/google-creds/www_emailer.json"
 maw__google_creds_volume: "{{ maw__env }}-maw-google-creds"
 
-maw__certs_dir: "{{ remote_mawus_root }}/certs"
-maw__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection"
+maw__certs_dir: "{{ remote_maw_root }}/certs"
+maw__dataprotection_dir: "{{ remote_maw_root }}/dataprotection"
 maw__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
 maw__asset_dir_images: "{{ asset_dir_root }}/images"
 maw__asset_dir_movies: "{{ asset_dir_root }}/movies"
 
-maw__pg_backup_host_dir: "{{ controller_mawus_root }}/db_backups"
+maw__pg_backup_host_dir: "{{ controller_maw_root }}/db_backups"
 maw__pg_backup_roles: roles.sql
 maw__pg_backup_idsrv: idsrv.20220307.dump
 maw__pg_backup_www: maw_website.20220307.dump
@@ -56,7 +56,7 @@ maw__version_postgres: 14
 maw__podman_image_postgres: docker.io/postgres:14-alpine
 
 maw__podman_pod: dev-maw-pod
-maw__podman_env_dir: "{{ remote_mawus_root }}/podman-env"
+maw__podman_env_dir: "{{ remote_maw_root }}/podman-env"
 maw__podman_image_photos: ""
 maw__podman_image_files: ""
 maw__podman_image_gateway: ""
@@ -79,7 +79,7 @@ maw__sql_solr_password: "{{ vault_password_sql_solr }}"
 # google api key (maps / reverse geocode)
 maw__google_api_key: "{{ vault_google_api_key }}"
 
-# mawus redis settings
+# maw redis settings
 maw_redis__version: 6
 maw_redis__pod: "{{ maw__podman_pod }}"
 maw_redis__image: "docker.io/redis:{{ maw_redis__version }}-alpine"
@@ -92,7 +92,7 @@ maw_redis__cache_sync_envfile_backup: false
 maw_redis__cache_sync_sql_username: "{{ maw__sql_username }}"
 maw_redis__cache_sync_sql_password: "{{ maw__sql_password }}"
 
-# mawus solr settings
+# maw solr settings
 maw_solr__version: 8
 maw_solr__systemd_dir: "{{ maw__systemd_dir }}"
 maw_solr__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_solr"
@@ -106,13 +106,13 @@ maw_solr__indexer_sql_username: "{{ maw__sql_solr_username }}"
 maw_solr__indexer_sql_password: "{{ maw__sql_solr_password }}"
 maw_solr__indexer_calendar: '00:50:00'
 
-# mawus api settings
+# maw api settings
 maw_api__pod: ""
 maw_api__image: ""
 maw_api__container: ""
 maw_api__cert_dir: "{{ maw__certs_dir }}"
 maw_api__cert_volume: ""
-maw_api__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection/api"
+maw_api__dataprotection_dir: "{{ remote_maw_root }}/dataprotection/api"
 maw_api__dataprotection_volume: ""
 maw_api__dataprotection_volume_to_migrate: ""
 maw_api__envfile: "{{ maw__podman_env_dir }}/maw-api.env"
@@ -127,13 +127,13 @@ maw_api__upload_volume: ""
 maw_api__upload_volume_to_migrate: ""
 maw_api__asset_dir_images: "{{ maw__asset_dir_images }}"
 
-# mawus auth settings
+# maw auth settings
 maw_auth__pod: ""
 maw_auth__image: ""
 maw_auth__container: ""
 maw_auth__cert_dir: "{{ maw__certs_dir }}"
 maw_auth__cert_volume: ""
-maw_auth__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection/auth"
+maw_auth__dataprotection_dir: "{{ remote_maw_root }}/dataprotection/auth"
 maw_auth__dataprotection_volume: ""
 maw_auth__dataprotection_volume_to_migrate: ""
 maw_auth__envfile: "{{ maw__podman_env_dir }}/maw-auth.env"
@@ -156,13 +156,13 @@ maw_auth__github_client_id: "{{ vault_github_client_id }}"
 maw_auth__github_client_secret: "{{ vault_github_client_secret }}"
 maw_auth__pfx_signing: "{{ maw__pfx_signing }}"
 
-# mawus www settings
+# maw www settings
 maw_www__pod: ""
 maw_www__image: ""
 maw_www__container: ""
 maw_www__cert_dir: "{{ maw__certs_dir }}"
 maw_www__cert_volume: ""
-maw_www__dataprotection_dir: "{{ remote_mawus_root }}/dataprotection/www"
+maw_www__dataprotection_dir: "{{ remote_maw_root }}/dataprotection/www"
 maw_www__dataprotection_volume: ""
 maw_www__dataprotection_volume_to_migrate: ""
 maw_www__envfile: "{{ maw__podman_env_dir }}/maw-www.env"
