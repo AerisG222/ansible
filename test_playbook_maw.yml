@@ -154,13 +154,13 @@
     #   ansible.builtin.include_role:
     #     name: reverse_geocoder
     #   vars:
-    #     rev_geo__systemd_dir: /home/mmorano/.config/systemd/user
-    #     rev_geo__service: revgeo
-    #     rev_geo__pod: test-pod
-    #     rev_geo__volume: test-volume
-    #     rev_geo__envfile: /path/to/envfile.env
-    #     rev_geo__image: postgres
-    #     rev_geo__calendar: '00:00:00'
+    #     maw_revgeo__systemd_dir: /home/mmorano/.config/systemd/user
+    #     maw_revgeo__service: revgeo
+    #     maw_revgeo__pod: test-pod
+    #     maw_revgeo__volume: test-volume
+    #     maw_revgeo__envfile: /path/to/envfile.env
+    #     maw_revgeo__image: postgres
+    #     maw_revgeo__calendar: '00:00:00'
 
     # - name: test creating solr indexer service
     #   ansible.builtin.include_role:

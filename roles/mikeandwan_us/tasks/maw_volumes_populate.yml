@@ -27,15 +27,6 @@
     pod_cp__src_dir_or_volume: maw-certs
     pod_cp__dest_dir_or_volume: "{{ maw_cert_volume.volume.Name }}"
 
-- name: migrate maw-reverse-geocode
-  ansible.builtin.include_role:
-    name: podman_copy
-  when: reverse_geocode_volume.changed
-  vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: maw-reverse-geocode
-    pod_cp__dest_dir_or_volume: "{{ reverse_geocode_volume.volume.Name }}"
-
 - name: migrate maw-gdrive-creds
   ansible.builtin.include_role:
     name: podman_copy

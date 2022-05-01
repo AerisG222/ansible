@@ -180,3 +180,14 @@ maw_www__google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
 maw_www__google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"
 maw_www__asset_dir_images: "{{ maw__asset_dir_images }}"
 maw_www__asset_dir_movies: "{{ maw__asset_dir_movies }}"
+
+# maw reverse geocode
+maw_revgeo__systemd_dir:
+maw_revgeo__service:
+maw_revgeo__pod:
+maw_revgeo__image:
+maw_revgeo__volume:
+maw_revgeo__volume_to_migrate:
+maw_revgeo__envfile:
+maw_revgeo__envfile_backup:
+maw_revgeo__calendar:

@@ -181,3 +181,14 @@ maw_www__google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
 maw_www__google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"
 maw_www__asset_dir_images: "{{ maw__asset_dir_images }}"
 maw_www__asset_dir_movies: "{{ maw__asset_dir_movies }}"
+
+# maw reverse geocode
+maw_revgeo__systemd_dir: "{{ maw__systemd_dir }}"
+maw_revgeo__service: "{{ maw__env }}-maw-reverse-geocoder"
+maw_revgeo__pod: "{{ maw__podman_pod }}"
+maw_revgeo__image: docker.io/aerisg222/maw-reverse-geocode:latest
+maw_revgeo__volume: "{{ maw__env }}-maw-reverse-geocode"
+maw_revgeo__volume_to_migrate: maw-reverse-geocode
+maw_revgeo__envfile: "{{ maw__podman_env_dir }}/maw-reverse-geocode.env"
+maw_revgeo__envfile_backup: true
+maw_revgeo__calendar: '00:45:00'

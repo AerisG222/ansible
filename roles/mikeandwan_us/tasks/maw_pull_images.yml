@@ -11,6 +11,5 @@
     - "{{ maw__podman_image_maw_certs }}"
     - "{{ maw__podman_image_certbot }}"
     - "{{ maw__podman_image_solr_indexer }}"
-    - "{{ maw__podman_image_reverse_geocode }}"
     - "{{ maw__podman_image_gdrive }}"
   when: item | length > 0

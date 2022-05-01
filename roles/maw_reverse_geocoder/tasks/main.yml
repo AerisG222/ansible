@@ -1,0 +1,38 @@
+---
+- name: pull reverse geocode image
+  containers.podman.podman_image:
+    name: "{{ maw_revgeo__image }}"
+
+- name: prepare reverse geocode environment file
+  ansible.builtin.include_role:
+    name: maw_envfile
+  vars:
+    maw_env__template: maw-reverse-geocode.env.j2
+    maw_env__path: "{{ maw_revgeo__envfile }}"
+    maw_env__backup: "{{ maw_revgeo__envfile_backup }}"
+
+- name: create maw-reverse-geocode volume
+  containers.podman.podman_volume:
+    name: "{{ maw_revgeo__volume }}"
+    state: present
+  register: _maw_revgeo__volume_result
+
+- name: migrate maw-reverse-geocode
+  ansible.builtin.include_role:
+    name: podman_copy
+  when: _maw_revgeo__volume_result.changed
+  vars:
+    pod_cp__skip_if_src_not_exists: true
+    pod_cp__src_dir_or_volume: "{{ maw_revgeo__volume_to_migrate }}"
+    pod_cp__dest_dir_or_volume: "{{ maw_revgeo__volume }}"
+
+- name: Set facts for systemd_job role
+  ansible.builtin.set_fact:
+    sysd_job__service_template: "{{ role_path }}/templates/reverse-geocode.service.j2"
+    sysd_job__timer_template: "{{ role_path }}/templates/reverse-geocode.timer.j2"
+    sysd_job__systemd_dir: "{{ maw_revgeo__systemd_dir }}"
+    sysd_job__service: "{{ maw_revgeo__service }}"
+
+- name: Configure systemd job to run the reverse geocoder
+  ansible.builtin.include_role:
+    name: systemd_job

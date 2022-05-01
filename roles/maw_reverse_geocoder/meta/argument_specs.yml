@@ -3,37 +3,47 @@ argument_specs:
   main:
     short_description: Role to configure a systemd service and timer to run the reverse geocode process
     options:
-      rev_geo__systemd_dir:
+      maw_revgeo__systemd_dir:
         type: str
         required: true
         description: the directory where to write the systemd service and timer files
 
-      rev_geo__service:
+      maw_revgeo__service:
         type: str
         required: true
         description: the name of the service
 
-      rev_geo__pod:
+      maw_revgeo__pod:
         type: str
         required: true
         description: the name of the pod in which to run the reverse geocode service
 
-      rev_geo__volume:
-        type: str
-        required: true
-        description: the name of the volume in which to write reverse geocode results
-
-      rev_geo__envfile:
-        type: str
-        required: true
-        description: the name of the file containing necessary environment variables for the reverse geocode process
-
-      rev_geo__image:
+      maw_revgeo__image:
         type: str
         required: true
         description: the name of docker image for the reverse geocode process
 
-      rev_geo__calendar:
+      maw_revgeo__volume:
+        type: str
+        required: true
+        description: the name of the volume in which to write reverse geocode results
+
+      maw_revgeo__volume_to_migrate:
+        type: str
+        required: true
+        description: the name of the volume to migrate to the new volume
+
+      maw_revgeo__envfile:
+        type: str
+        required: true
+        description: the name of the file containing necessary environment variables for the reverse geocode process
+
+      maw_revgeo__envfile_backup:
+        type: str
+        required: true
+        description: indicates if the envfile should be backed up before being overwritten
+
+      maw_revgeo__calendar:
         type: str
         required: true
         description: the systemd calendar specification to define when this job runs

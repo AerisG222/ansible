@@ -1,6 +1,0 @@
-[Unit]
-Description=Reverse Geocode job for mikeandwan.us
-
-[Service]
-Type=oneshot
-ExecStart=podman run -it --rm --pull always --pod {{ rev_geo__pod }} --volume {{ rev_geo__volume }}:/results:rw,z --env-file {{ rev_geo__envfile }} {{ rev_geo__image }}
