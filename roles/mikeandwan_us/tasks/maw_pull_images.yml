@@ -3,10 +3,7 @@
   containers.podman.podman_image:
     name: "{{ item }}"
   loop:
-    - "{{ maw__podman_image_photos }}"
-    - "{{ maw__podman_image_files }}"
     - "{{ maw__podman_image_gateway }}"
     - "{{ maw__podman_image_maw_certs }}"
     - "{{ maw__podman_image_certbot }}"
-    - "{{ maw__podman_image_gdrive }}"
   when: item | length > 0

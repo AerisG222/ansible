@@ -11,6 +11,10 @@
   containers.podman.podman_image:
     name: "{{ maw_postgres__image }}"
 
+- name: pull gdrive image
+  containers.podman.podman_image:
+    name: "{{ maw_postgres__gdrive_image }}"
+
 - name: create postgres volume
   containers.podman.podman_volume:
     name: "{{ maw_postgres__volume }}"
