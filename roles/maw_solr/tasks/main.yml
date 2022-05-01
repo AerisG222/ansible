@@ -1,4 +1,8 @@
 ---
+- name: pull solr image
+  containers.podman.podman_image:
+    name: "{{ maw_solr__image }}"
+
 - name: create solr volume
   containers.podman.podman_volume:
     name: "{{ maw_solr__volume }}"

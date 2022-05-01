@@ -1,4 +1,8 @@
 ---
+- name: pull solr image
+  containers.podman.podman_image:
+    name: "{{ maw_solridx__image }}"
+
 - name: Set facts for systemd_job role
   ansible.builtin.set_fact:
     sysd_job__service_template: "{{ role_path }}/templates/solr-indexer.service.j2"

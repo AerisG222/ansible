@@ -4,12 +4,10 @@
     name: "{{ item }}"
   loop:
     - "{{ maw__podman_image_postgres }}"
-    - "{{ maw__podman_image_solr }}"
     - "{{ maw__podman_image_photos }}"
     - "{{ maw__podman_image_files }}"
     - "{{ maw__podman_image_gateway }}"
     - "{{ maw__podman_image_maw_certs }}"
     - "{{ maw__podman_image_certbot }}"
-    - "{{ maw__podman_image_solr_indexer }}"
     - "{{ maw__podman_image_gdrive }}"
   when: item | length > 0
