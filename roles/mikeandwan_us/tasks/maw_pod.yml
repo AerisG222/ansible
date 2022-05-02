@@ -31,48 +31,6 @@
     cert_vol: "{{ maw_cert_volume.volume is defined | ternary(maw_cert_volume.volume.Name, maw__certs_dir) }}"
     google_creds_vol: "{{ google_creds_volume.volume.Name }}"
 
-- name: gateway container block
-  block:
-
-    - name: define common volumes for gateway
-      ansible.builtin.set_fact:
-        gateway_volumes:
-          - "{{ cert_vol }}:/certs:ro,z"
-          - "{{ asset_dir_root }}:/assets:ro"
-
-    - name: define prod only volumes for gateway (letsencrypt)
-      ansible.builtin.set_fact:
-        gateway_volumes_prod:
-          - "{{ certbot_validation_volume.volume.Name }}:/var/www/certbot:ro,z"
-          - "{{ certbot_certs_volume.volume.Name }}:/etc/letsencrypt:ro,z"
-      when: maw__env == 'prod'
-
-    - name: merge all volumes needed for gateway
-      ansible.builtin.set_fact:
-        gateway_volumes: "{{ gateway_volumes + gateway_volumes_prod }}"
-      when: maw__env == 'prod'
-
-    - name: maw-gateway container
-      containers.podman.podman_container:
-        name: "{{ maw__env }}-maw-gateway"
-        pod: "{{ maw__podman_pod }}"
-        image: "{{ maw__podman_image_gateway }}"
-        state: started
-        volume: "{{ gateway_volumes }}"
-        security_opt:
-          - label=disable
-        label:
-          io.containers.autoupdate: image
-      register: gateway_container
-
-    - name: wait for gateway container
-      ansible.builtin.include_role:
-        name: podman_wait_for_start
-      vars:
-        pod_start__container_name: "{{ gateway_container.container.Name }}"
-
-  when: maw__podman_image_gateway | length > 0
-
 - name: Ensure user systemd directory exists
   ansible.builtin.file:
     path: "{{ maw__systemd_dir }}"

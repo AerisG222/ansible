@@ -1,23 +1,4 @@
 ---
-- name: migrate certbot certs
-  ansible.builtin.include_role:
-    name: podman_copy
-  when: certbot_certs_volume.changed
-  vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: maw-certbot-certs
-    pod_cp__dest_dir_or_volume: "{{ certbot_certs_volume.volume.Name }}"
-    pod_cp__command: cp -R /src/internal/. /dest
-
-- name: migrate certbot validation
-  ansible.builtin.include_role:
-    name: podman_copy
-  when: certbot_validation_volume.changed
-  vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: maw-certbot-validation
-    pod_cp__dest_dir_or_volume: "{{ certbot_validation_volume.volume.Name }}"
-
 - name: migrate maw-certs
   ansible.builtin.include_role:
     name: podman_copy

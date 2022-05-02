@@ -17,17 +17,3 @@
     name: "{{ maw__env }}-maw-gdrive-creds"
     state: present
   register: gdrive_creds_volume
-
-- name: create maw-certbot-validation volume
-  containers.podman.podman_volume:
-    name: "{{ maw__env }}-maw-certbot-validation"
-    state: present
-  when: maw__env == 'prod'
-  register: certbot_validation_volume
-
-- name: create maw-certbot-certs volume
-  containers.podman.podman_volume:
-    name: "{{ maw__env }}-maw-certbot-certs"
-    state: present
-  when: maw__env == 'prod'
-  register: certbot_certs_volume

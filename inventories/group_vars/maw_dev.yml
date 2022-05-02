@@ -236,6 +236,17 @@ maw_photos__image:
 maw_photos__container:
 maw_photos__cert_volume:
 
+# maw gateway
+maw_gateway__pod:
+maw_gateway__image:
+maw_gateway__container:
+maw_gateway__cert_volume:
+maw_gateway__certbot_certs_volume:
+maw_gateway__certbot_certs_volume_to_migrate:
+maw_gateway__certbot_validation_volume:
+maw_gateway__certbot_validation_volume_to_migrate:
+maw_gateway__asset_dir:
+
 # maw reverse geocode
 maw_revgeo__systemd_dir:
 maw_revgeo__service:

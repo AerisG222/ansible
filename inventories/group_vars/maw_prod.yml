@@ -61,7 +61,6 @@ maw__podman_image_postgres: docker.io/postgres:14-alpine
 
 maw__podman_pod: prod-maw-pod
 maw__podman_env_dir: "{{ remote_maw_root }}/podman-env"
-maw__podman_image_gateway: docker.io/aerisg222/maw-gateway:latest
 maw__podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
 maw__podman_image_certbot: docker.io/certbot/certbot:latest
 maw__podman_image_reverse_geocode: docker.io/aerisg222/maw-reverse-geocode:latest
@@ -247,6 +246,17 @@ maw_photos__pod: "{{ maw__podman_pod }}"
 maw_photos__image: docker.io/aerisg222/maw-photos:latest
 maw_photos__container: "{{ maw__env }}-maw-photos"
 maw_photos__cert_volume: "{{ maw__certs_volume }}"
+
+# maw gateway
+maw_gateway__pod: "{{ maw__podman_pod }}"
+maw_gateway__image: docker.io/aerisg222/maw-gateway:latest
+maw_gateway__container: "{{ maw__env }}-maw-gateway"
+maw_gateway__cert_volume: "{{ maw__certs_volume }}"
+maw_gateway__certbot_certs_volume: "{{ maw__env }}-maw-certbot-certs"
+maw_gateway__certbot_certs_volume_to_migrate: maw-certbot-certs
+maw_gateway__certbot_validation_volume: "{{ maw__env }}-maw-certbot-validation"
+maw_gateway__certbot_validation_volume_to_migrate: maw-certbot-validation
+maw_gateway__asset_dir: "{{ asset_dir_root }}"
 
 # maw reverse geocode
 maw_revgeo__systemd_dir: "{{ maw__systemd_dir }}"
