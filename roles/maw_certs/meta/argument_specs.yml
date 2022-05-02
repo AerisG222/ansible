@@ -1,0 +1,49 @@
+---
+argument_specs:
+  main:
+    short_description: Creates auth service and supporting objects for mikeandwan.us
+    options:
+      maw_certs__image:
+        type: str
+        required: true
+        description: full name of the maw-certs docker image
+
+      maw_certs__container:
+        type: str
+        required: true
+        description: name to give the certs container when it runs
+
+      maw_certs__dir:
+        type: str
+        required: true
+        description: full path to the local directory where certs should be written
+
+      maw_certs__volume:
+        type: str
+        required: true
+        description: name of the volume where certs should be written
+
+      maw_certs__volume_to_migrate:
+        type: str
+        required: true
+        description: name of the original volume holding existing certs that should be migrated to the new volume
+
+      maw_certs__env:
+        type: str
+        required: true
+        description: name of the environment (dev / test / prod)
+
+      maw_certs__fqdn_prefix:
+        type: str
+        required: true
+        description: the prefix to use to indicate the name of the environment ('dev', 'test', or '' for prod)
+
+      maw_certs__temp_dir:
+        type: str
+        required: true
+        description: full path to the directory that can be used to temporarily store cert files
+
+      maw_certs__register_ca:
+        type: boolean
+        required: true
+        description: indicates if the generated CA files should be registered with the system

@@ -264,3 +264,14 @@ maw_revgeo__volume_to_migrate: maw-reverse-geocode
 maw_revgeo__envfile: "{{ maw__podman_env_dir }}/maw-reverse-geocode.env"
 maw_revgeo__envfile_backup: false
 maw_revgeo__calendar: '00:45:00'
+
+# maw certs
+maw_certs__image: docker.io/aerisg222/maw-certs:latest
+maw_certs__container: "{{ maw__env }}-maw-certs"
+maw_certs__dir:
+maw_certs__volume: "{{ maw__env }}-maw-certs"
+maw_certs__volume_to_migrate:
+maw_certs__env: "{{ maw_env }}"
+maw_certs__fqdn_prefix: "{{ maw__env }}"
+maw_certs__temp_dir: "{{ remote_home_dir }}/_tmp_ansible_certs"
+maw_certs__register_ca: true

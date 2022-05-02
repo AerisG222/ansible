@@ -1,11 +1,4 @@
 ---
-- name: create maw cert volume
-  containers.podman.podman_volume:
-    name: "{{ maw__env }}-maw-certs"
-    state: present
-  when: maw__certs_dir | length == 0
-  register: maw_cert_volume
-
 - name: create maw-google-creds volume
   containers.podman.podman_volume:
     name: "{{ maw__env }}-maw-google-creds"

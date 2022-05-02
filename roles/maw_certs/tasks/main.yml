@@ -1,0 +1,119 @@
+---
+- name: ensure we have latest images for mikeandwan.us
+  containers.podman.podman_image:
+    name: "{{ maw_certs__image }}"
+
+- name: create maw cert volume
+  containers.podman.podman_volume:
+    name: "{{ maw_certs__volume }}"
+    state: present
+  when: maw__certs_dir | length == 0
+  register: _maw_certs__volume_result
+
+- name: migrate maw-certs
+  ansible.builtin.include_role:
+    name: podman_copy
+  when: _maw_certs__volume_result.changed
+  vars:
+    pod_cp__skip_if_src_not_exists: true
+    pod_cp__src_dir_or_volume: "{{ maw_certs__volume_to_migrate }}"
+    pod_cp__dest_dir_or_volume: "{{ maw_certs__volume }}"
+
+- name: set the cert dir / volume name and fqdn prefix
+  ansible.builtin.set_fact:
+    _maw_certs__cert_vol: "{{ (maw_certs__dir | length > 0) | ternary(maw_certs__dir, maw_certs__volume) }}"
+
+- name: ensure cert dir exists for local projects
+  ansible.builtin.file:
+    path: "{{ maw_certs__dir }}"
+    state: directory
+    mode: u+rwx
+  when: maw_certs__dir | length > 0
+
+# if you add a new environment, you may need to update the maw-certs image to be able to generate certs for the new env
+# todo: add logic to maw-certs to dynamically accept new env name
+- name: initialize internal certs
+  containers.podman.podman_container:
+    name: "{{ maw_certs__container }}"
+    image: "{{ maw_certs__image }}"
+    command: "{{ maw_certs__env }} {{ maw_certs__fqdn_prefix }}"
+    state: started
+    interactive: true
+    volume:
+      - "{{ _maw_certs__cert_vol }}:/maw-certs:rw,z"
+
+- name: wait for cert initialization to complete
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
+  vars:
+    pod_stop__container_name: "{{ maw_certs__container }}"
+    pod_stop__result_varname: _maw_certs__result
+
+- name: fail if certs not created
+  ansible.builtin.fail:
+    msg: certs were not successfully created
+  failed_when: _maw_certs__result | int != 0
+
+- name: ensure temp dir exists
+  ansible.builtin.file:
+    path: "{{ maw_certs__temp_dir }}"
+    state: directory
+    mode: u+rw
+
+- name: copy certificate files from volume to server/host
+  ansible.builtin.include_role:
+    name: podman_copy
+  vars:
+    pod_cp__src_dir_or_volume: "{{ _maw_certs__cert_vol }}"
+    pod_cp__dest_dir_or_volume: "{{ maw_certs__temp_dir }}"
+    pod_cp__command: "cp /src/{{ item }} /dest"
+  loop:
+    - api/api.pfx.pwd
+    - auth/auth.pfx.pwd
+    - www/www.pfx.pwd
+    - ca/ca_*.crt
+
+- name: get api cert pwd
+  ansible.builtin.slurp:
+    src: "{{ maw_certs__temp_dir }}/api.pfx.pwd"
+  register: api_pwd
+
+- name: get auth cert pwd
+  ansible.builtin.slurp:
+    src: "{{ maw_certs__temp_dir }}/auth.pfx.pwd"
+  register: auth_pwd
+
+- name: get www cert pwd
+  ansible.builtin.slurp:
+    src: "{{ maw_certs__temp_dir }}/www.pfx.pwd"
+  register: www_pwd
+
+- name: set cert pwd variables
+  ansible.builtin.set_fact:
+    maw__pfx_pwd_api: "{{ api_pwd.content | b64decode }}"
+    maw__pfx_pwd_auth: "{{ auth_pwd.content | b64decode }}"
+    maw__pfx_pwd_www: "{{ www_pwd.content | b64decode }}"
+
+- name: make system aware of self signed certificate authority
+  block:
+    - name: Add ca cert(s) to trusted sources
+      become_user: root
+      become: true
+      ansible.builtin.copy:
+        dest: "/usr/share/pki/ca-trust-source/anchors/maw_{{ maw_certs__env }}_{{ item | basename }}"
+        src: "{{ item }}"
+        mode: u+rw,go+r
+      with_fileglob:
+        - "{{ maw_certs__temp_dir }}/ca_*.crt"
+
+    - name: Make the system aware of the new ca certs
+      become_user: root
+      become: true
+      ansible.builtin.command:
+        cmd: update-ca-trust
+  when: maw_certs__register_ca
+
+- name: delete temp dir
+  ansible.builtin.file:
+    path: "{{ maw_certs__temp_dir }}"
+    state: absent

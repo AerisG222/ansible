@@ -49,8 +49,6 @@ maw__asset_dir_movies: "{{ asset_dir_root }}/movies"
 
 maw__podman_pod: dev-maw-pod
 maw__podman_env_dir: "{{ remote_maw_root }}/podman-env"
-maw__podman_image_gateway: ""
-maw__podman_image_maw_certs: docker.io/aerisg222/maw-certs:latest
 maw__podman_image_certbot: docker.io/certbot/certbot:latest
 maw__podman_image_reverse_geocode: ""
 maw__podman_publish_ports:
@@ -257,3 +255,14 @@ maw_revgeo__volume_to_migrate:
 maw_revgeo__envfile:
 maw_revgeo__envfile_backup:
 maw_revgeo__calendar:
+
+# maw certs
+maw_certs__image: docker.io/aerisg222/maw-certs:latest
+maw_certs__container: "{{ maw__env }}-maw-certs"
+maw_certs__dir: "{{ maw__certs_dir }}"
+maw_certs__volume: "{{ maw__env }}-maw-certs"
+maw_certs__volume_to_migrate: maw-certs
+maw_certs__env: "{{ maw_env }}"
+maw_certs__fqdn_prefix: "{{ maw__env }}"
+maw_certs__temp_dir: "{{ remote_home_dir }}/_tmp_ansible_certs"
+maw_certs__register_ca: true
