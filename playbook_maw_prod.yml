@@ -9,36 +9,13 @@
       ansible.builtin.include_role:
         name: fedora_base
 
-    - name: Add Service Accounts
-      become: true
-      ansible.builtin.user:
-        name: "{{ maw__username }}"
-        password: "{{ maw__password | password_hash('sha512') }}"
-        update_password: always
-        state: present
-
-    - name: Configure firewall
-      ansible.builtin.include_role:
-        name: firewall
-      vars:
-        fw__allowed_services:
-          - http
-          - https
-
     - name: Configure sshd
       ansible.builtin.include_role:
         name: sshd
       vars:
         sshd_allow_users:
           - "{{ ansible_user }}"
-          - "{{ maw__username }}"
-
-    - name: Initialize podman
-      ansible.builtin.include_role:
-        name: podman_init
-      vars:
-        pod_init__linger_users:
-          - "{{ maw__username }}"
+          - "{{ maw_host__username }}"
 
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:

@@ -1,4 +1,19 @@
 ---
+- name: Add Service Accounts
+  become: true
+  ansible.builtin.user:
+    name: "{{ maw_host__username }}"
+    password: "{{ maw_host__password | password_hash('sha512') }}"
+    update_password: on_create
+    state: present
+
+- name: Initialize podman
+  ansible.builtin.include_role:
+    name: podman_init
+  vars:
+    pod_init__linger_users:
+      - "{{ maw_host__username }}"
+
 - name: Include maw_hostnames.yml
   ansible.builtin.include_tasks: maw_hostnames.yml
   loop_control:
@@ -14,10 +29,16 @@
     state: present
   when: maw_host__allow_low_ports
 
-# todo: copy files to server
+- name: Configure firewall
+  ansible.builtin.include_role:
+    name: firewall
+  vars:
+    fw__allowed_services: "{{ maw_host__allow_firewall_services }}"
 
 - name: Initialize host directories
   ansible.builtin.include_tasks: maw_host_directories.yml
+
+# todo: copy files to server
 
 - name: Include maw_admin_scripts
   ansible.builtin.include_role:

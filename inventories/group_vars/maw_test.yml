@@ -10,10 +10,8 @@ remote_maw_root: "{{ remote_home_dir }}/maw_test"
 asset_dir_root: /srv/www/website_assets
 
 # shared maw settings
-maw__username: "{{ ansible_user_id }}"
 maw__env: test
 maw__aspnet_env: test
-maw__allow_low_ports: false
 
 maw__fqdn_naked: test.mikeandwan.us
 maw__fqdn_api: test.api.mikeandwan.us
@@ -75,6 +73,9 @@ maw_host__asset_dirs:
   - "{{ maw__asset_dir_movies }}"
 maw_host__allow_low_ports: false
 maw_host__deploy_admin_scripts: false
+maw_host__allow_firewall_services:
+maw_host__username: "{{ ansible_user_id }}"
+maw_host__password:
 
 # maw shared google creds volume
 maw_google_creds__backup_dir: "{{ controller_maw_env_root }}/google-creds"

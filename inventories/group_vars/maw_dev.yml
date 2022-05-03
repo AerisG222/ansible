@@ -13,7 +13,6 @@ git_root: "{{ controller_home_dir }}/git"
 asset_dir_root: /srv/www/website_assets
 
 # maw
-maw__username: "{{ ansible_user_id }}"
 maw__env: dev
 maw__aspnet_env: development
 
@@ -70,6 +69,9 @@ maw_host__asset_dirs:
   - "{{ maw__asset_dir_movies }}"
 maw_host__allow_low_ports: false
 maw_host__deploy_admin_scripts: false
+maw_host__allow_firewall_services:
+maw_host__username: "{{ ansible_user_id }}"
+maw_host__password:
 
 # maw shared google creds volume
 maw_google_creds__backup_dir: "{{ controller_maw_env_root }}/google-creds"

@@ -15,13 +15,6 @@
           - git
           - nodejs
 
-    - name: Initialize podman
-      ansible.builtin.include_role:
-        name: podman_init
-      vars:
-        pod_init__linger_users:
-          - "{{ maw__username }}"
-
     - name: Ensure git directory exists
       ansible.builtin.file:
         path: "{{ git_root }}"
