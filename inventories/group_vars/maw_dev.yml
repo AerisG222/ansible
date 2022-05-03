@@ -16,7 +16,6 @@ asset_dir_root: /srv/www/website_assets
 maw__username: "{{ ansible_user_id }}"
 maw__env: dev
 maw__aspnet_env: development
-maw__allow_low_ports: false
 
 maw__fqdn_naked: dev.mikeandwan.us
 maw__fqdn_api: dev.api.mikeandwan.us
@@ -58,7 +57,21 @@ maw__sql_password_solr: "{{ vault_password_sql_solr }}"
 # google api key (maps / reverse geocode)
 maw__google_api_key: "{{ vault_google_api_key }}"
 
-# shared google creds volume
+# maw host settings
+maw_host__hostnames:
+  - "{{ maw__fqdn_naked }}"
+  - "{{ maw__fqdn_api }}"
+  - "{{ maw__fqdn_auth }}"
+  - "{{ maw__fqdn_files }}"
+  - "{{ maw__fqdn_photos }}"
+  - "{{ maw__fqdn_www }}"
+maw_host__asset_dirs:
+  - "{{ maw__asset_dir_images }}"
+  - "{{ maw__asset_dir_movies }}"
+maw_host__allow_low_ports: false
+maw_host__deploy_admin_scripts: false
+
+# maw shared google creds volume
 maw_google_creds__backup_dir: "{{ controller_maw_env_root }}/google-creds"
 maw_google_creds__backup_file: "{{ controller_maw_env_root }}/google-creds/www_emailer.json"
 maw_google_creds__volume:
@@ -281,7 +294,6 @@ maw_bashenv__files:
   - "{{ maw__podman_env_dir }}/maw-cache-sync.env"
 
 # maw admin scripts
-maw_as__deploy: false
 maw_as__dir:
 maw_as__do_backup:
 maw_as__pod:

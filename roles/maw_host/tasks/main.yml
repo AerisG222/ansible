@@ -1,0 +1,25 @@
+---
+- name: Include maw_hostnames.yml
+  ansible.builtin.include_tasks: maw_hostnames.yml
+  loop_control:
+    loop_var: _maw_host__hostname
+  loop: "{{ maw_host__hostnames }}"
+
+# https://github.com/containers/podman/blob/main/rootless.md
+- name: permit rootless users to listen on low ports
+  become: true
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_unprivileged_port_start
+    value: 80
+    state: present
+  when: maw_host__allow_low_ports
+
+# todo: copy files to server
+
+- name: Initialize host directories
+  ansible.builtin.include_tasks: maw_host_directories.yml
+
+- name: Include maw_admin_scripts
+  ansible.builtin.include_role:
+    name: maw_admin_scripts
+  when: maw_host__deploy_admin_scripts

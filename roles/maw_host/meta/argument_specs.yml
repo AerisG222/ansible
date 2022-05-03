@@ -1,0 +1,26 @@
+---
+argument_specs:
+  main:
+    short_description: Creates shared google creds volume to hold email credentials file for mikeandwan.us
+    options:
+      maw_host__hostnames:
+        type: list
+        elements: str
+        required: true
+        description: list of hostnames associated with this environment
+
+      maw_host__asset_dirs:
+        type: list
+        elements: str
+        required: true
+        description: list of asset directories to create on the host
+
+      maw_host__allow_low_ports:
+        type: bool
+        required: true
+        description: indicates if low ports (80/443 in particular) should be available to unprivileged users
+
+      maw_host__deploy_admin_scripts:
+        type: bool
+        required: true
+        description: indicates if the admin scripts will be deployed to this host

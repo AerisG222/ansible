@@ -1,33 +1,4 @@
 ---
-- name: Include maw_hostnames.yml
-  ansible.builtin.include_tasks: maw_hostnames.yml
-  loop:
-    - "{{ maw__fqdn_naked }}"
-    - "{{ maw__fqdn_api }}"
-    - "{{ maw__fqdn_auth }}"
-    - "{{ maw__fqdn_files }}"
-    - "{{ maw__fqdn_photos }}"
-    - "{{ maw__fqdn_www }}"
-
-- name: Include port_mapping.yml
-  ansible.builtin.include_tasks: port_mapping.yml
-  when: maw__allow_low_ports
-
-- name: Initialize host directories
-  ansible.builtin.include_tasks: maw_host_directories.yml
-  vars:
-    asset_dirs:
-      - "{{ maw__asset_dir_images }}"
-      - "{{ maw__asset_dir_movies }}"
-
-- name: Include maw_admin_scripts
-  ansible.builtin.include_role:
-    name: maw_admin_scripts
-    apply:
-      become: true
-      become_user: "{{ maw__username }}"
-  when: maw_as__deploy
-
 - name: Initialize self signed certificates
   ansible.builtin.include_tasks:
     file: maw_certs.yml
@@ -38,13 +9,6 @@
 - name: Obtain self signed certificate passwords
   ansible.builtin.include_tasks:
     file: maw_certs_get_pwds.yml
-    apply:
-      become: true
-      become_user: "{{ maw__username }}"
-
-- name: Include maw_maintenance.yml
-  ansible.builtin.include_tasks:
-    file: maw_maintenance.yml
     apply:
       become: true
       become_user: "{{ maw__username }}"

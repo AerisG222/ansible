@@ -2,11 +2,12 @@
 - name: ensure asset directories exist
   become: true
   ansible.builtin.file:
-    path: "{{ item }}"
-    # recurse: true
+    path: "{{ _maw_host__asset_dir }}"
     state: directory
     owner: root
     mode: u+rwx,go+rx
-  loop: "{{ asset_dirs }}"
+  loop_control:
+    loop_var: _maw_host__asset_dir
+  loop: "{{ maw_host__asset_dirs }}"
 
 # todo: copy files for prod

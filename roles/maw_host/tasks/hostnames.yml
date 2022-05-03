@@ -5,7 +5,7 @@
     argv:
       - grep
       - -E
-      - '^127\.0\.0\.1.*\b{{ item }}\b.*$'
+      - '^127\.0\.0\.1.*\b{{ _maw_host__hostname }}\b.*$'
       - /etc/hosts
   changed_when: false
   failed_when: grep_hosts.rc != 0 and grep_hosts.rc != 1
@@ -15,10 +15,10 @@
   become: true
   ansible.builtin.lineinfile:
     path: /etc/hosts
-    backup: "{{ maw__env == 'prod' }}"
+    backup: "{{ maw_host__etc_hosts_backup }}"
     backrefs: true
     regex: "^127\\.0\\.0\\.1\\s+(.*)$"
-    line: "127.0.0.1 \\1 {{ item }}"
+    line: "127.0.0.1 \\1 {{ _maw_host__hostname }}"
     state: present
   when:
     - grep_hosts.rc == 1
