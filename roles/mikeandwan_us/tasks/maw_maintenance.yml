@@ -1,19 +1,4 @@
 ---
-- name: Configure Certbot Renew
-  ansible.builtin.include_role:
-    name: certbot_renew
-  vars:
-    cb__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
-    cb__service_name: "{{ maw__env }}-certbot-renew"
-    cb__start_job: false
-    cb__enable_job: "{{ maw__env == 'prod' }}"
-    cb__calendar: '0/12:00:00'
-    cb__pod: "{{ maw__podman_pod }}"
-    cb__container_image: "{{ maw__podman_image_certbot }}"
-    cb__validation_volume: "{{ certbot_validation_volume.volume.Name }}"
-    cb__certs_volume: "{{ certbot_certs_volume.volume.Name }}"
-  when: maw__env == 'prod'
-
 - name: Configure Reverse Geocoder
   ansible.builtin.include_role:
     name: reverse_geocoder

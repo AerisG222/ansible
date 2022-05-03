@@ -1,7 +1,0 @@
----
-- name: ensure we have latest images for mikeandwan.us
-  containers.podman.podman_image:
-    name: "{{ item }}"
-  loop:
-    - "{{ maw__podman_image_certbot }}"
-  when: item | length > 0

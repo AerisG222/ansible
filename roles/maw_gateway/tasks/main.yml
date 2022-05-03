@@ -1,7 +1,11 @@
 ---
 - name: ensure we have latest images for mikeandwan.us
   containers.podman.podman_image:
-    name: "{{ maw_gateway__image }}"
+    name: "{{ item }}"
+  loop:
+    - "{{ maw_gateway__image }}"
+    - "{{ maw_gateway__certbot_image }}"
+  when: item | length > 0
 
 - name: define common volumes for gateway
   ansible.builtin.set_fact:
@@ -51,6 +55,20 @@
     - name: merge all volumes needed for gateway
       ansible.builtin.set_fact:
         _maw_gateway__volumes: "{{ _maw_gateway__volumes + _maw_gateway__volumes_prod }}"
+
+    - name: Configure Certbot Renew
+      ansible.builtin.include_role:
+        name: certbot_renew
+      vars:
+        cb__systemd_dir: "{{ maw_gateway__certbot_systemd_dir }}"
+        cb__service_name: "{{ maw_gateway__certbot_service }}"
+        cb__start_job: true
+        cb__enable_job: true
+        cb__calendar: "{{ maw_gateway__certbot_calendar }}"
+        cb__pod: "{{ maw_gateway__pod }}"
+        cb__container_image: "{{ maw_gateway__certbot_image }}"
+        cb__validation_volume: "{{ maw_gateway__certbot_validation_volume }}"
+        cb__certs_volume: "{{ maw_gateway__certbot_certs_volume }}"
   when: maw_gateway__certbot_certs_volume | length > 0
 
 - name: maw-gateway container

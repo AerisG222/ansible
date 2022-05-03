@@ -40,13 +40,6 @@
     maw_as__solr_indexer: "{{ maw__podman_image_solr_indexer }}"
   when: ansible_connection != 'local'
 
-- name: Include maw_pull_images.yml
-  ansible.builtin.include_tasks:
-    file: maw_pull_images.yml
-    apply:
-      become: true
-      become_user: "{{ maw__username }}"
-
 - name: Include maw_volumes_create.yml
   ansible.builtin.include_tasks:
     file: maw_volumes_create.yml
