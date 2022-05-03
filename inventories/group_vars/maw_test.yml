@@ -279,3 +279,17 @@ maw_certs__register_ca: true
 # maw bash profile
 maw_bashenv__profile:
 maw_bashenv__files:
+
+# maw admin scripts
+maw_as__deploy: false
+maw_as__dir:
+maw_as__do_backup:
+maw_as__pod:
+maw_as__postgres_envfile:
+maw_as__postgres_image:
+maw_as__certbot_image:
+maw_as__gdrive_image:
+maw_as__cache_sync_image:
+maw_as__maw_certs_image:
+maw_as__reverse_geocode_image:
+maw_as__solr_indexer:

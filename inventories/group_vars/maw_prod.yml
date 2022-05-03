@@ -282,3 +282,17 @@ maw_certs__register_ca: true
 # maw bash profile
 maw_bashenv__profile:
 maw_bashenv__files:
+
+# maw admin scripts
+maw_as__deploy: true
+maw_as__dir: "{{ remote_maw_root }}/admin_scripts"
+maw_as__do_backup: true
+maw_as__pod: "{{ maw__podman_pod }}"
+maw_as__postgres_envfile: "{{ maw_postgres__envfile }}"
+maw_as__postgres_image: "{{ maw_postgres__image }}"
+maw_as__certbot_image: "{{ maw_gateway__certbot_image }}"
+maw_as__gdrive_image: "{{ maw_postgres__gdrive_image }}"
+maw_as__cache_sync_image: "{{ maw_redis__cache_sync_image }}"
+maw_as__maw_certs_image: "{{ maw_certs__image }}"
+maw_as__reverse_geocode_image: "{{ maw_revgeo__image }}"
+maw_as__solr_indexer: "{{ maw_solridx__image }}"
