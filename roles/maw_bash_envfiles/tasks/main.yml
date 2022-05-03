@@ -1,0 +1,17 @@
+---
+- name: Add env files to .bash_profile for dev
+  ansible.builtin.blockinfile:
+    path: "{{ maw_bashenv__profile }}"
+    block: |
+      function load_dotenv(){
+        # https://stackoverflow.com/a/66118031/134904
+        source <(cat $1 | sed -e '/^#/d;/^\s*$/d' -e "s/'/'\\\''/g" -e "s/=\(.*\)/='\1'/g")
+      }
+
+      set -o allexport
+
+      {% for _maw_bashenv__file in maw_bashenv__files %}
+        [ -f "{{ _maw_bashenv__file }}" ] && load_dotenv "{{ _maw_bashenv__file }}"
+      {% endfor %}
+
+      set +o allexport

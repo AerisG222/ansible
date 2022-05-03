@@ -75,13 +75,6 @@
       become: true
       become_user: "{{ maw__username }}"
 
-- name: Include maw_env_files.yml
-  ansible.builtin.include_tasks:
-    file: maw_env_files.yml
-    apply:
-      become: true
-      become_user: "{{ maw__username }}"
-
 - name: Include maw_pod.yml
   ansible.builtin.include_tasks:
     file: maw_pod.yml

@@ -16,7 +16,6 @@ asset_dir_root: /srv/www/website_assets
 maw__username: "{{ ansible_user_id }}"
 maw__env: dev
 maw__aspnet_env: development
-maw__bash_profile: "{{ controller_home_dir }}/.bash_profile"
 maw__allow_low_ports: false
 
 maw__fqdn_naked: dev.mikeandwan.us
@@ -270,3 +269,11 @@ maw_certs__env: "{{ maw_env }}"
 maw_certs__fqdn_prefix: "{{ maw__env }}"
 maw_certs__temp_dir: "{{ remote_home_dir }}/_tmp_ansible_certs"
 maw_certs__register_ca: true
+
+# maw bash profile
+maw_bashenv__profile: "{{ remote_home_dir }}/.bash_profile"
+maw_bashenv__files:
+  - "{{ maw__podman_env_dir }}/maw-api.env"
+  - "{{ maw__podman_env_dir }}/maw-auth.env"
+  - "{{ maw__podman_env_dir }}/maw-www.env"
+  - "{{ maw__podman_env_dir }}/maw-cache-sync.env"

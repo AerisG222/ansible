@@ -13,7 +13,6 @@ asset_dir_root: /srv/www/website_assets
 maw__username: "{{ ansible_user_id }}"
 maw__env: test
 maw__aspnet_env: test
-maw__bash_profile: "{{ controller_home_dir }}/.bash_profile"
 maw__allow_low_ports: false
 
 maw__fqdn_naked: test.mikeandwan.us
@@ -275,3 +274,7 @@ maw_certs__env: "{{ maw_env }}"
 maw_certs__fqdn_prefix: "{{ maw__env }}"
 maw_certs__temp_dir: "{{ remote_home_dir }}/_tmp_ansible_certs"
 maw_certs__register_ca: true
+
+# maw bash profile
+maw_bashenv__profile:
+maw_bashenv__files:

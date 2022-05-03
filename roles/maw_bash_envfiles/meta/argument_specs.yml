@@ -1,0 +1,15 @@
+---
+argument_specs:
+  main:
+    short_description: Adds script to the bash profile so that environment files for the site are loaded as environment variables
+    options:
+      maw_bashenv__profile:
+        type: str
+        required: true
+        description: full path to the .bash_profile that will be updated to load the generated environment files as environment variables
+
+      maw_bashenv__envfiles:
+        type: list
+        elements: str
+        required: true
+        description: list of env files to load

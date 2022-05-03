@@ -17,7 +17,6 @@ maw__username: svc_www_maw
 maw__password: "{{ vault_os_svc_www_maw }}"
 maw__env: prod
 maw__aspnet_env: production
-maw__bash_profile: # not needed for prod
 maw__allow_low_ports: true
 
 maw__fqdn_naked: mikeandwan.us
@@ -278,3 +277,7 @@ maw_certs__env: "{{ maw_env }}"
 maw_certs__fqdn_prefix: ''
 maw_certs__temp_dir: "{{ remote_home_dir }}/_tmp_ansible_certs"
 maw_certs__register_ca: true
+
+# maw bash profile
+maw_bashenv__profile:
+maw_bashenv__files:
