@@ -1,0 +1,50 @@
+---
+- name: create maw-google-creds volume
+  containers.podman.podman_volume:
+    name: "{{ maw_google_creds__volume }}"
+    state: present
+  register: _maw_google_creds__volume_results
+
+- name: migrate maw-google-creds
+  ansible.builtin.include_role:
+    name: podman_copy
+  when: _maw_google_creds__volume_results.changed
+  vars:
+    pod_cp__skip_if_src_not_exists: true
+    pod_cp__src_dir_or_volume: "{{ maw_google_creds__volume_to_migrate }}"
+    pod_cp__dest_dir_or_volume: "{{ maw_google_creds__volume }}"
+    pod_cp__result_varname: _maw_google__migrated
+
+- name: copy google credentials when not migrated
+  block:
+
+    - name: Define tmp dir variable
+      ansible.builtin.set_fact:
+        maw_google__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_google"
+
+    - name: Ensure temp dir exists
+      ansible.builtin.file:
+        path: "{{ maw_google__tempdir }}"
+        state: directory
+        mode: u+rw
+
+    - name: copy files to temp dir
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ maw_google__tempdir }}"
+        mode: u+rw
+      with_fileglob: "{{ maw__google_email_creds_dir }}/*"
+
+    - name: copy google drive credentials to volume
+      ansible.builtin.include_role:
+        name: podman_copy
+      vars:
+        pod_cp__src_dir_or_volume: "{{ maw_google__tempdir }}"
+        pod_cp__dest_dir_or_volume: "{{ maw_google_creds__volume }}"
+
+    - name: Cleanup temp dir
+      ansible.builtin.file:
+        path: "{{ maw_google__tempdir }}"
+        state: absent
+
+  when: _maw_google_creds__volume_results.changed and (_maw_google__migrated is defined) and (not _maw_google__migrated)

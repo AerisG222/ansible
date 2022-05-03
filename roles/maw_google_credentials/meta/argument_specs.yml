@@ -1,0 +1,5 @@
+---
+argument_specs:
+  main:
+    short_description: Creates shared google creds volume to hold email credentials file for mikeandwan.us
+    options:

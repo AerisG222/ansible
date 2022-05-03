@@ -40,20 +40,6 @@
     maw_as__solr_indexer: "{{ maw__podman_image_solr_indexer }}"
   when: ansible_connection != 'local'
 
-- name: Include maw_volumes_create.yml
-  ansible.builtin.include_tasks:
-    file: maw_volumes_create.yml
-    apply:
-      become: true
-      become_user: "{{ maw__username }}"
-
-- name: Include maw_volumes_populate.yml
-  ansible.builtin.include_tasks:
-    file: maw_volumes_populate.yml
-    apply:
-      become: true
-      become_user: "{{ maw__username }}"
-
 - name: Initialize self signed certificates
   ansible.builtin.include_tasks:
     file: maw_certs.yml

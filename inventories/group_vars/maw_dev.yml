@@ -35,11 +35,6 @@ maw__pfx_pwd_api:
 maw__pfx_pwd_auth:
 maw__pfx_pwd_www:
 
-maw__gdrive_creds_dir:  # not needed for dev
-maw__google_email_creds_dir: "{{ controller_maw_env_root }}/google-creds"
-maw__google_email_creds_file: "{{ controller_maw_env_root }}/google-creds/www_emailer.json"
-maw__google_creds_volume: "{{ maw__env }}-maw-google-creds"
-
 maw__certs_dir: "{{ remote_maw_root }}/certs"
 maw__dataprotection_dir: "{{ remote_maw_root }}/dataprotection"
 maw__systemd_dir: "{{ remote_home_dir }}/.config/systemd/user"
@@ -62,6 +57,13 @@ maw__sql_password_solr: "{{ vault_password_sql_solr }}"
 
 # google api key (maps / reverse geocode)
 maw__google_api_key: "{{ vault_google_api_key }}"
+
+# shared google creds volume
+maw_google_creds__backup_dir: "{{ controller_maw_env_root }}/google-creds"
+maw_google_creds__backup_file: "{{ controller_maw_env_root }}/google-creds/www_emailer.json"
+maw_google_creds__volume:
+maw_google_creds__volume_to_migrate:
+maw_google_creds__file: "{{ maw_google_creds__backup_file }}"
 
 # maw postgres settings
 maw_postgres__version: 14
@@ -92,8 +94,8 @@ maw_postgres__daily_archive_service: "{{ maw__env }}-postgres-archive-daily"
 maw_postgres__daily_archive_container: "{{ maw__env }}-postgres-archive-daily"
 maw_postgres__monthly_archive_service: "{{ maw__env }}-postgres-archive-monthly"
 maw_postgres__monthly_archive_container: "{{ maw__env }}-postgres-archive-monthly"
-maw_postgres__gdrive_creds_volume: ""
-maw_postgres__gdrive_image: ""
+maw_postgres__gdrive_creds_volume:
+maw_postgres__gdrive_image:
 maw_postgres__gdrive_folder_daily: "{{ maw__podman_pod }}-{{ ansible_host }}-pg_backup"
 maw_postgres__gdrive_folder_monthly: "{{ maw__podman_pod }}-{{ ansible_host }}-pg_backup_monthly"
 maw_postgres__calendar_role_backup: '00:55:00'
@@ -179,7 +181,7 @@ maw_auth__envfile: "{{ maw__podman_env_dir }}/maw-auth.env"
 maw_auth__envfile_backup: false
 maw_auth__aspnet_env: "{{ maw__aspnet_env }}"
 maw_auth__google_creds_volume: ""
-maw_auth__google_email_creds_file:
+maw_auth__google_email_creds_file: "{{ maw_google_creds__file }}"
 maw_auth__pfx: "{{ maw__pfx_auth }}"
 maw_auth__pfx_pwd:
 maw_auth__sql_username: "{{ maw__sql_username_maw }}"
@@ -210,7 +212,7 @@ maw_www__pfx: "{{ maw__pfx_www }}"
 maw_www__pfx_pwd:
 maw_www__aspnet_env: "{{ maw__aspnet_env }}"
 maw_www__google_creds_volume: ""
-maw_www__google_email_creds_file: "{{ maw__google_email_creds_file }}"
+maw_www__google_email_creds_file: "{{ maw_google_creds__file }}"
 maw_www__sql_username: "{{ maw__sql_username_maw }}"
 maw_www__sql_password: "{{ maw__sql_password_maw }}"
 maw_www__auth_client_id: "{{ vault_www_auth_client_id }}"

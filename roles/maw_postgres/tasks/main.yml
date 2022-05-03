@@ -27,8 +27,11 @@
 
 - name: prepare postgres initialization volume
   ansible.builtin.include_tasks:
-    file:
-      - init_volume.yml
+    file: init_volume.yml
+
+- name: prepare gdrive credentials volume
+  ansible.builtin.include_tasks:
+    file: gdrive_volume.yml
 
 - name: maw-postgres container
   containers.podman.podman_container:
