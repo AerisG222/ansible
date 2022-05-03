@@ -253,6 +253,7 @@ maw_revgeo__systemd_dir:
 maw_revgeo__service:
 maw_revgeo__pod:
 maw_revgeo__image:
+maw_revgeo__container:
 maw_revgeo__volume:
 maw_revgeo__volume_to_migrate:
 maw_revgeo__envfile:

@@ -3,4 +3,4 @@ Description=Reverse Geocode job for mikeandwan.us
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pull always --pod {{ maw_revgeo__pod }} --volume {{ maw_revgeo__volume }}:/results:rw,z --env-file {{ maw_revgeo__envfile }} {{ maw_revgeo__image }}
+ExecStart=podman run -it --rm --pull always --pod {{ maw_revgeo__pod }} --name {{ maw_revgeo__container }} --volume {{ maw_revgeo__volume }}:/results:rw,z --env-file {{ maw_revgeo__envfile }} {{ maw_revgeo__image }}

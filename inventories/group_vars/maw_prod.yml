@@ -261,6 +261,7 @@ maw_revgeo__systemd_dir: "{{ maw__systemd_dir }}"
 maw_revgeo__service: "{{ maw__env }}-maw-reverse-geocoder"
 maw_revgeo__pod: "{{ maw__podman_pod }}"
 maw_revgeo__image: docker.io/aerisg222/maw-reverse-geocode:latest
+maw_revgeo__container: "{{ maw__env }}-maw-reverse-geocoder"
 maw_revgeo__volume: "{{ maw__env }}-maw-reverse-geocode"
 maw_revgeo__volume_to_migrate: maw-reverse-geocode
 maw_revgeo__envfile: "{{ maw__podman_env_dir }}/maw-reverse-geocode.env"
