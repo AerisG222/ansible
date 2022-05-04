@@ -1,0 +1,57 @@
+---
+- name: delete current backup directory on controller
+  ansible.builtin.file:
+    path: "{{ podman_vol_bu__control_dir }}"
+    state: absent
+  delegate_to: localhost
+
+- name: make sure remote temp directory does not exist
+  ansible.builtin.file:
+    path: "{{ podman_vol_bu__temp_remote_dir }}"
+    state: absent
+    mode: u+rwx
+
+- name: Ensure temp dir exists
+  ansible.builtin.file:
+    path: "{{ podman_vol_bu__temp_remote_dir }}"
+    state: directory
+    mode: u+rw
+
+- name: copy data from volume
+  ansible.builtin.include_role:
+    name: podman_copy
+  vars:
+    pod_cp__src_dir_or_volume: "{{ podman_vol_bu__volume }}"
+    pod_cp__dest_dir_or_volume: "{{ podman_vol_bu__temp_remote_dir }}"
+
+- name: find all files that were copied from volume
+  ansible.builtin.find:
+    paths: "{{ podman_vol_bu__temp_remote_dir }}"
+    recurse: true
+  register: _podman_vol_bu__find_result
+
+- name: copy files to controller
+  ansible.builtin.fetch:
+    dest: "{{ podman_vol_bu__control_dir }}"
+    src: "{{ _podman_vol_bu__file.path }}"
+  loop_control:
+    loop_var: _podman_vol_bu__file
+  loop: "{{ _podman_vol_bu__find_result.files }}"
+
+- name: finally, delete remote temp directory
+  ansible.builtin.file:
+    path: "{{ podman_vol_bu__temp_remote_dir }}"
+    state: absent
+
+- name: move files on controller to the root backup dir
+  ansible.builtin.command:
+    cmd: "mv {{ item }} {{ podman_vol_bu__control_dir }}"
+  delegate_to: localhost
+  with_fileglob:
+    - "{{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}{{ podman_vol_bu__temp_remote_dir }}/*"
+
+- name: delete host specific directories created
+  ansible.builtin.file:
+    path: "{{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}"
+    state: absent
+  delegate_to: localhost

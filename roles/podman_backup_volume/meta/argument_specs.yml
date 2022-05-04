@@ -1,0 +1,29 @@
+---
+argument_specs:
+  main:
+    short_description: This role is responsible backing up the full contents of a volume to a directory on the controller
+    options:
+      podman_vol_bu__hostname:
+        type: str
+        required: true
+        description: Name of the existing server where the production volume is located
+
+      podman_vol_bu__username:
+        type: str
+        required: true
+        description: Name of the user that hosts the production volume
+
+      podman_vol_bu__volume:
+        type: str
+        required: true
+        description: Name of the current production volume to backup
+
+      podman_vol_bu__control_dir:
+        type: str
+        required: true
+        description: Absolute path to the backup directory on the controller for this volume
+
+      podman_vol_bu__temp_remote_dir:
+        type: str
+        required: true
+        description: Absolute path to the temp volume backup directory on the production server

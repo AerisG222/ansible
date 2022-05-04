@@ -15,8 +15,14 @@
   when: maw_prod_gdrive_creds_bu__use_existing_backups
 
 - name: perform backup if needed
-  ansible.builtin.include_tasks:
-    file: backup.yml
+  ansible.builtin.include_role:
+    name: podman_backup_volume
+  vars:
+    podman_vol_bu__hostname: "{{ maw_prod_gdrive_creds_bu__hostname }}"
+    podman_vol_bu__username: "{{ maw_prod_gdrive_creds_bu__username }}"
+    podman_vol_bu__volume: "{{ maw_prod_gdrive_creds_bu__volume }}"
+    podman_vol_bu__control_dir: "{{ maw_prod_gdrive_creds_bu__control_dir }}"
+    podman_vol_bu__temp_remote_dir: "{{ maw_prod_gdrive_creds_bu__temp_remote_dir }}"
   when: >
     (not maw_prod_gdrive_creds_bu__use_existing_backups)
     or
