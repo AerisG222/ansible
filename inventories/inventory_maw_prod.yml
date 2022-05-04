@@ -2,6 +2,10 @@
 all:
   children:
 
+    current_prod:
+      hosts:
+        tifa:
+
     maw_prod:
       hosts:
         tifa:
