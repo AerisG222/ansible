@@ -62,16 +62,32 @@ maw__sql_password_solr: "{{ vault_password_sql_solr }}"
 # google api key (maps / reverse geocode)
 maw__google_api_key: "{{ vault_google_api_key }}"
 
-# current live site backup details (assumes ssh + key auth configured)
+# current live site postgres backup (assumes ssh + key auth configured)
 maw_prod_pg_bu__hostname: tifa
 maw_prod_pg_bu__username: svc_www_maw
 maw_prod_pg_bu__use_existing_backups: false
 maw_prod_pg_bu__pod: maw-pod
 maw_prod_pg_bu__image: docker.io/postgres:13-alpine
 maw_prod_pg_bu__container: "{{ maw_env }}-ansible-postgres-backup"
-maw_prod_pg_bu__envfile: /home/svc_www_maw/maw-postgres.env
+maw_prod_pg_bu__envfile: /home/svc_www_maw/maw-postgres-backup.env
 maw_prod_pg_bu__control_dir: "{{ controller_maw_root }}/db_backups"
 maw_prod_pg_bu__temp_remote_dir: "{{ remote_home_dir }}/_tmp_ansible_postgres_backup"
+
+# current live site gdrive credentials backup
+maw_prod_gdrive_creds_bu__hostname: tifa
+maw_prod_gdrive_creds_bu__username: svc_www_maw
+maw_prod_gdrive_creds_bu__use_existing_backups: false
+maw_prod_gdrive_creds_bu__volume: "maw-gdrive-creds"
+maw_prod_gdrive_creds_bu__control_dir: "/home/mmorano/ansible/gdrive_backup"
+maw_prod_gdrive_creds_bu__temp_remote_dir: /home/svc_www_maw/_tmp_ansible_gdrive_backup
+
+# current live site google credentials backup
+maw_prod_google_creds_bu__hostname: tifa
+maw_prod_google_creds_bu__username: svc_www_maw
+maw_prod_google_creds_bu__use_existing_backups: false
+maw_prod_google_creds_bu__volume: "maw-google-creds"
+maw_prod_google_creds_bu__control_dir: "/home/mmorano/ansible/google_backup"
+maw_prod_google_creds_bu__temp_remote_dir: /home/svc_www_maw/_tmp_ansible_google_backup
 
 # maw host settings
 maw_host__hostnames:
