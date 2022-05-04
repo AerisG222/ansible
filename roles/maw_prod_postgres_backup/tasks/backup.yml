@@ -129,19 +129,15 @@
     path: "{{ maw_prod_pg_bu__temp_remote_dir }}"
     state: absent
 
-- name: set local backup dir
-  ansible.builtin.set_fact:
-    _maw_prod_pg_bu__local_dir: "{{ maw_prod_pg_bu__control_dir }}/{{ maw_prod_pg_bu__hostname }}{{ maw_prod_pg_bu__temp_remote_dir }}"
-
 - name: move files on controller to the root backup dir
   ansible.builtin.command:
     cmd: "mv {{ item }} {{ maw_prod_pg_bu__control_dir }}"
   delegate_to: localhost
   with_fileglob:
-        - "{{ _maw_prod_pg_bu__local_dir }}/*"
+        - "{{ maw_prod_pg_bu__control_dir }}/{{ maw_prod_pg_bu__hostname }}{{ maw_prod_pg_bu__temp_remote_dir }}/*"
 
 - name: delete local backup dir
   ansible.builtin.file:
-    path: "{{ _maw_prod_pg_bu__local_dir }}"
+    path: "{{ maw_prod_pg_bu__control_dir }}/{{ maw_prod_pg_bu__hostname }}"
     state: absent
   delegate_to: localhost
