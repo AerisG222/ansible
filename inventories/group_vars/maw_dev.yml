@@ -83,6 +83,14 @@ maw_prod_google_creds_bu__volume: "maw-google-creds"
 maw_prod_google_creds_bu__control_dir: "/home/mmorano/ansible/google_backup"
 maw_prod_google_creds_bu__temp_remote_dir: /home/svc_www_maw/_tmp_ansible_google_backup
 
+# current live site uploads backup
+maw_prod_uploads_bu__hostname: tifa
+maw_prod_uploads_bu__username: svc_www_maw
+maw_prod_uploads_bu__use_existing_backups: true
+maw_prod_uploads_bu__volume: maw-uploads
+maw_prod_uploads_bu__control_dir: "/home/mmorano/ansible/upload_backup_test"
+maw_prod_uploads_bu__temp_remote_dir: /home/svc_www_maw/_tmp_ansible_upload_backup
+
 # maw host settings
 maw_host__hostnames:
   - "{{ maw__fqdn_naked }}"
