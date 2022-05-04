@@ -12,6 +12,7 @@ asset_dir_root: /srv/www/website_assets
 # shared maw settings
 maw__env: test
 maw__aspnet_env: test
+maw__do_uploads_backup: false
 
 maw__fqdn_naked: test.mikeandwan.us
 maw__fqdn_api: test.api.mikeandwan.us

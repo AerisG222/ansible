@@ -15,6 +15,7 @@ asset_dir_root: /srv/www/website_assets
 # maw
 maw__env: prod
 maw__aspnet_env: production
+maw__do_uploads_backup: true
 
 maw__fqdn_naked: mikeandwan.us
 maw__fqdn_api: api.mikeandwan.us
