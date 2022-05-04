@@ -57,15 +57,15 @@ maw__sql_password_solr: "{{ vault_password_sql_solr }}"
 maw__google_api_key: "{{ vault_google_api_key }}"
 
 # current live site backup details (assumes ssh + key auth configured)
-maw_prod_backup__hostname: tifa
-maw_prod_backup__username: svc_www_maw
-maw_prod_backup__use_existing_backups: true
-maw_prod_backup__postgres_pod: maw-pod
-maw_prod_backup__postgres_image: docker.io/postgres:{{ maw_postgres__version }}-alpine
-maw_prod_backup__postgres_container: "{{ maw_env }}-ansible-postgres-backup"
-maw_prod_backup__postgres_envfile: /home/svc_www_maw/maw-postgres.env
-maw_prod_backup__control_dir_postgres: "{{ controller_maw_root }}/db_backups"
-maw_prod_backup__temp_remote_dir_postgres: "{{ remote_home_dir }}/_tmp_ansible_postgres_backup"
+maw_prod_pg_bu__hostname: tifa
+maw_prod_pg_bu__username: svc_www_maw
+maw_prod_pg_bu__use_existing_backups: true
+maw_prod_pg_bu__pod: maw-pod
+maw_prod_pg_bu__image: docker.io/postgres:13-alpine
+maw_prod_pg_bu__container: "{{ maw_env }}-ansible-postgres-backup"
+maw_prod_pg_bu__envfile: /home/svc_www_maw/maw-postgres.env
+maw_prod_pg_bu__control_dir: "{{ controller_maw_root }}/db_backups"
+maw_prod_pg_bu__temp_remote_dir: "{{ remote_home_dir }}/_tmp_ansible_postgres_backup"
 
 # maw host settings
 maw_host__hostnames:

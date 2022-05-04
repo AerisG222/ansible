@@ -1,0 +1,35 @@
+---
+- name: see if we already have postgres backups
+  block:
+    - name: look for role backup
+      ansible.builtin.stat:
+        path: "{{ maw_prod_pg_bu__control_dir }}/roles.sql"
+      register: _maw_prod_pg_bu__roles_result
+      delegate_to: localhost
+
+    - name: look for idsrv backup
+      ansible.builtin.stat:
+        path: "{{ maw_prod_pg_bu__control_dir }}/idsrv.dump"
+      register: _maw_prod_pg_bu__idsrv_result
+      delegate_to: localhost
+
+    - name: look for maw_website backup
+      ansible.builtin.stat:
+        path: "{{ maw_prod_pg_bu__control_dir }}/maw_website.dump"
+      register: _maw_prod_pg_bu__maw_website_result
+      delegate_to: localhost
+  when: maw_prod_pg_bu__use_existing_backups
+
+- name: perform backup if needed
+  ansible.builtin.include_tasks:
+    file: backup.yml
+  when: >
+    (not maw_prod_pg_bu__use_existing_backups)
+    or
+    (
+      (not _maw_prod_pg_bu__roles_result.stat.exists)
+      and
+      (not _maw_prod_pg_bu__idsrv_result.stat.exists)
+      and
+      (not _maw_prod_pg_bu__maw_website_result.stat.exists)
+    )

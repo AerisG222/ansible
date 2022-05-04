@@ -1,32 +1,32 @@
 ---
 - name: delete current backup directory on controller
   ansible.builtin.file:
-    path: "{{ maw_prod_backup__control_dir_postgres }}"
+    path: "{{ maw_prod_pg_bu__control_dir }}"
     state: absent
-  when: not maw_prod_backup__use_existing_backups
+  when: not maw_prod_pg_bu__use_existing_backups
   delegate_to: localhost
 
 - name: make sure remote temp directory does not exist
   ansible.builtin.file:
-    path: "{{ maw_prod_backup__temp_remote_dir_postgres }}"
+    path: "{{ maw_prod_pg_bu__temp_remote_dir }}"
     state: absent
     mode: u+rwx
 
 - name: ensure remote temp directory exists
   ansible.builtin.file:
-    path: "{{ maw_prod_backup__temp_remote_dir_postgres }}"
+    path: "{{ maw_prod_pg_bu__temp_remote_dir }}"
     state: directory
     mode: u+rwx
 
 - name: backup roles to temp directory
   containers.podman.podman_container:
-    pod: "{{ maw_prod_backup__postgres_pod }}"
-    image: "{{ maw_prod_backup__postgres_image }}"
-    name: "{{ maw_prod_backup__postgres_container }}"
-    env_file: "{{ maw_prod_backup__postgres_envfile }}"
+    pod: "{{ maw_prod_pg_bu__pod }}"
+    image: "{{ maw_prod_pg_bu__image }}"
+    name: "{{ maw_prod_pg_bu__container }}"
+    env_file: "{{ maw_prod_pg_bu__envfile }}"
     interactive: true
     volume:
-      - "{{ maw_prod_backup__temp_remote_dir_postgres }}:/pg_backup:rw,z"
+      - "{{ maw_prod_pg_bu__temp_remote_dir }}:/pg_backup:rw,z"
     command:
       - pg_dumpall
       - '-h'
@@ -42,23 +42,23 @@
   ansible.builtin.include_role:
     name: podman_wait_for_stop
   vars:
-    pod_stop__container_name: "{{ maw_prod_backup__postgres_container }}"
-    pod_stop__result_varname: _maw_prod_backup__result
+    pod_stop__container_name: "{{ maw_prod_pg_bu__container }}"
+    pod_stop__result_varname: _maw_prod_pg_bu__result
 
 - name: fail if role backup failed
   ansible.builtin.fail:
     msg: roles were not successfully backed up
-  failed_when: _maw_prod_backup__result | int != 0
+  failed_when: _maw_prod_pg_bu__result | int != 0
 
 - name: backup idsrv to temp directory
   containers.podman.podman_container:
-    pod: "{{ maw_prod_backup__postgres_pod }}"
-    image: "{{ maw_prod_backup__postgres_image }}"
-    name: "{{ maw_prod_backup__postgres_container }}"
-    env_file: "{{ maw_prod_backup__postgres_envfile }}"
+    pod: "{{ maw_prod_pg_bu__pod }}"
+    image: "{{ maw_prod_pg_bu__image }}"
+    name: "{{ maw_prod_pg_bu__container }}"
+    env_file: "{{ maw_prod_pg_bu__envfile }}"
     interactive: true
     volume:
-      - "{{ maw_prod_backup__temp_remote_dir_postgres }}:/pg_backup:rw,z"
+      - "{{ maw_prod_pg_bu__temp_remote_dir }}:/pg_backup:rw,z"
     command:
       - pg_dump
       - '-h'
@@ -74,23 +74,23 @@
   ansible.builtin.include_role:
     name: podman_wait_for_stop
   vars:
-    pod_stop__container_name: "{{ maw_prod_backup__postgres_container }}"
-    pod_stop__result_varname: _maw_prod_backup__result
+    pod_stop__container_name: "{{ maw_prod_pg_bu__container }}"
+    pod_stop__result_varname: _maw_prod_pg_bu__result
 
 - name: fail if idsrv backup failed
   ansible.builtin.fail:
     msg: idsrv database was not successfully backed up
-  failed_when: _maw_prod_backup__result | int != 0
+  failed_when: _maw_prod_pg_bu__result | int != 0
 
 - name: backup maw_website to temp directory
   containers.podman.podman_container:
-    pod: "{{ maw_prod_backup__postgres_pod }}"
-    image: "{{ maw_prod_backup__postgres_image }}"
-    name: "{{ maw_prod_backup__postgres_container }}"
-    env_file: "{{ maw_prod_backup__postgres_envfile }}"
+    pod: "{{ maw_prod_pg_bu__pod }}"
+    image: "{{ maw_prod_pg_bu__image }}"
+    name: "{{ maw_prod_pg_bu__container }}"
+    env_file: "{{ maw_prod_pg_bu__envfile }}"
     interactive: true
     volume:
-      - "{{ maw_prod_backup__temp_remote_dir_postgres }}:/pg_backup:rw,z"
+      - "{{ maw_prod_pg_bu__temp_remote_dir }}:/pg_backup:rw,z"
     command:
       - pg_dump
       - '-h'
@@ -106,43 +106,43 @@
   ansible.builtin.include_role:
     name: podman_wait_for_stop
   vars:
-    pod_stop__container_name: "{{ maw_prod_backup__postgres_container }}"
-    pod_stop__result_varname: _maw_prod_backup__result
+    pod_stop__container_name: "{{ maw_prod_pg_bu__container }}"
+    pod_stop__result_varname: _maw_prod_pg_bu__result
 
 - name: fail if maw_website backup failed
   ansible.builtin.fail:
     msg: maw_website database was not successfully backed up
-  failed_when: _maw_prod_backup__result | int != 0
+  failed_when: _maw_prod_pg_bu__result | int != 0
 
 - name: copy backup directory to controller
   ansible.builtin.fetch:
-    dest: "{{ maw_prod_backup__control_dir_postgres }}"
-    src: "{{ _maw_prod_backup__file }}"
+    dest: "{{ maw_prod_pg_bu__control_dir }}"
+    src: "{{ _maw_prod_pg_bu__file }}"
   loop_control:
-    loop_var: _maw_prod_backup__file
+    loop_var: _maw_prod_pg_bu__file
   loop:
-    - "{{ maw_prod_backup__temp_remote_dir_postgres }}/roles.sql"
-    - "{{ maw_prod_backup__temp_remote_dir_postgres }}/idsrv.dump"
-    - "{{ maw_prod_backup__temp_remote_dir_postgres }}/maw_website.dump"
+    - "{{ maw_prod_pg_bu__temp_remote_dir }}/roles.sql"
+    - "{{ maw_prod_pg_bu__temp_remote_dir }}/idsrv.dump"
+    - "{{ maw_prod_pg_bu__temp_remote_dir }}/maw_website.dump"
 
 - name: finally, delete remote temp directory
   ansible.builtin.file:
-    path: "{{ maw_prod_backup__temp_remote_dir_postgres }}"
+    path: "{{ maw_prod_pg_bu__temp_remote_dir }}"
     state: absent
 
 - name: set local backup dir
   ansible.builtin.set_fact:
-    _maw_prod_backup__local_dir: "{{ maw_prod_backup__control_dir_postgres }}/{{ maw_prod_backup__hostname }}{{ maw_prod_backup__temp_remote_dir_postgres }}"
+    _maw_prod_pg_bu__local_dir: "{{ maw_prod_pg_bu__control_dir }}/{{ maw_prod_pg_bu__hostname }}{{ maw_prod_pg_bu__temp_remote_dir }}"
 
 - name: move files on controller to the root backup dir
   ansible.builtin.command:
-    cmd: "mv {{ item }} {{ maw_prod_backup__control_dir_postgres }}"
+    cmd: "mv {{ item }} {{ maw_prod_pg_bu__control_dir }}"
   delegate_to: localhost
   with_fileglob:
-        - "{{ _maw_prod_backup__local_dir }}/*"
+        - "{{ _maw_prod_pg_bu__local_dir }}/*"
 
 - name: delete local backup dir
   ansible.builtin.file:
-    path: "{{ _maw_prod_backup__local_dir }}"
+    path: "{{ _maw_prod_pg_bu__local_dir }}"
     state: absent
   delegate_to: localhost
