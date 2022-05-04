@@ -3,7 +3,6 @@
   ansible.builtin.file:
     path: "{{ maw_prod_pg_bu__control_dir }}"
     state: absent
-  when: not maw_prod_pg_bu__use_existing_backups
   delegate_to: localhost
 
 - name: make sure remote temp directory does not exist
