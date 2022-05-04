@@ -1,0 +1,14 @@
+---
+- name: take current backup of postgres roles and databases
+  ansible.builtin.include_tasks:
+    file: postgres.yml
+
+# - name: take current backup of gdrive credentials
+#   ansible.builtin.include_tasks:
+#     file: gdrive_creds.yml
+
+# - name: take current backup of google credentials
+#   ansible.builtin.include_tasks:
+#     file: google_creds.yml
+
+# todo: uploads?  assets?

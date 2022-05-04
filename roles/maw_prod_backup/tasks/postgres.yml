@@ -1,0 +1,131 @@
+---
+- name: delete current backup directory on controller
+  ansible.builtin.file:
+    path: "{{ maw_prod_backup__control_dir_postgres }}"
+    state: absent
+  when: not maw_prod_backup__use_existing_backups
+  delegate_to: localhost
+
+- name: make sure remote temp directory does not exist
+  ansible.builtin.file:
+    path: "{{ maw_prod_backup__temp_remote_dir_postgres }}"
+    state: absent
+    mode: u+rwx
+
+- name: ensure remote temp directory exists
+  ansible.builtin.file:
+    path: "{{ maw_prod_backup__temp_remote_dir_postgres }}"
+    state: directory
+    mode: u+rwx
+
+- name: backup roles to temp directory
+  containers.podman.podman_container:
+    pod: "{{ maw_prod_backup__postgres_pod }}"
+    image: "{{ maw_prod_backup__postgres_image }}"
+    name: "{{ maw_prod_backup__postgres_container }}"
+    env_file: "{{ maw_prod_backup__postgres_envfile }}"
+    interactive: true
+    volume:
+      - "{{ maw_prod_backup__temp_remote_dir_postgres }}:/pg_backup:rw,z"
+    command:
+      - pg_dumpall
+      - '-h'
+      - localhost
+      - '-U'
+      - postgres
+      - '--roles-only'
+      - '--no-role-passwords'
+      - '--file'
+      - '/pg_backup/roles.sql'
+
+- name: wait for role backup to complete
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
+  vars:
+    pod_stop__container_name: "{{ maw_prod_backup__postgres_container }}"
+    pod_stop__result_varname: _maw_prod_backup__result
+
+- name: fail if role backup failed
+  ansible.builtin.fail:
+    msg: roles were not successfully backed up
+  failed_when: _maw_prod_backup__result | int != 0
+
+- name: backup idsrv to temp directory
+  containers.podman.podman_container:
+    pod: "{{ maw_prod_backup__postgres_pod }}"
+    image: "{{ maw_prod_backup__postgres_image }}"
+    name: "{{ maw_prod_backup__postgres_container }}"
+    env_file: "{{ maw_prod_backup__postgres_envfile }}"
+    interactive: true
+    volume:
+      - "{{ maw_prod_backup__temp_remote_dir_postgres }}:/pg_backup:rw,z"
+    command:
+      - pg_dump
+      - '-h'
+      - localhost
+      - '-U'
+      - postgres
+      - '-Fc'
+      - idsrv
+      - '--file'
+      - '/pg_backup/idsrv.dump'
+
+- name: wait for idsrv backup to complete
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
+  vars:
+    pod_stop__container_name: "{{ maw_prod_backup__postgres_container }}"
+    pod_stop__result_varname: _maw_prod_backup__result
+
+- name: fail if idsrv backup failed
+  ansible.builtin.fail:
+    msg: idsrv database was not successfully backed up
+  failed_when: _maw_prod_backup__result | int != 0
+
+- name: backup maw_website to temp directory
+  containers.podman.podman_container:
+    pod: "{{ maw_prod_backup__postgres_pod }}"
+    image: "{{ maw_prod_backup__postgres_image }}"
+    name: "{{ maw_prod_backup__postgres_container }}"
+    env_file: "{{ maw_prod_backup__postgres_envfile }}"
+    interactive: true
+    volume:
+      - "{{ maw_prod_backup__temp_remote_dir_postgres }}:/pg_backup:rw,z"
+    command:
+      - pg_dump
+      - '-h'
+      - localhost
+      - '-U'
+      - postgres
+      - '-Fc'
+      - maw_website
+      - '--file'
+      - '/pg_backup/maw_website.dump'
+
+- name: wait for maw_website backup to complete
+  ansible.builtin.include_role:
+    name: podman_wait_for_stop
+  vars:
+    pod_stop__container_name: "{{ maw_prod_backup__postgres_container }}"
+    pod_stop__result_varname: _maw_prod_backup__result
+
+- name: fail if maw_website backup failed
+  ansible.builtin.fail:
+    msg: maw_website database was not successfully backed up
+  failed_when: _maw_prod_backup__result | int != 0
+
+- name: copy backup directory to controller
+  ansible.builtin.fetch:
+    dest: "{{ maw_prod_backup__control_dir_postgres }}"
+    src: "{{ _maw_prod_backup__file }}"
+  loop_control:
+    loop_var: _maw_prod_backup__file
+  loop:
+    - "{{ maw_prod_backup__temp_remote_dir_postgres }}/roles.sql"
+    - "{{ maw_prod_backup__temp_remote_dir_postgres }}/idsrv.dump"
+    - "{{ maw_prod_backup__temp_remote_dir_postgres }}/maw_website.dump"
+
+- name: finally, delete remote temp directory
+  ansible.builtin.file:
+    path: "{{ maw_prod_backup__temp_remote_dir_postgres }}"
+    state: absent

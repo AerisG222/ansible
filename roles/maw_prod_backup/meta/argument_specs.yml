@@ -1,0 +1,49 @@
+---
+argument_specs:
+  main:
+    short_description: This role is responsible from getting backups from production and saving them to the control server
+    options:
+      maw_prod_backup__hostname:
+        type: str
+        required: true
+        description: Name of the existing server where the production databases are located
+
+      maw_prod_backup__username:
+        type: str
+        required: true
+        description: Name of the user that hosts the postgres containers / services
+
+      maw_prod_backup__use_existing_backups:
+        type: bool
+        required: true
+        description: Specifies if this process should be skipped if backups already exist on the control node
+
+      maw_prod_backup__postgres_pod:
+        type: str
+        required: true
+        description: Name of the pod running the production postgres container
+
+      maw_prod_backup__postgres_image:
+        type: str
+        required: true
+        description: Name of the postgres image to use to dump roles and databases
+
+      maw_prod_backup__postgres_container:
+        type: str
+        required: true
+        description: Name of the temp postgres container that will dump roles and databases
+
+      maw_prod_backup__postgres_envfile:
+        type: str
+        required: true
+        description: Absolute path to the current production postgres envfile
+
+      maw_prod_backup__control_dir_postgres:
+        type: str
+        required: true
+        description: Absolute path to the postgres backup directory on the controller
+
+      maw_prod_backup__temp_remote_dir_postgres:
+        type: str
+        required: true
+        description: Absolute pat to the temp postgres backup directory on the production server

@@ -56,6 +56,17 @@ maw__sql_password_solr: "{{ vault_password_sql_solr }}"
 # google api key (maps / reverse geocode)
 maw__google_api_key: "{{ vault_google_api_key }}"
 
+# current live site backup details (assumes ssh + key auth configured)
+maw_prod_backup__hostname: tifa
+maw_prod_backup__username: svc_www_maw
+maw_prod_backup__use_existing_backups: true
+maw_prod_backup__postgres_pod: maw-pod
+maw_prod_backup__postgres_image: docker.io/postgres:{{ maw_postgres__version }}-alpine
+maw_prod_backup__postgres_container: "{{ maw_env }}-ansible-postgres-backup"
+maw_prod_backup__postgres_envfile: /home/svc_www_maw/maw-postgres.env
+maw_prod_backup__control_dir_postgres: "{{ controller_maw_root }}/db_backups"
+maw_prod_backup__temp_remote_dir_postgres: "{{ remote_home_dir }}/_tmp_ansible_postgres_backup"
+
 # maw host settings
 maw_host__hostnames:
   - "{{ maw__fqdn_naked }}"

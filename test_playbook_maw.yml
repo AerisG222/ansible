@@ -1,6 +1,7 @@
 ---
 - name: Configure mikeandwan.us prod environment
   hosts: maw_prod
+  gather_facts: false
   vars_files:
     - "{{ controller_secrets_file }}"
 
@@ -174,10 +175,28 @@
     #     maw_solridx__sql_password: pwd
     #     maw_solridx__calendar: '00:00:00'
 
-    - name: test setting up sshd
+    # - name: test setting up sshd
+    #   ansible.builtin.include_role:
+    #     name: sshd
+    #   vars:
+    #     sshd__allow_users:
+    #       - "{{ ansible_user }}"
+    #       - svc_ddclient
+
+    - name: test running postgres backups
       ansible.builtin.include_role:
-        name: sshd
+        name: maw_prod_backup
+        apply:
+          delegate_to: tifa
       vars:
-        sshd__allow_users:
-          - "{{ ansible_user }}"
-          - svc_ddclient
+        ansible_user: svc_www_maw
+        maw_prod_backup__hostname: tifa
+        maw_prod_backup__username: svc_www_maw
+        maw_prod_backup__use_existing_backups: false
+        maw_prod_backup__postgres_pod: maw-pod
+        maw_prod_backup__postgres_image: docker.io/postgres:13-alpine
+        maw_prod_backup__postgres_container: "dev-ansible-postgres-backup"
+        maw_prod_backup__postgres_envfile: /home/svc_www_maw/maw-postgres-backup.env
+        maw_prod_backup__control_dir_postgres: "/home/mmorano/ansible/db_backup_test"
+        maw_prod_backup__temp_remote_dir_postgres: /home/svc_www_maw/_tmp_ansible_postgres_backup
+
