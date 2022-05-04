@@ -5,20 +5,32 @@
     - "{{ controller_secrets_file }}"
 
   tasks:
-    - name: test running postgres backups
+    # - name: test running postgres backups
+    #   ansible.builtin.include_role:
+    #     name: maw_prod_postgres_backup
+    #   vars:
+    #     ansible_user: svc_www_maw
+    #     maw_prod_pg_bu__hostname: tifa
+    #     maw_prod_pg_bu__username: svc_www_maw
+    #     maw_prod_pg_bu__use_existing_backups: true
+    #     maw_prod_pg_bu__pod: maw-pod
+    #     maw_prod_pg_bu__image: docker.io/postgres:13-alpine
+    #     maw_prod_pg_bu__container: "dev-ansible-postgres-backup"
+    #     maw_prod_pg_bu__envfile: /home/svc_www_maw/maw-postgres-backup.env
+    #     maw_prod_pg_bu__control_dir: "/home/mmorano/ansible/db_backup_test"
+    #     maw_prod_pg_bu__temp_remote_dir: /home/svc_www_maw/_tmp_ansible_postgres_backup
+
+    - name: test running gdrive backups
       ansible.builtin.include_role:
-        name: maw_prod_postgres_backup
+        name: maw_prod_gdrive_creds_backup
       vars:
         ansible_user: svc_www_maw
-        maw_prod_pg_bu__hostname: tifa
-        maw_prod_pg_bu__username: svc_www_maw
-        maw_prod_pg_bu__use_existing_backups: true
-        maw_prod_pg_bu__pod: maw-pod
-        maw_prod_pg_bu__image: docker.io/postgres:13-alpine
-        maw_prod_pg_bu__container: "dev-ansible-postgres-backup"
-        maw_prod_pg_bu__envfile: /home/svc_www_maw/maw-postgres-backup.env
-        maw_prod_pg_bu__control_dir: "/home/mmorano/ansible/db_backup_test"
-        maw_prod_pg_bu__temp_remote_dir: /home/svc_www_maw/_tmp_ansible_postgres_backup
+        maw_prod_gdrive_creds_bu__hostname: tifa
+        maw_prod_gdrive_creds_bu__username: svc_www_maw
+        maw_prod_gdrive_creds_bu__use_existing_backups: true
+        maw_prod_gdrive_creds_bu__volume: "maw-gdrive-creds"
+        maw_prod_gdrive_creds_bu__control_dir: "/home/mmorano/ansible/gdrive_backup_test"
+        maw_prod_gdrive_creds_bu__temp_remote_dir: /home/svc_www_maw/_tmp_ansible_gdrive_backup
 
 - name: Configure mikeandwan.us prod environment
   hosts: maw_prod

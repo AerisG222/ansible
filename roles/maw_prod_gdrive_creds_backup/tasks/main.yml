@@ -1,0 +1,27 @@
+---
+- name: see if we already have gdrive backups
+  block:
+    - name: look for credentials backup
+      ansible.builtin.stat:
+        path: "{{ maw_prod_gdrive_creds_bu__control_dir }}/credentials.json"
+      register: _maw_prod_gdrive_creds_bu__credentials_result
+      delegate_to: localhost
+
+    - name: look for token backup
+      ansible.builtin.stat:
+        path: "{{ maw_prod_gdrive_creds_bu__control_dir }}/token.json"
+      register: _maw_prod_gdrive_creds_bu__token_result
+      delegate_to: localhost
+  when: maw_prod_gdrive_creds_bu__use_existing_backups
+
+- name: perform backup if needed
+  ansible.builtin.include_tasks:
+    file: backup.yml
+  when: >
+    (not maw_prod_gdrive_creds_bu__use_existing_backups)
+    or
+    (
+      (not _maw_prod_gdrive_creds_bu__credentials_result.stat.exists)
+      and
+      (not _maw_prod_gdrive_creds_bu__token_result.stat.exists)
+    )
