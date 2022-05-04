@@ -44,11 +44,9 @@
     state: absent
 
 - name: move files on controller to the root backup dir
-  ansible.builtin.command:
-    cmd: "mv {{ item }} {{ podman_vol_bu__control_dir }}"
+  ansible.builtin.shell:
+    cmd: "mv {{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}{{ podman_vol_bu__temp_remote_dir }}/* {{ podman_vol_bu__control_dir }}"
   delegate_to: localhost
-  with_fileglob:
-    - "{{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}{{ podman_vol_bu__temp_remote_dir }}/*"
 
 - name: delete host specific directories created
   ansible.builtin.file:
