@@ -2,14 +2,8 @@
   block:
     - name: look for credentials backup
       ansible.builtin.stat:
-        path: "{{ maw_prod_google_creds_bu__control_dir }}/credentials.json"
+        path: "{{ maw_prod_google_creds_bu__control_dir }}/www_emailer.json"
       register: _maw_prod_google_creds_bu__credentials_result
-      delegate_to: localhost
-
-    - name: look for token backup
-      ansible.builtin.stat:
-        path: "{{ maw_prod_google_creds_bu__control_dir }}/token.json"
-      register: _maw_prod_google_creds_bu__token_result
       delegate_to: localhost
   when: maw_prod_google_creds_bu__use_existing_backups
 
