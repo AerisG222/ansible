@@ -1,7 +1,8 @@
 ---
 - name: Configure mikeandwan.us dev environment
-  hosts: maw_dev
+  hosts: maw
   vars_files:
+    - vars/maw_dev.yml
     - "{{ controller_secrets_file }}"
     - vars/maw_vars.yml
 

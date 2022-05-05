@@ -2,12 +2,17 @@
 . ./_shared.sh
 
 MAW_ENV=$(get_maw_env)
-HOST=$(get_value "Workstation hostname (must exist in inventory file): " 'n')
+HOST=$(get_value "Hostname (must exist in inventory file): " 'n')
 FIRST_RUN=$(get_value "First Run - need to prompt for sshd password?  (y/N): " 'n' 'n')
 VERBOSE=$(get_value "Verbose?  (y/N): " 'n' 'n')
-INVENTORY="inventories/inventory_maw_${MAW_ENV}.yml"
 PLAYBOOK="playbook_maw_${MAW_ENV}.yml"
 PLAYBOOK_ARGS=("--ask-become-pass")
+
+if [ "${MAW_ENV}" == "prod" ]; then
+    INVENTORY="inventories/inventory_prod.yml"
+else
+    INVENTORY="inventories/inventory_nonprod.yml"
+fi
 
 if [ "${FIRST_RUN}" == 'y' ]; then
     PLAYBOOK_ARGS+=("--ask-pass")

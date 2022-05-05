@@ -1,0 +1,26 @@
+---
+all:
+  children:
+
+    ddclient:
+      hosts:
+        lvmtest:
+        vmtest2:
+
+    maw_current_prod:
+      hosts:
+        tifa:
+
+    maw:
+      hosts:
+        barett:
+        aeris:
+        vincent:
+
+    workstations:
+      hosts:
+        barett:
+        aeris:
+        vincent:
+        lvmwstest:
+        vmwstest:

@@ -2,11 +2,15 @@
 all:
   children:
 
-    current_prod:
+    ddclient:
       hosts:
         tifa:
 
-    maw_prod:
+    maw_current_prod:
+      hosts:
+        tifa:
+
+    maw:
       hosts:
         tifa:
         vmtest2:

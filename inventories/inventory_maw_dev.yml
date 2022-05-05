@@ -1,9 +1,0 @@
----
-all:
-  children:
-
-    maw_dev:
-      hosts:
-        barett:
-        aeris:
-        vincent:

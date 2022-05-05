@@ -1,8 +1,0 @@
----
-all:
-  children:
-
-    ddclient:
-      hosts:
-        lvmtest:
-        vmtest2:

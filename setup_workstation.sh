@@ -1,10 +1,10 @@
 #!/bin/bash
 . ./_shared.sh
 
-HOST=$(get_value "Workstation hostname (must exist in 'inventory/inventory_workstation.yml' inventory file): " 'n')
+HOST=$(get_value "Workstation hostname: " 'n')
 
 ansible-playbook \
     --ask-become-pass \
-    --inventory inventories/inventory_workstation.yml \
+    --inventory inventories/inventory_nonprod.yml \
     --limit "${HOST}" \
     playbook_workstation.yml

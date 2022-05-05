@@ -1,7 +1,8 @@
 ---
 - name: Configure mikeandwan.us test environment
-  hosts: maw_test
+  hosts: maw
   vars_files:
+    - vars/maw_test.yml
     - "{{ controller_secrets_file }}"
     - vars/maw_vars.yml
 
