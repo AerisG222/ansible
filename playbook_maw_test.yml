@@ -3,9 +3,9 @@
   hosts: maw_test
   vars_files:
     - "{{ controller_secrets_file }}"
+    - vars/maw_vars.yml
 
   tasks:
-
     - name: Configure mikeandwan.us
       ansible.builtin.include_role:
         name: mikeandwan_us

@@ -3,6 +3,7 @@
   hosts: maw_dev
   vars_files:
     - "{{ controller_secrets_file }}"
+    - vars/maw_vars.yml
 
   tasks:
     - name: Install Prerequisites

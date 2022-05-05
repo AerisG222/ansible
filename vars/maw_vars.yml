@@ -1,0 +1,307 @@
+# ----
+# this file assumes that host, group, and secret variables were previously loaded.
+# this file then configures variables templated on those variables to maximize consistency across environments.
+# ----
+git_root: "{{ remote_home_dir }}/git"
+
+maw__asset_dir_root: /srv/www/website_assets
+maw__asset_dir_images: "{{ maw__asset_dir_root }}/images"
+maw__asset_dir_movies: "{{ maw__asset_dir_root }}/movies"
+
+maw__certs_dir: "{{ remote_maw_root }}/certs"
+maw__certs_volume: "{{ maw__env }}-maw-certs"
+maw__certs_dir_for_site: "{{ maw__certs_use_volume | ternary('/certs', remote_maw_root + '/certs') }}"
+
+# certs paths for sites
+maw__pfx_api: "{{ maw__certs_dir_for_site }}/api/api.pfx"
+maw__pfx_auth: "{{ maw__certs_dir_for_site }}/auth/auth.pfx"
+maw__pfx_signing: "{{ maw__certs_dir_for_site }}/signing/signing.pfx"
+maw__pfx_www: "{{ maw__certs_dir_for_site }}/www/www.pfx"
+
+# to be set by cert process
+maw__pfx_pwd_api:
+maw__pfx_pwd_auth:
+maw__pfx_pwd_www:
+
+maw__podman_pod: "{{ maw__env }}-maw-pod"
+maw__podman_env_dir: "{{ remote_maw_root }}/podman-env"
+
+maw__pg_backup_host_dir: "{{ controller_maw_root }}/db_backups"
+maw__pg_backup_roles: roles.sql
+maw__pg_backup_idsrv: idsrv.dump
+maw__pg_backup_www: maw_website.dump
+
+# postgres sql accounts for site
+maw__sql_username_maw: svc_www_maw
+maw__sql_password_maw: "{{ vault_password_sql_svc_www_maw }}"
+maw__sql_username_solr: svc_solr
+maw__sql_password_solr: "{{ vault_password_sql_solr }}"
+
+# google api key (maps / reverse geocode)
+maw__google_api_key: "{{ vault_google_api_key }}"
+
+# information about current production website
+maw_current__prod_host: tifa
+maw_current__prod_username: svc_www_maw
+maw_current__homedir: /home/{{ maw_current__prod_username }}
+
+# current live site postgres backup (assumes ssh + key auth configured)
+maw_prod_pg_bu__hostname: "{{ maw_current__prod_host }}"
+maw_prod_pg_bu__username: "{{ maw_current__prod_username }}"
+maw_prod_pg_bu__pod: maw-pod
+maw_prod_pg_bu__image: docker.io/postgres:13-alpine
+maw_prod_pg_bu__container: "{{ maw_env }}-ansible-postgres-backup"
+maw_prod_pg_bu__envfile: "{{ maw_current__homedir }}/maw-postgres-backup.env"
+maw_prod_pg_bu__control_dir: "{{ maw__pg_backup_host_dir }}"
+maw_prod_pg_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_postgres_backup"
+
+# current live site gdrive credentials backup
+maw_prod_gdrive_creds_bu__hostname: "{{ maw_current__prod_host }}"
+maw_prod_gdrive_creds_bu__username: "{{ maw_current__prod_username }}"
+maw_prod_gdrive_creds_bu__volume: maw-gdrive-creds
+maw_prod_gdrive_creds_bu__control_dir: "{{ controller_maw_root }}/gdrive_backup"
+maw_prod_gdrive_creds_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_gdrive_backup"
+
+# current live site google credentials backup
+maw_prod_google_creds_bu__hostname: "{{ maw_current__prod_host }}"
+maw_prod_google_creds_bu__username: "{{ maw_current__prod_username }}"
+maw_prod_google_creds_bu__volume: maw-google-creds
+maw_prod_google_creds_bu__control_dir: "{{ controller_maw_root }}/google_backup"
+maw_prod_google_creds_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_google_backup"
+
+# current live site uploads backup
+maw_prod_uploads_bu__hostname: "{{ maw_current__prod_host }}"
+maw_prod_uploads_bu__username: "{{ maw_current__prod_username }}"
+maw_prod_uploads_bu__volume: maw-uploads
+maw_prod_uploads_bu__control_dir: "{{ controller_maw_root }}/upload_backup"
+maw_prod_uploads_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_upload_backup"
+
+# maw host
+maw_host__hostnames:
+  - "{{ maw__fqdn_naked }}"
+  - "{{ maw__fqdn_api }}"
+  - "{{ maw__fqdn_auth }}"
+  - "{{ maw__fqdn_files }}"
+  - "{{ maw__fqdn_photos }}"
+  - "{{ maw__fqdn_www }}"
+maw_host__asset_dirs:
+  - "{{ maw__asset_dir_images }}"
+  - "{{ maw__asset_dir_movies }}"
+
+# maw google credentials
+maw_google_creds__backup_dir: "{{ maw_prod_google_creds_bu__control_dir }}"
+maw_google_creds__backup_file: "{{ maw_prod_google_creds_bu__control_dir }}/www_emailer.json"
+maw_google_creds__dir: "{{ remote_maw_root }}/google-creds"
+maw_google_creds__volume: "{{ maw__env }}-maw-google-creds"
+maw_google_creds__dir_for_site: "{{ maw_google_creds__use_volume | ternary('/google-creds', maw_google_creds__dir) }}"
+maw_google_creds__file_for_site: "{{ maw_google_creds__dir_for_site }}/www_emailer.json"
+
+# maw postgres
+maw_postgres__version: 14
+maw_postgres__pod: "{{ maw__podman_pod }}"
+maw_postgres__image: "docker.io/postgres:{{ maw_postgres__version }}-alpine"
+maw_postgres__container: "{{ maw__env }}-maw-postgres"
+maw_postgres__volume: "{{ maw__env }}-maw-postgres-{{ maw__version_postgres }}"
+maw_postgres__init_volume: "{{ maw__env }}-maw-postgres-{{ maw__version_postgres }}-init"
+maw_postgres__backup_volume: "{{ maw__env }}-maw-postgres-backup"
+maw_postgres__envfile: "{{ maw__podman_env_dir }}/maw-postgres.env"
+maw_postgres__password: "{{ vault_password_sql_postgres }}"
+maw_postgres__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_postgres"
+maw_postgres__systemd_dir: "{{ maw__systemd_dir }}"
+maw_postgres__backup_roles_service: "{{ maw__env }}-postgres-backup-roles"
+maw_postgres__backup_roles_container: "{{ maw__env }}-postgres-backup-roles"
+maw_postgres__backup_maw_service: "{{ maw__env }}-postgres-backup-maw"
+maw_postgres__backup_maw_container: "{{ maw__env }}-postgres-backup-maw"
+maw_postgres__backup_idsrv_service: "{{ maw__env }}-postgres-backup-idsrv"
+maw_postgres__backup_idsrv_container: "{{ maw__env }}-postgres-backup-idsrv"
+maw_postgres__optimize_maw_service: "{{ maw__env }}-postgres-optimize-maw"
+maw_postgres__optimize_maw_container: "{{ maw__env }}-postgres-optimize-maw"
+maw_postgres__optimize_idsrv_service: "{{ maw__env }}-postgres-optimize-idsrv"
+maw_postgres__optimize_idsrv_container: "{{ maw__env }}-postgres-optimize-idsrv"
+maw_postgres__cleanup_service: "{{ maw__env }}-postgres-cleanup"
+maw_postgres__cleanup_container: "{{ maw__env }}-postgres-cleanup"
+maw_postgres__daily_archive_service: "{{ maw__env }}-postgres-archive-daily"
+maw_postgres__daily_archive_container: "{{ maw__env }}-postgres-archive-daily"
+maw_postgres__monthly_archive_service: "{{ maw__env }}-postgres-archive-monthly"
+maw_postgres__monthly_archive_container: "{{ maw__env }}-postgres-archive-monthly"
+maw_postgres__gdrive_creds_volume: "{{ maw__env }}-maw-gdrive-creds"
+maw_postgres__gdrive_image: docker.io/d0whc3r/gdrive:latest
+maw_postgres__gdrive_folder_daily: "{{ maw__podman_pod }}-pg_backup"
+maw_postgres__gdrive_folder_monthly: "{{ maw__podman_pod }}-pg_backup_monthly"
+maw_postgres__calendar_role_backup: '00:55:00'
+maw_postgres__calendar_maw_backup: '01:00:00'
+maw_postgres__calendar_idsrv_backup: '01:05:00'
+maw_postgres__calendar_maw_optimize: '01:10:00'
+maw_postgres__calendar_idsrv_optimize: '01:15:00'
+maw_postgres__calendar_backup_cleanup: '01:20:00'
+maw_postgres__calendar_archive_daily: '01:25:00'
+maw_postgres__calendar_archive_monthly: '*-*-01 01:30:00'
+maw_postgres__controller_backup_dir: "{{ maw__pg_backup_host_dir }}"
+maw_postgres__backup_file_maw: "{{ maw__pg_backup_www }}"
+maw_postgres__backup_file_idsrv: "{{ maw__pg_backup_idsrv }}"
+maw_postgres__backup_file_roles: "{{ maw__pg_backup_roles }}"
+maw_postgres__sql_username_maw: "{{ maw__sql_username_maw }}"
+maw_postgres__sql_password_maw: "{{ maw__sql_password_maw }}"
+maw_postgres__sql_username_solr: "{{ maw__sql_username_solr }}"
+maw_postgres__sql_password_solr: "{{ maw__sql_password_solr }}"
+
+# maw redis
+maw_redis__version: 6
+maw_redis__pod: "{{ maw__podman_pod }}"
+maw_redis__container: "{{ maw__env }}-maw-redis"
+maw_redis__volume: "{{ maw__env }}-maw-redis-{{ maw_redis__version }}"
+maw_redis__cache_sync_container: "{{ maw__env }}-maw-cache-sync"
+maw_redis__cache_sync_envfile: "{{ maw__podman_env_dir }}/maw-cache-sync.env"
+maw_redis__cache_sync_sql_username: "{{ maw__sql_username_maw }}"
+maw_redis__cache_sync_sql_password: "{{ maw__sql_password_maw }}"
+
+# maw solr
+maw_solr__version: 8
+maw_solr__systemd_dir: "{{ maw__systemd_dir }}"
+maw_solr__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_solr"
+maw_solr__pod: "{{ maw__podman_pod }}"
+maw_solr__image: "docker.io/solr:{{ maw_solr__version }}"
+maw_solr__container: "{{ maw__env }}-maw-solr"
+maw_solr__volume: "{{ maw__env }}-maw-solr-{{ maw__version_solr }}"
+
+# maw solr indexer
+maw_solridx__pod: "{{ maw__podman_pod }}"
+maw_solridx__container: "{{ maw__env }}-solr-indexer"
+maw_solridx__sql_username: "{{ maw__sql_username_solr }}"
+maw_solridx__sql_password: "{{ maw__sql_password_solr }}"
+maw_solridx__systemd_dir: "{{ maw__systemd_dir }}"
+maw_solridx__service: "{{ maw_solridx__container }}"
+maw_solridx__calendar: '00:50:00'
+
+# maw api
+maw_api__pod: "{{ maw__podman_pod }}"
+maw_api__container: "{{ maw__env }}-maw-api"
+maw_api__cert_dir: "{{ maw__certs_dir }}"
+maw_api__cert_volume: "{{ maw__certs_volume }}"
+maw_api__dataprotection_dir: "{{ remote_maw_root }}/api/dataprotection"
+maw_api__dataprotection_volume: "{{ maw__env }}-maw-api-dataprotection"
+maw_api__dataprotection_dir_for_site: "{{ maw_api__run_in_container | ternary('/dataprotection', maw_api__dataprotection_dir) }}"
+maw_api__envfile: "{{ maw__podman_env_dir }}/maw-api.env"
+maw_api__aspnet_env: "{{ maw__aspnet_env }}"
+maw_api__pfx: "{{ maw__pfx_api }}"
+maw_api__pfx_pwd: ""
+maw_api__sql_username: "{{ maw__sql_username_maw }}"
+maw_api__sql_password: "{{ maw__sql_password_maw }}"
+maw_api__upload_dir: "{{ remote_maw_root }}/api/uploads"
+maw_api__upload_volume: "{{ maw__env }}-maw-upload"
+maw_api__upload_dir_for_site: "{{ maw_api__run_in_container | ternary('/maw-uploads', maw_api__upload_dir) }}"
+maw_api__asset_dir_images: "{{ maw__asset_dir_images }}"
+
+# maw auth
+maw_auth__pod: "{{ maw__podman_pod }}"
+maw_auth__container: "{{ maw__env }}-maw-auth"
+maw_auth__cert_dir: "{{ maw__certs_dir }}"
+maw_auth__cert_volume: "{{ maw__certs_volume }}"
+maw_auth__dataprotection_dir: "{{ remote_maw_root }}/auth/dataprotection"
+maw_auth__dataprotection_volume: "{{ maw__env }}-maw-auth-dataprotection"
+maw_auth__dataprotection_dir_for_site: "{{ maw_auth__run_in_container | ternary('/dataprotection', maw_auth__dataprotection_dir) }}"
+maw_auth__envfile: "{{ maw__podman_env_dir }}/maw-auth.env"
+maw_auth__aspnet_env: "{{ maw__aspnet_env }}"
+maw_auth__google_creds_volume: "{{ maw_google_creds__volume }}"
+maw_auth__google_email_creds_file: "{{ maw_google_creds__file_for_site }}"
+maw_auth__pfx: "{{ maw__pfx_auth }}"
+maw_auth__pfx_pwd:
+maw_auth__sql_username: "{{ maw__sql_username_maw }}"
+maw_auth__sql_password: "{{ maw__sql_password_maw }}"
+maw_auth__www_auth_client_secret: "{{ vault_www_auth_client_secret }}"
+maw_auth__google_plus_client_id: "{{ vault_google_plus_client_id }}"
+maw_auth__google_plus_client_secret: "{{ vault_google_plus_client_secret }}"
+maw_auth__twitter_client_id: "{{ vault_twitter_client_id }}"
+maw_auth__twitter_client_secret: "{{ vault_twitter_client_secret }}"
+maw_auth__microsoft_client_id: "{{ vault_microsoft_client_id }}"
+maw_auth__microsoft_client_secret: "{{ vault_microsoft_client_secret }}"
+maw_auth__github_client_id: "{{ vault_github_client_id }}"
+maw_auth__github_client_secret: "{{ vault_github_client_secret }}"
+maw_auth__pfx_signing: "{{ maw__pfx_signing }}"
+
+# maw www settings
+maw_www__pod: "{{ maw__podman_pod }}"
+maw_www__container: "{{ maw__env }}-maw-www"
+maw_www__cert_dir: "{{ maw__certs_dir }}"
+maw_www__cert_volume: "{{ maw__certs_volume }}"
+maw_www__dataprotection_dir: "{{ remote_maw_root }}/www/dataprotection"
+maw_www__dataprotection_volume: "{{ maw__env }}-maw-www-dataprotection"
+maw_www__dataprotection_dir_for_site: "{{ maw_www__run_in_container | ternary('/dataprotection', maw_www__dataprotection_dir) }}"
+maw_www__envfile: "{{ maw__podman_env_dir }}/maw-www.env"
+maw_www__aspnet_env: "{{ maw__aspnet_env }}"
+maw_www__pfx: "{{ maw__pfx_www }}"
+maw_www__pfx_pwd:
+maw_www__google_creds_volume: "{{ maw_google_creds__volume }}"
+maw_www__google_email_creds_file: "{{ maw_google_creds__file_for_site }}"
+maw_www__sql_username: "{{ maw__sql_username_maw }}"
+maw_www__sql_password: "{{ maw__sql_password_maw }}"
+maw_www__auth_client_id: "{{ vault_www_auth_client_id }}"
+maw_www__auth_client_secret: "{{ vault_www_auth_client_secret }}"
+maw_www__google_recaptcha_site_key: "{{ vault_google_recaptcha_site_key }}"
+maw_www__google_recaptcha_secret_key: "{{ vault_google_recaptcha_secret_key }}"
+maw_www__asset_dir_images: "{{ maw__asset_dir_images }}"
+maw_www__asset_dir_movies: "{{ maw__asset_dir_movies }}"
+
+# maw files
+maw_files__pod: "{{ maw__podman_pod }}"
+maw_files__container: "{{ maw__env }}-maw-files"
+maw_files__cert_volume: "{{ maw__certs_volume }}"
+
+# maw photos
+maw_photos__pod: "{{ maw__podman_pod }}"
+maw_photos__container: "{{ maw__env }}-maw-photos"
+maw_photos__cert_volume: "{{ maw__certs_volume }}"
+
+# maw gateway
+maw_gateway__asset_dir: "{{ maw__asset_dir_root }}"
+maw_gateway__pod: "{{ maw__podman_pod }}"
+maw_gateway__container: "{{ maw__env }}-maw-gateway"
+maw_gateway__cert_volume: "{{ maw__certs_volume }}"
+maw_gateway__certbot_systemd_dir: "{{ maw__systemd_dir }}"
+maw_gateway__certbot_service: "{{ maw__env }}-maw-certbot-certs"
+maw_gateway__certbot_image: docker.io/certbot/certbot:latest
+maw_gateway__certbot_certs_volume: "{{ maw__env }}-maw-certbot-certs"
+maw_gateway__certbot_certs_volume_to_migrate: maw-certbot-certs
+maw_gateway__certbot_validation_volume: "{{ maw__env }}-maw-certbot-validation"
+maw_gateway__certbot_validation_volume_to_migrate: maw-certbot-validation
+maw_gateway__certbot_calendar: '0/12:00:00'
+
+# maw reverse geocode
+maw_revgeo__systemd_dir: "{{ maw__systemd_dir }}"
+maw_revgeo__service: "{{ maw__env }}-maw-reverse-geocoder"
+maw_revgeo__pod: "{{ maw__podman_pod }}"
+maw_revgeo__container: "{{ maw__env }}-maw-reverse-geocoder"
+maw_revgeo__volume: "{{ maw__env }}-maw-reverse-geocode"
+maw_revgeo__volume_to_migrate: maw-reverse-geocode
+maw_revgeo__envfile: "{{ maw__podman_env_dir }}/maw-reverse-geocode.env"
+maw_revgeo__envfile_backup: true
+maw_revgeo__calendar: '00:45:00'
+
+# maw certs
+maw_certs__container: "{{ maw__env }}-maw-certs"
+maw_certs__dir: "{{ maw__certs_dir }}"
+maw_certs__volume: "{{ maw__env }}-maw-certs"
+maw_certs__volume_to_migrate: maw-certs
+maw_certs__env: "{{ maw_env }}"
+maw_certs__fqdn_prefix: "{{ maw__env }}"
+maw_certs__temp_dir: "{{ remote_home_dir }}/_tmp_ansible_certs"
+
+# maw bash profile
+maw_bashenv__profile: "{{ remote_home_dir }}/.bash_profile"
+maw_bashenv__files:
+  - "{{ maw__podman_env_dir }}/maw-api.env"
+  - "{{ maw__podman_env_dir }}/maw-auth.env"
+  - "{{ maw__podman_env_dir }}/maw-www.env"
+  - "{{ maw__podman_env_dir }}/maw-cache-sync.env"
+
+# maw admin scripts
+maw_as__dir: "{{ remote_maw_root }}/admin_scripts"
+maw_as__pod: "{{ maw__podman_pod }}"
+maw_as__postgres_envfile: "{{ maw_postgres__envfile }}"
+maw_as__postgres_image: "{{ maw_postgres__image }}"
+maw_as__certbot_image: "{{ maw_gateway__certbot_image }}"
+maw_as__gdrive_image: "{{ maw_postgres__gdrive_image }}"
+maw_as__cache_sync_image: "{{ maw_redis__cache_sync_image }}"
+maw_as__maw_certs_image: "{{ maw_certs__image }}"
+maw_as__reverse_geocode_image: "{{ maw_revgeo__image }}"
+maw_as__solr_indexer: "{{ maw_solridx__image }}"
