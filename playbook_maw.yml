@@ -27,10 +27,43 @@
 
     - name: backup files in uploads volume
       ansible.builtin.include_role:
-        name: maw_prod_uploads_backup
+        name: podman_backup_volume
       vars:
         ansible_user: "{{ maw_current__prod_username }}"
+        podman_vol_bu__volume: "{{ maw_prod_uploads_bu__volume }}"
+        podman_vol_bu__control_dir: "{{ maw_prod_uploads_bu__control_dir }}"
+        podman_vol_bu__temp_remote_dir: "{{ maw_prod_uploads_bu__temp_remote_dir }}"
       when: maw__do_uploads_backup
+
+    - name: backup api dataprotection volume
+      ansible.builtin.include_role:
+        name: podman_backup_volume
+      vars:
+        ansible_user: "{{ maw_current__prod_username }}"
+        podman_vol_bu__volume: "{{ maw_prod_apidp_bu__volume }}"
+        podman_vol_bu__control_dir: "{{ maw_prod_apidp_bu__control_dir }}"
+        podman_vol_bu__temp_remote_dir: "{{ maw_prod_apidp_bu__temp_remote_dir }}"
+      when: maw__do_dataprotection_backup
+
+    - name: backup auth dataprotection volume
+      ansible.builtin.include_role:
+        name: podman_backup_volume
+      vars:
+        ansible_user: "{{ maw_current__prod_username }}"
+        podman_vol_bu__volume: "{{ maw_prod_authdp_bu__volume }}"
+        podman_vol_bu__control_dir: "{{ maw_prod_authdp_bu__control_dir }}"
+        podman_vol_bu__temp_remote_dir: "{{ maw_prod_authdp_bu__temp_remote_dir }}"
+      when: maw__do_dataprotection_backup
+
+    - name: backup www dataprotection volume
+      ansible.builtin.include_role:
+        name: podman_backup_volume
+      vars:
+        ansible_user: "{{ maw_current__prod_username }}"
+        podman_vol_bu__volume: "{{ maw_prod_wwwdp_bu__volume }}"
+        podman_vol_bu__control_dir: "{{ maw_prod_wwwdp_bu__control_dir }}"
+        podman_vol_bu__temp_remote_dir: "{{ maw_prod_wwwdp_bu__temp_remote_dir }}"
+      when: maw__do_dataprotection_backup
 
 
 - name: Prepare host

@@ -43,13 +43,34 @@
     path: "{{ podman_vol_bu__temp_remote_dir }}"
     state: absent
 
-- name: move files on controller to the root backup dir
-  ansible.builtin.shell:
-    cmd: "mv {{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}{{ podman_vol_bu__temp_remote_dir }}/* {{ podman_vol_bu__control_dir }}"
-  delegate_to: localhost
+- name: set var to hold path to directory on controller where files were copied
+  ansible.builtin.set_fact:
+    _podman_vol_bu__control_copy_dir: "{{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}{{ podman_vol_bu__temp_remote_dir }}"
 
-- name: delete host specific directories created
-  ansible.builtin.file:
-    path: "{{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}"
-    state: absent
+- name: check if files were copied to controller
+  ansible.builtin.stat:
+    path: "{{ _podman_vol_bu__control_copy_dir }}"
   delegate_to: localhost
+  register: _podman_vol_bu__control_copy_dir_stat_result
+
+- name: copy files if copy dir exists
+  block:
+    - name: move files on controller to the root backup dir
+      ansible.builtin.shell:
+        cmd: "mv {{ _podman_vol_bu__control_copy_dir }}/* {{ podman_vol_bu__control_dir }}"
+      delegate_to: localhost
+
+    - name: delete host specific directories created
+      ansible.builtin.file:
+        path: "{{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}"
+        state: absent
+      delegate_to: localhost
+  when: _podman_vol_bu__control_copy_dir_stat_result.stat.exists
+
+- name: create empty dir if no files were in volume
+  ansible.builtin.file:
+    path: "{{ podman_vol_bu__control_dir }}"
+    state: directory
+    mode: u+rwx
+  delegate_to: localhost
+  when: not _podman_vol_bu__control_copy_dir_stat_result.stat.exists
