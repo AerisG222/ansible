@@ -32,6 +32,42 @@
       when: maw__do_uploads_backup
 
 
+- name: Prepare host
+  hosts: maw
+  become: true
+  vars_files:
+    - "{{ controller_secrets_file }}"
+    - vars/maw_vars.yml
+
+  tasks:
+    - name: Configure Base OS
+      ansible.builtin.include_role:
+        name: fedora_base
+
+    - name: Add Service Account
+      ansible.builtin.user:
+        name: "{{ maw_host__username }}"
+        password: "{{ maw_host__password | password_hash('sha512') }}"
+        update_password: on_create
+        state: present
+
+    - name: Configure sshd
+      ansible.builtin.import_role:
+        name: sshd
+      vars:
+        sshd_allow_users:
+          - "{{ ansible_user }}"
+          - "{{ maw_host__username }}"
+      when: ansible_connection != 'local'
+
+    - name: Initialize podman
+      ansible.builtin.include_role:
+        name: podman_init
+      vars:
+        pod_init__linger_users:
+          - "{{ maw_host__username }}"
+
+
 - name: Configure mikeandwan.us
   hosts: maw
   vars_files:
@@ -39,23 +75,10 @@
     - vars/maw_vars.yml
 
   tasks:
-    # - name: Configure Base
-    #   ansible.builtin.include_role:
-    #     name: fedora_base
-
-    # - name: Configure sshd
-    #   ansible.builtin.include_role:
-    #     name: sshd
-    #   vars:
-    #     sshd_allow_users:
-    #       - "{{ ansible_user }}"
-    #       - "{{ maw_host__username }}"
-    #   when: ansible_connection != 'local'
-
     # - name: Configure development environment for mikeandwan.us
     #   ansible.builtin.include_role:
     #     name: maw_dev_prep
-      # when: maw_dev_prep__configure_tools
+    #   when: maw_dev_prep__configure_tools
 
     # - name: Configure mikeandwan.us
     #   ansible.builtin.include_role:
