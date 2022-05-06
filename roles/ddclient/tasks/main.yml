@@ -3,6 +3,7 @@
   ansible.builtin.file:
     path: "{{ dd__tmp_dir }}"
     state: directory
+    mode: u+rwx
 
 - name: Create volume to hold ddclient config
   containers.podman.podman_volume:
@@ -67,6 +68,7 @@
   ansible.builtin.file:
     path: "{{ dd__systemd_dir }}"
     state: directory
+    mode: u+rwx
 
 - name: Create systemd unit files
   containers.podman.podman_pod:

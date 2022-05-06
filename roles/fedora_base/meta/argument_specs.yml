@@ -17,4 +17,3 @@ argument_specs:
         type: bool
         default: false
         description: whether packages should automatically be upgraded when role runs
-
