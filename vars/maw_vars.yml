@@ -2,7 +2,7 @@
 # this file assumes that host, group, and secret variables were previously loaded.
 # this file then configures variables templated on those variables to maximize consistency across environments.
 # ----
-git_root: "{{ remote_home_dir }}/git"
+maw_dev_prep__git_root: "{{ remote_home_dir }}/git"
 
 maw__asset_dir_root: /srv/www/website_assets
 maw__asset_dir_images: "{{ maw__asset_dir_root }}/images"

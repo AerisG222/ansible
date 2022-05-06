@@ -25,6 +25,8 @@ maw__podman_publish_ports:
   - 8080:8080
   - 8443:8443
 
+maw_dev_prep__configure_tools: false
+
 # backup
 maw_prod_pg_bu__use_existing_backups: true
 maw_prod_gdrive_creds_bu__use_existing_backups: true

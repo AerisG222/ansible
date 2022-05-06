@@ -26,6 +26,8 @@ maw__podman_publish_ports:
   - 5432:5432  # postgres
   - 6379:6379  # redis
 
+maw_dev_prep__configure_tools: true
+
 # backup
 maw_prod_pg_bu__use_existing_backups: true
 maw_prod_gdrive_creds_bu__use_existing_backups: true

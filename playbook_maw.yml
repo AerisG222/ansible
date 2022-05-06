@@ -1,8 +1,7 @@
 ---
-- name: Configure mikeandwan.us prod environment
+- name: Configure mikeandwan.us
   hosts: maw
   vars_files:
-    - vars/maw_prod.yml
     - "{{ controller_secrets_file }}"
     - vars/maw_vars.yml
 
@@ -18,7 +17,13 @@
         sshd_allow_users:
           - "{{ ansible_user }}"
           - "{{ maw_host__username }}"
+      when: ansible_connection != 'local'
 
-    - name: Configure mikeandwan.us
+    - name: Configure development environment for mikeandwan.us
       ansible.builtin.include_role:
-        name: mikeandwan_us
+        name: maw_dev_prep
+      when: maw_dev_prep__configure_tools
+
+    # - name: Configure mikeandwan.us
+    #   ansible.builtin.include_role:
+    #     name: mikeandwan_us

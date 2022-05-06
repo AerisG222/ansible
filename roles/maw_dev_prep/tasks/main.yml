@@ -1,0 +1,35 @@
+---
+- name: Install Prerequisites
+  become: true
+  ansible.builtin.dnf:
+    state: present
+    name:
+      - buildah
+      - dotnet
+      - git
+      - nodejs
+
+- name: Ensure git directory exists
+  ansible.builtin.file:
+    path: "{{ maw_dev_prep__git_root }}"
+    state: directory
+    mode: u+rwx
+
+- name: Get status of mikeandwan.us git directory
+  ansible.builtin.stat:
+    name: "{{ maw_dev_prep__git_root }}/mikeandwan.us"
+  register: maw_git_status
+
+- name: Clone mikeandwan.us
+  ansible.builtin.git:
+    dest: "{{ maw_dev_prep__git_root }}/mikeandwan.us"
+    repo: git@github.com:AerisG222/mikeandwan.us.git
+    version: dev
+  when: not maw_git_status.stat.exists
+
+# todo:
+#   - run npm install
+#   - build client assets (www/auth)
+#   - build client apps
+#   - build dotnet application
+#   - ...

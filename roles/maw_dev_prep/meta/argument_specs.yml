@@ -1,0 +1,14 @@
+---
+argument_specs:
+  main:
+    short_description: Facilitates creating environment files for mikeandwan.us
+    options:
+      maw_dev_prep__configure_tools:
+        type: bool
+        default: false
+        description: indicates if dev tooling and dev site should be configured on this host
+
+      maw_dev_prep__git_root:
+        type: str
+        required: true
+        description: path to where the root git directory should be located

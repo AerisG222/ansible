@@ -5,7 +5,6 @@ MAW_ENV=$(get_maw_env)
 HOST=$(get_value "Hostname (must exist in inventory file): " 'n')
 FIRST_RUN=$(get_value "First Run - need to prompt for sshd password?  (y/N): " 'n' 'n')
 VERBOSE=$(get_value "Verbose?  (y/N): " 'n' 'n')
-PLAYBOOK="playbook_maw_${MAW_ENV}.yml"
 PLAYBOOK_ARGS=("--ask-become-pass")
 
 if [ "${MAW_ENV}" == "prod" ]; then
@@ -26,7 +25,9 @@ PLAYBOOK_ARGS+=("--inventory")
 PLAYBOOK_ARGS+=("${INVENTORY}")
 PLAYBOOK_ARGS+=("--limit")
 PLAYBOOK_ARGS+=("${HOST}")
-PLAYBOOK_ARGS+=("${PLAYBOOK}")
+PLAYBOOK_ARGS+=("--extra-vars")
+PLAYBOOK_ARGS+=("@vars/maw_${MAW_ENV}.yml")
+PLAYBOOK_ARGS+=("playbook_maw.yml")
 
 echo ''
 
