@@ -134,7 +134,7 @@
     cmd: "mv {{ item }} {{ maw_prod_pg_bu__control_dir }}"
   delegate_to: localhost
   with_fileglob:
-        - "{{ maw_prod_pg_bu__control_dir }}/{{ maw_prod_pg_bu__hostname }}{{ maw_prod_pg_bu__temp_remote_dir }}/*"
+    - "{{ maw_prod_pg_bu__control_dir }}/{{ maw_prod_pg_bu__hostname }}{{ maw_prod_pg_bu__temp_remote_dir }}/*"
 
 - name: delete local backup dir
   ansible.builtin.file:

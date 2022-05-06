@@ -1,4 +1,37 @@
 ---
+- name: Gather current production backups
+  hosts: maw_current_prod
+  vars_files:
+    - "{{ controller_secrets_file }}"
+    - vars/maw_vars.yml
+
+  tasks:
+    - name: backup postgres roles and databases
+      ansible.builtin.include_role:
+        name: maw_prod_postgres_backup
+      vars:
+        ansible_user: "{{ maw_current__prod_username }}"
+
+    - name: backup gdrive credentials volume
+      ansible.builtin.include_role:
+        name: maw_prod_gdrive_creds_backup
+      vars:
+        ansible_user: "{{ maw_current__prod_username }}"
+
+    - name: backup google credentials volume
+      ansible.builtin.include_role:
+        name: maw_prod_google_creds_backup
+      vars:
+        ansible_user: "{{ maw_current__prod_username }}"
+
+    - name: backup files in uploads volume
+      ansible.builtin.include_role:
+        name: maw_prod_uploads_backup
+      vars:
+        ansible_user: "{{ maw_current__prod_username }}"
+      when: maw__do_uploads_backup
+
+
 - name: Configure mikeandwan.us
   hosts: maw
   vars_files:
@@ -6,23 +39,23 @@
     - vars/maw_vars.yml
 
   tasks:
-    - name: Configure Base
-      ansible.builtin.include_role:
-        name: fedora_base
+    # - name: Configure Base
+    #   ansible.builtin.include_role:
+    #     name: fedora_base
 
-    - name: Configure sshd
-      ansible.builtin.include_role:
-        name: sshd
-      vars:
-        sshd_allow_users:
-          - "{{ ansible_user }}"
-          - "{{ maw_host__username }}"
-      when: ansible_connection != 'local'
+    # - name: Configure sshd
+    #   ansible.builtin.include_role:
+    #     name: sshd
+    #   vars:
+    #     sshd_allow_users:
+    #       - "{{ ansible_user }}"
+    #       - "{{ maw_host__username }}"
+    #   when: ansible_connection != 'local'
 
-    - name: Configure development environment for mikeandwan.us
-      ansible.builtin.include_role:
-        name: maw_dev_prep
-      when: maw_dev_prep__configure_tools
+    # - name: Configure development environment for mikeandwan.us
+    #   ansible.builtin.include_role:
+    #     name: maw_dev_prep
+      # when: maw_dev_prep__configure_tools
 
     # - name: Configure mikeandwan.us
     #   ansible.builtin.include_role:

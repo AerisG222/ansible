@@ -26,7 +26,8 @@ maw__pfx_pwd_www:
 maw__podman_pod: "{{ maw__env }}-maw-pod"
 maw__podman_env_dir: "{{ remote_maw_root }}/podman-env"
 
-maw__pg_backup_host_dir: "{{ controller_maw_root }}/db_backups"
+maw__backup_root: "{{ controller_maw_root }}/_backups"
+maw__pg_backup_host_dir: "{{ maw__backup_root }}/postgres"
 maw__pg_backup_roles: roles.sql
 maw__pg_backup_idsrv: idsrv.dump
 maw__pg_backup_www: maw_website.dump
@@ -50,7 +51,7 @@ maw_prod_pg_bu__hostname: "{{ maw_current__prod_host }}"
 maw_prod_pg_bu__username: "{{ maw_current__prod_username }}"
 maw_prod_pg_bu__pod: maw-pod
 maw_prod_pg_bu__image: docker.io/postgres:13-alpine
-maw_prod_pg_bu__container: "{{ maw_env }}-ansible-postgres-backup"
+maw_prod_pg_bu__container: "{{ maw__env }}-ansible-postgres-backup"
 maw_prod_pg_bu__envfile: "{{ maw_current__homedir }}/maw-postgres-backup.env"
 maw_prod_pg_bu__control_dir: "{{ maw__pg_backup_host_dir }}"
 maw_prod_pg_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_postgres_backup"
@@ -59,21 +60,21 @@ maw_prod_pg_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_postgr
 maw_prod_gdrive_creds_bu__hostname: "{{ maw_current__prod_host }}"
 maw_prod_gdrive_creds_bu__username: "{{ maw_current__prod_username }}"
 maw_prod_gdrive_creds_bu__volume: maw-gdrive-creds
-maw_prod_gdrive_creds_bu__control_dir: "{{ controller_maw_root }}/gdrive_backup"
+maw_prod_gdrive_creds_bu__control_dir: "{{ maw__backup_root }}/gdrive_credentials"
 maw_prod_gdrive_creds_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_gdrive_backup"
 
 # current live site google credentials backup
 maw_prod_google_creds_bu__hostname: "{{ maw_current__prod_host }}"
 maw_prod_google_creds_bu__username: "{{ maw_current__prod_username }}"
 maw_prod_google_creds_bu__volume: maw-google-creds
-maw_prod_google_creds_bu__control_dir: "{{ controller_maw_root }}/google_backup"
+maw_prod_google_creds_bu__control_dir: "{{ maw__backup_root }}/google_credentials"
 maw_prod_google_creds_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_google_backup"
 
 # current live site uploads backup
 maw_prod_uploads_bu__hostname: "{{ maw_current__prod_host }}"
 maw_prod_uploads_bu__username: "{{ maw_current__prod_username }}"
 maw_prod_uploads_bu__volume: maw-uploads
-maw_prod_uploads_bu__control_dir: "{{ controller_maw_root }}/upload_backup"
+maw_prod_uploads_bu__control_dir: "{{ maw__backup_root }}/uploads"
 maw_prod_uploads_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_upload_backup"
 
 # maw host
@@ -282,7 +283,7 @@ maw_certs__container: "{{ maw__env }}-maw-certs"
 maw_certs__dir: "{{ maw__certs_dir }}"
 maw_certs__volume: "{{ maw__env }}-maw-certs"
 maw_certs__volume_to_migrate: maw-certs
-maw_certs__env: "{{ maw_env }}"
+maw_certs__env: "{{ maw__env }}"
 maw_certs__fqdn_prefix: "{{ maw__env }}"
 maw_certs__temp_dir: "{{ remote_home_dir }}/_tmp_ansible_certs"
 
