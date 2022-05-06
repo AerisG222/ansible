@@ -1,6 +1,7 @@
 ---
 - name: Gather current production backups
   hosts: maw_current_prod
+  tags: maw_backups
   vars_files:
     - "{{ controller_secrets_file }}"
     - vars/maw_vars.yml
@@ -35,6 +36,7 @@
 - name: Prepare host
   hosts: maw
   become: true
+  tags: maw_host
   vars_files:
     - "{{ controller_secrets_file }}"
     - vars/maw_vars.yml
@@ -70,6 +72,7 @@
 
 - name: Configure mikeandwan.us
   hosts: maw
+  tags: maw_services
   vars_files:
     - "{{ controller_secrets_file }}"
     - vars/maw_vars.yml
