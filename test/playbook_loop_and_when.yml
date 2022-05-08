@@ -6,11 +6,11 @@
       - name: namea
         use: true
       - name: nameb
-        use: no
+        use: false
       - name: namec
         use: true
       - name: named
-        use: no
+        use: false
 
   tasks:
     - name: output used names

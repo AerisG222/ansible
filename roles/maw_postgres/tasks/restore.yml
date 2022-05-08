@@ -19,7 +19,7 @@
   vars:
     pg_res_role__pod: "{{ maw_postgres__pod }}"
     pg_res_role__image: "{{ maw_postgres__image }}"
-    pg_res_role__envfile:  "{{ maw_postgres__envfile }}"
+    pg_res_role__envfile: "{{ maw_postgres__envfile }}"
     pg_res_role__backup_file: "{{ maw_postgres__tempdir }}/{{ maw_postgres__backup_file_roles }}"
     pg_res_role__role_info_list:
       - username: "{{ maw_postgres__sql_username_maw }}"

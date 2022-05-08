@@ -1,3 +1,4 @@
+---
 - name: create multimedia-categories core
   ansible.builtin.command:
     cmd: "podman exec -it {{ maw_solr__container }} solr create_core -c multimedia-categories"

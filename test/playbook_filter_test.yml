@@ -9,10 +9,10 @@
             started: true
         - name: b
           state:
-            started: no
+            started: false
         - name: c
           state:
-            started: True
+            started: true
 
   tasks:
     - name: get started containers

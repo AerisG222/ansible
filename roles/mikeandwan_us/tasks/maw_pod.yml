@@ -6,7 +6,7 @@
     enabled: false
     state: stopped
     scope: user
-  ignore_errors: true # nothing to stop if it doesn't exist
+  ignore_errors: true  # nothing to stop if it doesn't exist
   tags: skip_ansible_lint
 
 - name: get pod info

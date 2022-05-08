@@ -1,3 +1,4 @@
+---
 # ----
 # this file assumes that host, group, and secret variables were previously loaded.
 # this file then configures variables templated on those variables to maximize consistency across environments.

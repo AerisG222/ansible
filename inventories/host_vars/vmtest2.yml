@@ -1,3 +1,4 @@
+---
 ansible_host: 192.168.122.245
 ansible_user: mmorano
 external_vars_root: "{{ lookup('env', 'HOME') }}/ansible/hosts/vmtest2"

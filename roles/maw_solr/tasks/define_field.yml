@@ -1,3 +1,4 @@
+---
 - name: "check if solr field {{ item.name }} exists"
   ansible.builtin.command:
     cmd: "podman exec -it {{ maw_solr__container }} curl 'http://localhost:8983/solr/multimedia-categories/schema/fields/{{ item.name }}'"

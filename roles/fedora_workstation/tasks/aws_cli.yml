@@ -22,7 +22,7 @@
   become: true
   ansible.builtin.command:
     cmd: aws_cli/aws/install
-  ignore_errors: true # this will fail if already installed
+  ignore_errors: true  # this will fail if already installed
   tags: skip_ansible_lint
   changed_when: true
 
