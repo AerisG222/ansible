@@ -1,0 +1,14 @@
+---
+argument_specs:
+  main:
+    short_description: Meta role to execute all backup tasks for mikeandwan.us
+    options:
+      maw__do_uploads_backup:
+        type: bool
+        required: true
+        description: indicates if the upload volume should be backed up
+
+      maw__do_dataprotection_backup:
+        type: bool
+        required: true
+        description: indicates if the dataprotection volumes should be backed up
