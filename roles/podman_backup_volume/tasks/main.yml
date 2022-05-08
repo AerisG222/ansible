@@ -5,6 +5,13 @@
     state: absent
   delegate_to: localhost
 
+- name: create backup directory on controller
+  ansible.builtin.file:
+    path: "{{ podman_vol_bu__control_dir | dirname }}"
+    state: directory
+    mode: u+rwx
+  delegate_to: localhost
+
 - name: make sure remote temp directory does not exist
   ansible.builtin.file:
     path: "{{ podman_vol_bu__temp_remote_dir }}"
@@ -24,48 +31,31 @@
     pod_cp__src_dir_or_volume: "{{ podman_vol_bu__volume }}"
     pod_cp__dest_dir_or_volume: "{{ podman_vol_bu__temp_remote_dir }}"
 
-- name: find all files that were copied from volume
-  ansible.builtin.find:
-    paths: "{{ podman_vol_bu__temp_remote_dir }}"
-    recurse: true
-  register: _podman_vol_bu__find_result
-
+# hack:
+# disappointing:
+# todo: we are hardcoding the ansible_user below, if we try to use a variable here, it does not seem to get evaluated...
+#   additionally, we need to specify the ansible_user variable in the top level playbook section.  if we define this as a var
+#   under include_role - this will also fail.  i suspect i am not appreciating some of the variable hierarchy here, but am leaving
+#   as is for now as i've wasted a lot of time on this and need to get the overall playbook working
 - name: copy files to controller
-  ansible.builtin.fetch:
+  ansible.posix.synchronize:
+    src: "{{ podman_vol_bu__temp_remote_dir }}/"
     dest: "{{ podman_vol_bu__control_dir }}"
-    src: "{{ _podman_vol_bu__file.path }}"
-  loop_control:
-    loop_var: _podman_vol_bu__file
-  loop: "{{ _podman_vol_bu__find_result.files }}"
+    mode: pull
+  vars:
+    ansible_user: svc_www_maw # "{{ maw_current__prod_username }}"
+  delegate_to: localhost
 
 - name: finally, delete remote temp directory
   ansible.builtin.file:
     path: "{{ podman_vol_bu__temp_remote_dir }}"
     state: absent
 
-- name: set var to hold path to directory on controller where files were copied
-  ansible.builtin.set_fact:
-    _podman_vol_bu__control_copy_dir: "{{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}{{ podman_vol_bu__temp_remote_dir }}"
-
 - name: check if files were copied to controller
   ansible.builtin.stat:
-    path: "{{ _podman_vol_bu__control_copy_dir }}"
+    path: "{{ podman_vol_bu__control_dir }}"
   delegate_to: localhost
-  register: _podman_vol_bu__control_copy_dir_stat_result
-
-- name: copy files if copy dir exists
-  block:
-    - name: move files on controller to the root backup dir
-      ansible.builtin.shell:
-        cmd: "mv {{ _podman_vol_bu__control_copy_dir }}/* {{ podman_vol_bu__control_dir }}"
-      delegate_to: localhost
-
-    - name: delete host specific directories created
-      ansible.builtin.file:
-        path: "{{ podman_vol_bu__control_dir }}/{{ podman_vol_bu__hostname }}"
-        state: absent
-      delegate_to: localhost
-  when: _podman_vol_bu__control_copy_dir_stat_result.stat.exists
+  register: _podman_vol_bu__control_dir_stat_result
 
 - name: create empty dir if no files were in volume
   ansible.builtin.file:
@@ -73,4 +63,4 @@
     state: directory
     mode: u+rwx
   delegate_to: localhost
-  when: not _podman_vol_bu__control_copy_dir_stat_result.stat.exists
+  when: not _podman_vol_bu__control_dir_stat_result.stat.exists

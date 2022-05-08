@@ -5,13 +5,13 @@
   vars_files:
     - "{{ controller_secrets_file }}"
     - vars/maw_vars.yml
+  vars:
+    ansible_user: "{{ maw_current__prod_username }}"
 
   tasks:
     - name: Execute Backups
       ansible.builtin.include_role:
         name: maw_backup
-      vars:
-        ansible_user: "{{ maw_current__prod_username }}"
 
 
 - name: Prepare host
@@ -43,4 +43,6 @@
 
     # - name: Configure mikeandwan.us
     #   ansible.builtin.include_role:
-    #     name: mikeandwan_us
+    #     name: maw
+    #   vars:
+    #     ansible_user: "{{ maw_host__username }}"
