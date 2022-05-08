@@ -77,6 +77,21 @@ maw_prod_volume_bu__username: "{{ maw_current__prod_username }}"
 podman_vol_bu__hostname: "{{ maw_prod_volume_bu__hostname }}"
 podman_vol_bu__username: "{{ maw_prod_volume_bu__username }}"
 
+# current live site lets encrypt cert backup
+maw_prod_certbot_certs_bu__volume: maw-certbot-certs
+maw_prod_certbot_certs_bu__control_dir: "{{ maw__backup_root }}/certbot_certs"
+maw_prod_certbot_certs_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_cbotcerts_backup"
+
+# current live site certbot validation backup
+maw_prod_certbot_validation_bu__volume: maw-certbot-validation
+maw_prod_certbot_validation_bu__control_dir: "{{ maw__backup_root }}/certbot_validation"
+maw_prod_certbot_validation_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_cbotval_backup"
+
+# current live site maw cert backup
+maw_prod_maw_cert_bu__volume: maw-certs
+maw_prod_maw_cert_bu__control_dir: "{{ maw__backup_root }}/maw_certs"
+maw_prod_maw_cert_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_mawcerts_backup"
+
 # current live site uploads backup
 maw_prod_uploads_bu__volume: maw-uploads
 maw_prod_uploads_bu__control_dir: "{{ maw__backup_root }}/uploads"

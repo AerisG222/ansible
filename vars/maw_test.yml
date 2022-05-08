@@ -34,6 +34,8 @@ maw_prod_gdrive_creds_bu__use_existing_backups: true
 maw_prod_google_creds_bu__use_existing_backups: true
 maw__do_uploads_backup: false
 maw__do_dataprotection_backup: false
+maw__do_letsencrypt_backup: false
+maw__do_maw_certs_backup: false
 
 # maw host
 maw_host__allow_low_ports: false

@@ -11,6 +11,33 @@
   ansible.builtin.include_role:
     name: maw_prod_google_creds_backup
 
+- name: backup lets encrypt certs volume
+  ansible.builtin.include_role:
+    name: podman_backup_volume
+  vars:
+    podman_vol_bu__volume: "{{ maw_prod_certbot_certs_bu__volume }}"
+    podman_vol_bu__control_dir: "{{ maw_prod_certbot_certs_bu__control_dir }}"
+    podman_vol_bu__temp_remote_dir: "{{ maw_prod_certbot_certs_bu__temp_remote_dir }}"
+  when: maw__do_letsencrypt_backup
+
+- name: backup lets encrypt validation volume
+  ansible.builtin.include_role:
+    name: podman_backup_volume
+  vars:
+    podman_vol_bu__volume: "{{ maw_prod_certbot_validation_bu__volume }}"
+    podman_vol_bu__control_dir: "{{ maw_prod_certbot_validation_bu__control_dir }}"
+    podman_vol_bu__temp_remote_dir: "{{ maw_prod_certbot_validation_bu__temp_remote_dir }}"
+  when: maw__do_letsencrypt_backup
+
+- name: backup maw certs volume
+  ansible.builtin.include_role:
+    name: podman_backup_volume
+  vars:
+    podman_vol_bu__volume: "{{ maw_prod_maw_cert_bu__volume }}"
+    podman_vol_bu__control_dir: "{{ maw_prod_maw_cert_bu__control_dir }}"
+    podman_vol_bu__temp_remote_dir: "{{ maw_prod_maw_cert_bu__temp_remote_dir }}"
+  when: maw__do_maw_certs_backup
+
 - name: backup files in uploads volume
   ansible.builtin.include_role:
     name: podman_backup_volume

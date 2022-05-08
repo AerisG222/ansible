@@ -12,3 +12,13 @@ argument_specs:
         type: bool
         required: true
         description: indicates if the dataprotection volumes should be backed up
+
+      maw__do_letsencrypt_backup:
+        type: bool
+        required: true
+        description: indicates if the certbot volumes should be backed up
+
+      maw__do_maw_certs_backup:
+        type: bool
+        required: true
+        description: indicates if the maw certs volume should be backed up
