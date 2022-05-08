@@ -1,11 +1,23 @@
 ---
-- name: Add Service Accounts
-  become: true
+- name: Configure Base OS
+  ansible.builtin.include_role:
+    name: fedora_base
+
+- name: Add Service Account
   ansible.builtin.user:
     name: "{{ maw_host__username }}"
     password: "{{ maw_host__password | password_hash('sha512') }}"
     update_password: on_create
     state: present
+
+- name: Configure sshd
+  ansible.builtin.import_role:
+    name: sshd
+  vars:
+    sshd_allow_users:
+      - "{{ ansible_user }}"
+      - "{{ maw_host__username }}"
+  when: ansible_connection != 'local'
 
 - name: Initialize podman
   ansible.builtin.include_role:
@@ -14,15 +26,15 @@
     pod_init__linger_users:
       - "{{ maw_host__username }}"
 
-- name: Include maw_hostnames.yml
-  ansible.builtin.include_tasks: maw_hostnames.yml
+- name: Include hostnames.yml
+  ansible.builtin.include_tasks:
+    file: hostnames.yml
   loop_control:
     loop_var: _maw_host__hostname
   loop: "{{ maw_host__hostnames }}"
 
 # https://github.com/containers/podman/blob/main/rootless.md
 - name: permit rootless users to listen on low ports
-  become: true
   ansible.posix.sysctl:
     name: net.ipv4.ip_unprivileged_port_start
     value: 80
@@ -36,11 +48,16 @@
     fw__allowed_services: "{{ maw_host__allow_firewall_services }}"
 
 - name: Initialize host directories
-  ansible.builtin.include_tasks: maw_host_directories.yml
+  ansible.builtin.include_tasks:
+    file: directories.yml
+    apply:
+      become_user: "{{ maw_host__username }}"
 
 # todo: copy files to server
 
 - name: Include maw_admin_scripts
   ansible.builtin.include_role:
     name: maw_admin_scripts
+    apply:
+      become_user: "{{ maw_host__username }}"
   when: maw_host__deploy_admin_scripts

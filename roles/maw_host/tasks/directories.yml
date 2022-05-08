@@ -9,5 +9,3 @@
   loop_control:
     loop_var: _maw_host__asset_dir
   loop: "{{ maw_host__asset_dirs }}"
-
-# todo: copy files for prod
