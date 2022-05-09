@@ -27,14 +27,3 @@
 
 - name: include configure_solr.yml
   ansible.builtin.include_tasks: configure_solr.yml
-
-- name: Configure Solr Indexer
-  ansible.builtin.include_role:
-    name: maw_solr_indexer
-
-- name: run indexer
-  ansible.builtin.systemd:
-    name: "{{ maw_solr__indexer_container }}"
-    enabled: false
-    state: started
-    scope: user

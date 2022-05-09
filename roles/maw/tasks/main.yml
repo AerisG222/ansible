@@ -9,9 +9,9 @@
 #   vars:
 #     maw_pod__mode: setup
 
-- name: Setup shared google creds volume
-  ansible.builtin.include_role:
-    name: maw_google_credentials
+# - name: Setup shared google creds volume
+#   ansible.builtin.include_role:
+#     name: maw_google_credentials
 
 # - name: Setup postgres container
 #   ansible.builtin.include_role:
@@ -21,6 +21,22 @@
 #   ansible.builtin.include_role:
 #     name: maw_redis
 
+- name: Configure solr
+  ansible.builtin.include_role:
+    name: maw_solr
+
+- name: Configure Solr Indexer
+  ansible.builtin.include_role:
+    name: maw_solr_indexer
+
+# REMINDER: our current db needs a couple scripts applied for the indexer to succeed.  make sure to run
+#           the 014 and 015 scripts if this fails, and then try again.
+- name: Run Solr Indexer
+  ansible.builtin.systemd:
+    name: "{{ maw_solridx__service }}"
+    enabled: false
+    state: started
+    scope: user
 
 # - name: Finalize maw_pod as a systemd service
 #   ansible.builtin.include_role:

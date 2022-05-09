@@ -201,7 +201,7 @@ maw_solr__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_solr"
 maw_solr__pod: "{{ maw__podman_pod }}"
 maw_solr__image: "docker.io/solr:{{ maw_solr__version }}"
 maw_solr__container: "{{ maw__env }}-maw-solr"
-maw_solr__volume: "{{ maw__env }}-maw-solr-{{ maw__version_solr }}"
+maw_solr__volume: "{{ maw__env }}-maw-solr-{{ maw_solr__version }}"
 
 # maw solr indexer
 maw_solridx__pod: "{{ maw__podman_pod }}"

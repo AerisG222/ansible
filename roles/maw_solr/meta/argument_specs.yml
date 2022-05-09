@@ -37,28 +37,3 @@ argument_specs:
         type: str
         required: true
         description: The podman volume where solr configuration and index data will be stored
-
-      maw_solr__indexer_image:
-        type: str
-        required: true
-        description: Fully qualified image name for the solr indexer
-
-      maw_solr__indexer_container:
-        type: str
-        required: true
-        description: The name to give the solr indexer container
-
-      maw_solr__indexer_sql_username:
-        type: str
-        required: true
-        description: The postgres username that the solr indexer should use when connecting to postgres
-
-      maw_solr__indexer_sql_password:
-        type: str
-        required: true
-        description: The password for the postgres username
-
-      maw_solr__indexer_calendar:
-        type: str
-        required: true
-        description: The systemd calendar specification that identifies when the indexer will run
