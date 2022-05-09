@@ -1,7 +1,7 @@
 ---
-# - name: Prepare self signed / internal certs
-#   ansible.builtin.include_role:
-#     name: maw_certs
+- name: Prepare self signed / internal certs
+  ansible.builtin.include_role:
+    name: maw_certs
 
 # - name: Initialize maw_pod
 #   ansible.builtin.include_role:
@@ -21,22 +21,40 @@
 #   ansible.builtin.include_role:
 #     name: maw_redis
 
-- name: Configure solr
-  ansible.builtin.include_role:
-    name: maw_solr
+# - name: Configure solr
+#   ansible.builtin.include_role:
+#     name: maw_solr
 
-- name: Configure Solr Indexer
-  ansible.builtin.include_role:
-    name: maw_solr_indexer
+# - name: Configure Solr Indexer
+#   ansible.builtin.include_role:
+#     name: maw_solr_indexer
 
-# REMINDER: our current db needs a couple scripts applied for the indexer to succeed.  make sure to run
-#           the 014 and 015 scripts if this fails, and then try again.
-- name: Run Solr Indexer
-  ansible.builtin.systemd:
-    name: "{{ maw_solridx__service }}"
-    enabled: false
-    state: started
-    scope: user
+# # REMINDER: our current db needs a couple scripts applied for the indexer to succeed.  make sure to run
+# #           the 014 and 015 scripts if this fails, and then try again.
+# - name: Run Solr Indexer
+#   ansible.builtin.systemd:
+#     name: "{{ maw_solridx__service }}"
+#     enabled: false
+#     state: started
+#     scope: user
+
+- name: Configure maw_auth
+  ansible.builtin.include_role:
+    name: maw_auth
+  vars:
+    maw_auth__pfx_pwd: "{{ maw__pfx_pwd_auth }}"
+
+- name: Configure maw_api
+  ansible.builtin.include_role:
+    name: maw_api
+  vars:
+    maw_api__pfx_pwd: "{{ maw__pfx_pwd_api }}"
+
+- name: Configure maw_www
+  ansible.builtin.include_role:
+    name: maw_www
+  vars:
+    maw_www__pfx_pwd: "{{ maw__pfx_pwd_www }}"
 
 # - name: Finalize maw_pod as a systemd service
 #   ansible.builtin.include_role:

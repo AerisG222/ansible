@@ -10,9 +10,9 @@
 - name: configure natively hosted www site
   ansible.builtin.include_tasks:
     file: native_hosted.yml
-  when: maw_www__image | length == 0
+  when: not maw_www__run_in_container
 
 - name: configure container hosted www site
   ansible.builtin.include_tasks:
     file: container_hosted.yml
-  when: maw_www__image | length > 0
+  when: maw_www__run_in_container

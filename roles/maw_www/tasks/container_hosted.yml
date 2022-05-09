@@ -9,17 +9,17 @@
     state: present
   register: _maw_www__dataprotection_volume_result
 
-- name: migrate www dataprotection files from original volume
+- name: restore dataprotection files
   ansible.builtin.include_role:
-    name: podman_copy
+    name: podman_restore_volume
   when: >
     _maw_www__dataprotection_volume_result.changed
     and
-    maw_www__dataprotection_volume_to_migrate | length > 0
+    maw_www__restore_dataprotection
   vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: "{{ maw_www__dataprotection_volume_to_migrate }}"
-    pod_cp__dest_dir_or_volume: "{{ maw_www__dataprotection_volume }}"
+    pod_vol_re__temp_remote_dir: "{{ maw_www__temp_dir }}"
+    pod_vol_re__control_dir: "{{ maw_www__dataprotection_controller_backup_dir }}"
+    pod_vol_re__volume: "{{ maw_www__dataprotection_volume }}"
 
 - name: maw-www container
   containers.podman.podman_container:
@@ -27,7 +27,7 @@
     pod: "{{ maw_www__pod }}"
     image: "{{ maw_www__image }}"
     state: started
-    env_file: "{{ maw_www__envfile }}/"
+    env_file: "{{ maw_www__envfile }}"
     security_opt:
       - label=disable
     volume:

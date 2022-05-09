@@ -10,9 +10,9 @@
 - name: configure natively hosted api site
   ansible.builtin.include_tasks:
     file: native_hosted.yml
-  when: maw_auth__image | length == 0
+  when: not maw_auth__run_in_container
 
 - name: configure container hosted api site
   ansible.builtin.include_tasks:
     file: container_hosted.yml
-  when: maw_auth__image | length > 0
+  when: maw_auth__run_in_container

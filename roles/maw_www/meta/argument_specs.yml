@@ -3,6 +3,11 @@ argument_specs:
   main:
     short_description: Creates www service and supporting objects for mikeandwan.us
     options:
+      maw_www__run_in_container:
+        type: bool
+        required: true
+        description: Indicates if maw_auth should run in a container (we will run this manually for dev)
+
       maw_www__pod:
         type: str
         required: true
@@ -37,11 +42,6 @@ argument_specs:
         type: str
         required: true
         description: Name of the volume where data protection files are stored
-
-      maw_www__dataprotection_volume_to_migrate:
-        type: str
-        required: true
-        description: Name of the previous volume where data protection files are stored and should be copied to the new volume
 
       maw_www__google_creds_volume:
         type: str
@@ -117,3 +117,18 @@ argument_specs:
         type: str
         required: true
         description: The host directory containing the video assets
+
+      maw_www__restore_dataprotection:
+        type: bool
+        required: true
+        description: indicates if the dataprotection volume should be restored from backup
+
+      maw_www__dataprotection_controller_backup_dir:
+        type: str
+        required: true
+        description: Absolute path to the directory on the controller that holds the www dataprotection backup
+
+      maw_www__temp_dir:
+        type: str
+        required: true
+        description: Absolute path to a temp directory on the remote

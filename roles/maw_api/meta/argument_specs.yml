@@ -3,6 +3,11 @@ argument_specs:
   main:
     short_description: Creates api service and supporting objects for mikeandwan.us
     options:
+      maw_api__run_in_container:
+        type: bool
+        required: true
+        description: Indicates if maw_api should run in a container (we will run this manually for dev)
+
       maw_api__pod:
         type: str
         required: true
@@ -37,11 +42,6 @@ argument_specs:
         type: str
         required: true
         description: Name of the volume where data protection files are stored
-
-      maw_api__dataprotection_volume_to_migrate:
-        type: str
-        required: true
-        description: Name of the previous volume where data protection files are stored and should be copied to the new volume
 
       maw_api__envfile:
         type: str
@@ -92,3 +92,23 @@ argument_specs:
         type: str
         required: true
         description: Absolute path to the photos / images asset directory
+
+      maw_api__dataprotection_controller_backup_dir:
+        type: str
+        required: true
+        description: Absolute path to the directory on the controller that holds the api dataprotection backup
+
+      maw_api__restore_dataprotection:
+        type: bool
+        required: true
+        description: Indicates if the dataprotection volume should be restored from backup
+
+      maw_api__temp_dir:
+        type: str
+        required: true
+        description: Absolute path to a temp directory on the remote
+
+      maw_api__upload_controller_backup_dir:
+        type: str
+        required: true
+        description: Absolute path to the directory on the controller that holds the uploads backup
