@@ -25,6 +25,7 @@ maw__pfx_pwd_auth:
 maw__pfx_pwd_www:
 
 maw__podman_pod: "{{ maw__env }}-maw-pod"
+maw__podman_systemd_pod_service: "pod-{{ maw__podman_pod }}"
 maw__podman_env_dir: "{{ remote_maw_root }}/podman-env"
 
 maw__backup_root: "{{ controller_maw_root }}/_backups"

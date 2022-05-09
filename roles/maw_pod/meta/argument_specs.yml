@@ -1,0 +1,12 @@
+---
+argument_specs:
+  main:
+    short_description: Role to create a new pod for mikeandwan.us as well as write the systemd service files for this pod
+    options:
+      maw_pod__mode:
+        type: str
+        required: true
+        description: Specifies whether this role should prepare a new pod or save the pod configuration and run as systemd
+        choices:
+          - setup
+          - systemd

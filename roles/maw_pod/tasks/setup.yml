@@ -1,0 +1,27 @@
+---
+# stop pod via systemd, otherwise systemd and podman fight
+- name: Disable maw via systemd
+  ansible.builtin.systemd:
+    name: "{{ maw__podman_systemd_pod_service }}"
+    enabled: false
+    state: stopped
+    scope: user
+  ignore_errors: true  # nothing to stop if it doesn't exist
+  tags: skip_ansible_lint
+
+- name: get pod info
+  containers.podman.podman_pod_info:
+    name: "{{ maw__podman_pod }}"
+  register: podinfo
+
+- name: stop pod if running
+  containers.podman.podman_pod:
+    name: "{{ maw__podman_pod }}"
+    state: stopped
+  when: (podinfo.pods | length > 0) and (podinfo.pods[0].State == 'Running')
+
+- name: "create {{ maw__podman_pod }} pod"
+  containers.podman.podman_pod:
+    name: "{{ maw__podman_pod }}"
+    state: started
+    publish: "{{ maw__podman_publish_ports if maw__podman_publish_ports is iterable else [] }}"

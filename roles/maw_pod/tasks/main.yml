@@ -1,0 +1,10 @@
+---
+- name: Run setup step
+  ansible.builtin.include_tasks:
+    file: setup.yml
+  when: maw_pod__mode == 'setup'
+
+- name: Run systemd step
+  ansible.builtin.include_tasks:
+    file: systemd.yml
+  when: maw_pod__mode == 'systemd'
