@@ -1,0 +1,16 @@
+---
+- name: create maw-google-creds volume
+  containers.podman.podman_volume:
+    name: "{{ maw_google_creds__volume }}"
+    state: present
+  when: maw_google_creds__use_volume
+  register: _maw_google_creds__volume_results
+
+- name: restore maw-google-creds
+  ansible.builtin.include_role:
+    name: podman_restore_volume
+  when: maw_google_creds__restore and _maw_google_creds__volume_results.changed
+  vars:
+    pod_vol_re__temp_remote_dir: "{{ maw_google_creds__temp_dir }}"
+    pod_vol_re__control_dir: "{{ maw_google_creds__backup_dir }}"
+    pod_vol_re__volume: "{{ maw_google_creds__volume }}"

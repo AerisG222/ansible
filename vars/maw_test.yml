@@ -45,7 +45,8 @@ maw_host__username: "{{ ansible_user_id }}"
 maw_host__password: ""
 
 # maw google credentials
-maw_google_creds__restore: false
+maw_google_creds__use_volume: true
+maw_google_creds__restore: true
 
 # maw postgres
 maw_postgres__envfile_backup: false

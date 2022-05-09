@@ -1,0 +1,12 @@
+---
+- name: ensure google-creds directory exists
+  ansible.builtin.file:
+    path: "{{ maw_google_creds__dir }}"
+    state: directory
+    mode: u+rwx
+
+- name: copy backup to remote
+  ansible.builtin.copy:
+    src: "{{ maw_google_creds__backup_file }}"
+    dest: "{{ maw_google_creds__dir }}"
+    mode: u+rw

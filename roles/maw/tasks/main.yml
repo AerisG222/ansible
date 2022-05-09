@@ -3,19 +3,23 @@
 #   ansible.builtin.include_role:
 #     name: maw_certs
 
-- name: Initialize maw_pod
-  ansible.builtin.include_role:
-    name: maw_pod
-  vars:
-    maw_pod__mode: setup
+# - name: Initialize maw_pod
+#   ansible.builtin.include_role:
+#     name: maw_pod
+#   vars:
+#     maw_pod__mode: setup
 
-- name: Setup postgres container
+- name: Setup shared google creds volume
   ansible.builtin.include_role:
-    name: maw_postgres
+    name: maw_google_credentials
 
-- name: Configure redis
-  ansible.builtin.include_role:
-    name: maw_redis
+# - name: Setup postgres container
+#   ansible.builtin.include_role:
+#     name: maw_postgres
+
+# - name: Configure redis
+#   ansible.builtin.include_role:
+#     name: maw_redis
 
 
 # - name: Finalize maw_pod as a systemd service

@@ -3,6 +3,11 @@ argument_specs:
   main:
     short_description: Creates shared google creds volume to hold email credentials file for mikeandwan.us
     options:
+      maw_google_creds__use_volume:
+        type: bool
+        required: true
+        description: indicates if a volume should be used to store the google credentials
+
       maw_google_creds__backup_dir:
         type: str
         required: true
@@ -13,17 +18,17 @@ argument_specs:
         required: true
         description: google credentials backup file on controller
 
+      maw_google_creds__dir_for_site:
+        type: str
+        required: true
+        description: directory that will hold the credentials file
+
       maw_google_creds__volume:
         type: str
         required: true
         description: volume that will hold the credentials file
 
-      maw_google_creds__volume_to_migrate:
-        type: str
-        required: true
-        description: name of the original volume holding the google credentials file
-
-      maw_google_creds__file:
+      maw_google_creds__file_for_site:
         type: str
         required: true
         description: path to the google credentials file for the running application

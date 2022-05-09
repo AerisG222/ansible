@@ -128,6 +128,7 @@ maw_host__asset_dirs:
 # maw google credentials
 maw_google_creds__backup_dir: "{{ maw_prod_google_creds_bu__control_dir }}"
 maw_google_creds__backup_file: "{{ maw_prod_google_creds_bu__control_dir }}/www_emailer.json"
+maw_google_creds__temp_dir: "{{ remote_maw_root }}/_tmp_ansible_google_creds"
 maw_google_creds__dir: "{{ remote_maw_root }}/google-creds"
 maw_google_creds__volume: "{{ maw__env }}-maw-google-creds"
 maw_google_creds__dir_for_site: "{{ maw_google_creds__use_volume | ternary('/google-creds', maw_google_creds__dir) }}"

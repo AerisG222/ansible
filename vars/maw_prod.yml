@@ -46,6 +46,10 @@ maw_host__allow_firewall_services:
 maw_host__username: svc_www_maw
 maw_host__password: "{{ vault_os_svc_www_maw }}"
 
+# maw google credentials
+maw_google_creds__use_volume: true
+maw_google_creds__restore: true
+
 # maw postgres
 maw_postgres__envfile_backup: true
 maw_postgres__configure_backup_jobs: true
