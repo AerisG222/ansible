@@ -113,6 +113,11 @@ maw_prod_wwwdp_bu__volume: maw-www-dataprotection
 maw_prod_wwwdp_bu__control_dir: "{{ maw__backup_root }}/dataprotection_www"
 maw_prod_wwwdp_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_wwwdp_backup"
 
+# current reverse geocoder backup
+maw_prod_revgeo_bu__volume: maw-reverse-geocode
+maw_prod_revgeo_bu__control_dir: "{{ maw__backup_root }}/reverse_geocode"
+maw_prod_revgeo_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_revgeo_backup"
+
 # maw host
 maw_host__hostnames:
   - "{{ maw__fqdn_naked }}"

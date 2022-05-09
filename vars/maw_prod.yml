@@ -36,6 +36,7 @@ maw__do_uploads_backup: true
 maw__do_dataprotection_backup: true
 maw__do_letsencrypt_backup: true
 maw__do_maw_certs_backup: true
+maw__do_revgeo_backup: true
 
 # maw host
 maw_host__allow_low_ports: true

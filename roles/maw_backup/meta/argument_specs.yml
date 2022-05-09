@@ -22,3 +22,8 @@ argument_specs:
         type: bool
         required: true
         description: indicates if the maw certs volume should be backed up
+
+      maw__do_revgeo_backup:
+        type: bool
+        required: true
+        description: indicates if the reverse geocoder volume should be backed up
