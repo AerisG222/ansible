@@ -320,11 +320,12 @@ maw_revgeo__systemd_dir: "{{ maw__systemd_dir }}"
 maw_revgeo__service: "{{ maw__env }}-maw-reverse-geocoder"
 maw_revgeo__pod: "{{ maw__podman_pod }}"
 maw_revgeo__container: "{{ maw__env }}-maw-reverse-geocoder"
+maw_revgeo__controller_backup_dir: "{{ maw_prod_revgeo_bu__control_dir }}"
 maw_revgeo__volume: "{{ maw__env }}-maw-reverse-geocode"
-maw_revgeo__volume_to_migrate: maw-reverse-geocode
 maw_revgeo__envfile: "{{ maw__podman_env_dir }}/maw-reverse-geocode.env"
 maw_revgeo__envfile_backup: true
 maw_revgeo__calendar: '00:45:00'
+maw_revgeo__temp_dir: "{{ remote_maw_root }}/_tmp_ansible_revgeo"
 
 # maw certs
 maw_certs__container: "{{ maw__env }}-maw-certs"

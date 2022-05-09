@@ -17,14 +17,17 @@
     state: present
   register: _maw_revgeo__volume_result
 
-- name: migrate maw-reverse-geocode
+- name: restore reverse geocode files
   ansible.builtin.include_role:
-    name: podman_copy
-  when: _maw_revgeo__volume_result.changed
+    name: podman_restore_volume
+  when: >
+    _maw_revgeo__volume_result.changed
+    and
+    maw_revgeo__restore
   vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: "{{ maw_revgeo__volume_to_migrate }}"
-    pod_cp__dest_dir_or_volume: "{{ maw_revgeo__volume }}"
+    pod_vol_re__temp_remote_dir: "{{ maw_revgeo__temp_dir }}"
+    pod_vol_re__control_dir: "{{ maw_revgeo__controller_backup_dir }}"
+    pod_vol_re__volume: "{{ maw_revgeo__volume }}"
 
 - name: Set facts for systemd_job role
   ansible.builtin.set_fact:

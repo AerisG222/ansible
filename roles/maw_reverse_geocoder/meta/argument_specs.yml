@@ -28,11 +28,6 @@ argument_specs:
         required: true
         description: the name of the volume in which to write reverse geocode results
 
-      maw_revgeo__volume_to_migrate:
-        type: str
-        required: true
-        description: the name of the volume to migrate to the new volume
-
       maw_revgeo__envfile:
         type: str
         required: true
@@ -47,3 +42,18 @@ argument_specs:
         type: str
         required: true
         description: the systemd calendar specification to define when this job runs
+
+      maw_revgeo__restore:
+        type: bool
+        required: true
+        description: indicates if the contents of the reverse geocoder volume should be restored in the new volume
+
+      maw_revgeo__temp_dir:
+        type: str
+        required: true
+        description: a directory on the remote where files can be temporarily stored before being placed in a volume
+
+      maw_revgeo__controller_backup_dir:
+        type: str
+        required: true
+        description: directory on the controller where the revgeo data should be backed up

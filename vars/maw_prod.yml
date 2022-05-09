@@ -99,6 +99,7 @@ maw_gateway__image: docker.io/aerisg222/maw-gateway:latest
 # maw reverse geocode
 maw_revgeo__configure_job: true
 maw_revgeo__image: docker.io/aerisg222/maw-reverse-geocode:latest
+maw_revgeo__restore: true
 
 # maw certs
 maw_certs__image: docker.io/aerisg222/maw-certs:latest

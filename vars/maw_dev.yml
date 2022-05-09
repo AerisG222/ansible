@@ -98,6 +98,7 @@ maw_gateway__image:
 # maw reverse geocode
 maw_revgeo__configure_job: false
 maw_revgeo__image:
+maw_revgeo__restore: false
 
 # maw certs
 maw_certs__image: localhost/maw-certs-test

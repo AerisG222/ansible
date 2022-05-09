@@ -1,7 +1,7 @@
 ---
-- name: Prepare self signed / internal certs
-  ansible.builtin.include_role:
-    name: maw_certs
+# - name: Prepare self signed / internal certs
+#   ansible.builtin.include_role:
+#     name: maw_certs
 
 # - name: Initialize maw_pod
 #   ansible.builtin.include_role:
@@ -64,12 +64,16 @@
 #   ansible.builtin.include_role:
 #     name: maw_photos
 
-- name: Configure maw_gateway
-  ansible.builtin.include_role:
-    name: maw_gateway
+# - name: Configure maw_gateway
+#   ansible.builtin.include_role:
+#     name: maw_gateway
 
 # - name: Finalize maw_pod as a systemd service
 #   ansible.builtin.include_role:
 #     name: maw_pod
 #   vars:
 #     maw_pod__mode: systemd
+
+- name: Configure Reverse Geocode service
+  ansible.builtin.include_role:
+    name: maw_reverse_geocoder
