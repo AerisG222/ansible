@@ -303,11 +303,12 @@ maw_gateway__cert_volume: "{{ maw__certs_volume }}"
 maw_gateway__certbot_systemd_dir: "{{ maw__systemd_dir }}"
 maw_gateway__certbot_service: "{{ maw__env }}-maw-certbot-certs"
 maw_gateway__certbot_image: docker.io/certbot/certbot:latest
+maw_gateway__certbot_certs_controller_backup_dir: "{{ maw_prod_certbot_certs_bu__control_dir }}"
 maw_gateway__certbot_certs_volume: "{{ maw__env }}-maw-certbot-certs"
-maw_gateway__certbot_certs_volume_to_migrate: maw-certbot-certs
+maw_gateway__certbot_validation_controller_backup_dir: "{{ maw_prod_certbot_validation_bu__control_dir }}"
 maw_gateway__certbot_validation_volume: "{{ maw__env }}-maw-certbot-validation"
-maw_gateway__certbot_validation_volume_to_migrate: maw-certbot-validation
 maw_gateway__certbot_calendar: '0/12:00:00'
+maw_gateway__temp_dir: "{{ remote_maw_root }}/_tmp_ansible_gateway"
 
 # maw reverse geocode
 maw_revgeo__systemd_dir: "{{ maw__systemd_dir }}"

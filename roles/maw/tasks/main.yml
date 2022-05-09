@@ -56,13 +56,17 @@
 #   vars:
 #     maw_www__pfx_pwd: "{{ maw__pfx_pwd_www }}"
 
-- name: Configure maw_files
-  ansible.builtin.include_role:
-    name: maw_files
+# - name: Configure maw_files
+#   ansible.builtin.include_role:
+#     name: maw_files
 
-- name: Configure maw_photos
+# - name: Configure maw_photos
+#   ansible.builtin.include_role:
+#     name: maw_photos
+
+- name: Configure maw_gateway
   ansible.builtin.include_role:
-    name: maw_photos
+    name: maw_gateway
 
 # - name: Finalize maw_pod as a systemd service
 #   ansible.builtin.include_role:

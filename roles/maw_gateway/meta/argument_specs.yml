@@ -28,22 +28,27 @@ argument_specs:
         required: true
         description: The volume where certbot can store Let's Encrypt certificates
 
-      maw_gateway__certbot_certs_volume_to_migrate:
-        type: str
-        required: true
-        description: The original name of the certbot volume containing existing Let's Encrypt certificates
-
       maw_gateway__certbot_validation_volume:
         type: str
         required: true
         description: The volume used with certbot to validate domain ownership
 
-      maw_gateway__certbot_validation_volume_to_migrate:
-        type: str
-        required: true
-        description: The original name of the certbot validation volume to migrate to the new volume
-
       maw_gateway__asset_dir:
         type: str
         required: true
         description: The path to the root asset directory on the host
+
+      maw_gateway__temp_dir:
+        type: str
+        required: true
+        description: The path to a temp directory on the remote host
+
+      maw_gateway__certbot_certs_controller_backup_dir:
+        type: str
+        required: true
+        description: The path to the backup directory for certbot certs on the controller
+
+      maw_gateway__certbot_validation_controller_backup_dir:
+        type: str
+        required: true
+        description: The path to the backup directory for certbot validation on the controller

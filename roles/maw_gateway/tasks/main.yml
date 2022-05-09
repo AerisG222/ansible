@@ -27,24 +27,29 @@
         state: present
       register: _maw_gateway__certbot_validation_volume
 
-    - name: migrate certbot certs
+    - name: restore certbot certs
       ansible.builtin.include_role:
-        name: podman_copy
-      when: _maw_gateway__certbot_certs_volume.changed
+        name: podman_restore_volume
+      when: >
+        _maw_gateway__certbot_certs_volume.changed
+        and
+        maw_gateway__configure_certbot
       vars:
-        pod_cp__skip_if_src_not_exists: true
-        pod_cp__src_dir_or_volume: "{{ maw_gateway__certbot_certs_volume_to_migrate }}"
-        pod_cp__dest_dir_or_volume: "{{ maw_gateway__certbot_certs_volume }}"
-        pod_cp__command: cp -R /src/internal/. /dest
+        pod_vol_re__temp_remote_dir: "{{ maw_gateway__temp_dir }}"
+        pod_vol_re__control_dir: "{{ maw_gateway__certbot_certs_controller_backup_dir }}"
+        pod_vol_re__volume: "{{ maw_gateway__certbot_certs_volume }}"
 
-    - name: migrate certbot validation
+    - name: restore certbot validation
       ansible.builtin.include_role:
-        name: podman_copy
-      when: _maw_gateway__certbot_validation_volume.changed
+        name: podman_restore_volume
+      when: >
+        _maw_gateway__certbot_validation_volume.changed
+        and
+        maw_gateway__configure_certbot
       vars:
-        pod_cp__skip_if_src_not_exists: true
-        pod_cp__src_dir_or_volume: "{{ maw_gateway__certbot_validation_volume_to_migrate }}"
-        pod_cp__dest_dir_or_volume: "{{ maw_gateway__certbot_validation_volume }}"
+        pod_vol_re__temp_remote_dir: "{{ maw_gateway__temp_dir }}"
+        pod_vol_re__control_dir: "{{ maw_gateway__certbot_validation_controller_backup_dir }}"
+        pod_vol_re__volume: "{{ maw_gateway__certbot_validation_volume }}"
 
     - name: define prod only volumes for gateway (letsencrypt)
       ansible.builtin.set_fact:
