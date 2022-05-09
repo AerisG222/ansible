@@ -38,23 +38,31 @@
 #     state: started
 #     scope: user
 
-- name: Configure maw_auth
-  ansible.builtin.include_role:
-    name: maw_auth
-  vars:
-    maw_auth__pfx_pwd: "{{ maw__pfx_pwd_auth }}"
+# - name: Configure maw_auth
+#   ansible.builtin.include_role:
+#     name: maw_auth
+#   vars:
+#     maw_auth__pfx_pwd: "{{ maw__pfx_pwd_auth }}"
 
-- name: Configure maw_api
-  ansible.builtin.include_role:
-    name: maw_api
-  vars:
-    maw_api__pfx_pwd: "{{ maw__pfx_pwd_api }}"
+# - name: Configure maw_api
+#   ansible.builtin.include_role:
+#     name: maw_api
+#   vars:
+#     maw_api__pfx_pwd: "{{ maw__pfx_pwd_api }}"
 
-- name: Configure maw_www
+# - name: Configure maw_www
+#   ansible.builtin.include_role:
+#     name: maw_www
+#   vars:
+#     maw_www__pfx_pwd: "{{ maw__pfx_pwd_www }}"
+
+- name: Configure maw_files
   ansible.builtin.include_role:
-    name: maw_www
-  vars:
-    maw_www__pfx_pwd: "{{ maw__pfx_pwd_www }}"
+    name: maw_files
+
+- name: Configure maw_photos
+  ansible.builtin.include_role:
+    name: maw_photos
 
 # - name: Finalize maw_pod as a systemd service
 #   ansible.builtin.include_role:
