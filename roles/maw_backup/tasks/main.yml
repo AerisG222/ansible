@@ -30,12 +30,33 @@
   when: maw__do_letsencrypt_backup
 
 - name: backup maw certs volume
-  ansible.builtin.include_role:
-    name: podman_backup_volume
-  vars:
-    podman_vol_bu__volume: "{{ maw_prod_maw_cert_bu__volume }}"
-    podman_vol_bu__control_dir: "{{ maw_prod_maw_cert_bu__control_dir }}"
-    podman_vol_bu__temp_remote_dir: "{{ maw_prod_maw_cert_bu__temp_remote_dir }}"
+  block:
+    - name: backup maw certs volume
+      ansible.builtin.include_role:
+        name: podman_backup_volume
+      vars:
+        podman_vol_bu__volume: "{{ maw_prod_maw_cert_bu__volume }}"
+        podman_vol_bu__control_dir: "{{ maw_prod_maw_cert_bu__control_dir }}"
+        podman_vol_bu__temp_remote_dir: "{{ maw_prod_maw_cert_bu__temp_remote_dir }}"
+
+    - name: legacy volume has an extra directory level named 'internal' - see if that exists
+      ansible.builtin.stat:
+        path: "{{ maw_prod_maw_cert_bu__control_dir }}/internal"
+      register: _maw_prod_maw_cert_bu__internal_exists
+      delegate_to: localhost
+
+    - name: move certs out of internal if needed
+      ansible.builtin.shell:
+        cmd: "mv {{ maw_prod_maw_cert_bu__control_dir }}/internal/* {{ maw_prod_maw_cert_bu__control_dir }}"
+      delegate_to: localhost
+      when: _maw_prod_maw_cert_bu__internal_exists.stat.exists
+
+    - name: remove internal dir if needed
+      ansible.builtin.file:
+        path: "{{ maw_prod_maw_cert_bu__control_dir }}/internal"
+        state: absent
+      delegate_to: localhost
+      when: _maw_prod_maw_cert_bu__internal_exists.stat.exists
   when: maw__do_maw_certs_backup
 
 - name: backup files in uploads volume
