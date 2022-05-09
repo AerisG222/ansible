@@ -14,6 +14,7 @@
 - name: pull gdrive image
   containers.podman.podman_image:
     name: "{{ maw_postgres__gdrive_image }}"
+  when: maw_postgres__configure_archive_jobs
 
 - name: create postgres volume
   containers.podman.podman_volume:
@@ -32,6 +33,7 @@
 - name: prepare gdrive credentials volume
   ansible.builtin.include_tasks:
     file: gdrive_volume.yml
+  when: maw_postgres__configure_archive_jobs
 
 - name: maw-postgres container
   containers.podman.podman_container:

@@ -81,7 +81,7 @@
       ansible.builtin.include_role:
         name: podman_wait_for_stop
       vars:
-        pod_stop__container_name: "{{ pg_res_db__container }}e"
+        pod_stop__container_name: "{{ pg_res_db__container }}"
         pod_stop__result_varname: _pg_res_db__optimize_result
 
     - name: fail if optimization failed

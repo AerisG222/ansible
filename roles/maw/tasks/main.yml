@@ -9,6 +9,9 @@
   vars:
     maw_pod__mode: setup
 
+- name: Setup postgres container
+  ansible.builtin.include_role:
+    name: maw_postgres
 
 
 # - name: Finalize maw_pod as a systemd service

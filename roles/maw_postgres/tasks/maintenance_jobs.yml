@@ -2,6 +2,7 @@
 - name: Configure Postgres Role Backup
   ansible.builtin.include_role:
     name: postgres_backup_roles
+  when: maw_postgres__configure_backup_jobs
   vars:
     pg_bu_roles__systemd_dir: "{{ maw_postgres__systemd_dir }}"
     pg_bu_roles__service: "{{ maw_postgres__backup_roles_service }}"
@@ -15,6 +16,7 @@
 - name: Configure postgres backup for maw_website database
   ansible.builtin.include_role:
     name: postgres_backup_database
+  when: maw_postgres__configure_backup_jobs
   vars:
     pg_bu_db__systemd_dir: "{{ maw_postgres__systemd_dir }}"
     pg_bu_db__service: "{{ maw_postgres__backup_maw_service }}"
@@ -29,6 +31,7 @@
 - name: Configure postgres backup for idsrv database
   ansible.builtin.include_role:
     name: postgres_backup_database
+  when: maw_postgres__configure_backup_jobs
   vars:
     pg_bu_db__systemd_dir: "{{ maw_postgres__systemd_dir }}"
     pg_bu_db__service: "{{ maw_postgres__backup_idsrv_service }}"
@@ -43,6 +46,7 @@
 - name: Configure postgres optimizations for maw_website
   ansible.builtin.include_role:
     name: postgres_optimize
+  when: maw_postgres__configure_optimize_jobs
   vars:
     pg_optimize__systemd_dir: "{{ maw_postgres__systemd_dir }}"
     pg_optimize__service: "{{ maw_postgres__optimize_maw_service }}"
@@ -56,6 +60,7 @@
 - name: Configure postgres optimizations for idsrv
   ansible.builtin.include_role:
     name: postgres_optimize
+  when: maw_postgres__configure_optimize_jobs
   vars:
     pg_optimize__systemd_dir: "{{ maw_postgres__systemd_dir }}"
     pg_optimize__service: "{{ maw_postgres__optimize_idsrv_service }}"
@@ -69,6 +74,7 @@
 - name: Configure Postgres Backup Cleanup
   ansible.builtin.include_role:
     name: postgres_backup_cleanup
+  when: maw_postgres__configure_backup_jobs
   vars:
     pg_clean__systemd_dir: "{{ maw_postgres__systemd_dir }}"
     pg_clean__service: "{{ maw_postgres__cleanup_service }}"
@@ -81,6 +87,7 @@
 - name: Configure Postgres GDrive Daily Archive
   ansible.builtin.include_role:
     name: postgres_gdrive_archive
+  when: maw_postgres__configure_archive_jobs
   vars:
     pg_archive__systemd_dir: "{{ maw_postgres__systemd_dir }}"
     pg_archive__service: "{{ maw_postgres__daily_archive_service }}"
@@ -96,6 +103,7 @@
 - name: Configure Postgres GDrive Monthly Archive
   ansible.builtin.include_role:
     name: postgres_gdrive_archive
+  when: maw_postgres__configure_archive_jobs
   vars:
     pg_archive__systemd_dir: "{{ maw_postgres__systemd_dir }}"
     pg_archive__service: "{{ maw_postgres__monthly_archive_service }}"

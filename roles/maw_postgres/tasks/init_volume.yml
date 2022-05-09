@@ -22,6 +22,7 @@
   vars:
     pod_cp__src_dir_or_volume: "{{ maw_postgres__tempdir }}"
     pod_cp__dest_dir_or_volume: "{{ maw_postgres__init_volume }}"
+    pod_cp__command: cp /src/configure_pg_hba.sh /dest
 
 - name: Delete temp dir
   ansible.builtin.file:

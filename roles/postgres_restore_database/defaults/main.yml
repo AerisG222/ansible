@@ -1,2 +1,2 @@
 ---
-pg_res_db__container_name: pg-restore
+pg_res_db__container: pg-restore

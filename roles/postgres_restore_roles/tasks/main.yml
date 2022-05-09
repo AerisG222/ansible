@@ -28,7 +28,7 @@
     pod: "{{ pg_res_role__pod }}"
     image: "{{ pg_res_role__image }}"
     env_file: "{{ pg_res_role__envfile }}"
-    command: "psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /postgres_backup/{{ _pg_res_role__safe_sql }}"
+    command: "psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 -f /postgres_backup/{{ _pg_res_role__safe_sql | basename }}"
     state: started
     interactive: true
     security_opt:
@@ -40,7 +40,7 @@
   ansible.builtin.include_role:
     name: podman_wait_for_stop
   vars:
-    pod_stop__container_name: "{{ {{ pg_res_role__temp_container }} }}"
+    pod_stop__container_name: "{{ pg_res_role__temp_container }}"
     pod_stop__result_varname: _pg_res_role__create_roles_result
 
 - name: fail if roles not created
