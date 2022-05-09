@@ -98,7 +98,9 @@ maw_revgeo__image:
 
 # maw certs
 maw_certs__image: localhost/maw-certs-test
+maw_certs__fqdn_prefix: "{{ maw__env }}"
 maw_certs__register_ca: true
+maw_certs__restore: false
 
 # maw bash profile
 maw_bashenv__configure: false

@@ -23,11 +23,6 @@ argument_specs:
         required: true
         description: name of the volume where certs should be written
 
-      maw_certs__volume_to_migrate:
-        type: str
-        required: true
-        description: name of the original volume holding existing certs that should be migrated to the new volume
-
       maw_certs__env:
         type: str
         required: true
@@ -44,6 +39,11 @@ argument_specs:
         description: full path to the directory that can be used to temporarily store cert files
 
       maw_certs__register_ca:
-        type: boolean
+        type: bool
         required: true
         description: indicates if the generated CA files should be registered with the system
+
+      maw_certs__restore_src_dir:
+        type: str
+        required: true
+        description: the control directory containing the backup of the maw-certs volume

@@ -34,15 +34,15 @@
   vars_files:
     - "{{ controller_secrets_file }}"
     - vars/maw_vars.yml
+  vars:
+    ansible_user: "{{ maw_host__username }}"
 
   tasks:
-    # - name: Configure development environment for mikeandwan.us
-    #   ansible.builtin.include_role:
-    #     name: maw_dev_prep
-    #   when: maw_dev_prep__configure_tools
+    - name: Configure development environment for mikeandwan.us
+      ansible.builtin.include_role:
+        name: maw_dev_prep
+      when: maw_dev_prep__configure_tools
 
-    # - name: Configure mikeandwan.us
-    #   ansible.builtin.include_role:
-    #     name: maw
-    #   vars:
-    #     ansible_user: "{{ maw_host__username }}"
+    - name: Configure mikeandwan.us
+      ansible.builtin.include_role:
+        name: maw

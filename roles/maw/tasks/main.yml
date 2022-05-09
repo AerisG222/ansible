@@ -1,1 +1,8 @@
 ---
+- name: Prepare self signed / internal certs
+  ansible.builtin.include_role:
+    name: maw_certs
+
+# - name: Include maw_pod
+#   ansible.builtin.include_role:
+#     name: maw_pod

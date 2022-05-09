@@ -27,7 +27,7 @@ maw__podman_publish_ports:
   - 5432:5432  # postgres
   - 6379:6379  # redis
 
-maw_dev_prep__configure_tools: true
+maw_dev_prep__configure_tools: false
 
 # backup
 maw_prod_pg_bu__use_existing_backups: true
@@ -100,7 +100,9 @@ maw_revgeo__image:
 
 # maw certs
 maw_certs__image: localhost/maw-certs-test
+maw_certs__fqdn_prefix: "{{ maw__env }}"
 maw_certs__register_ca: true
+maw_certs__restore: false
 
 # maw bash profile
 maw_bashenv__configure: true

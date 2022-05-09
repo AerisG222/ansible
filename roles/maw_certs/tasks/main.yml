@@ -7,28 +7,24 @@
   containers.podman.podman_volume:
     name: "{{ maw_certs__volume }}"
     state: present
-  when: maw__certs_dir | length == 0
+  when: maw__certs_use_volume
   register: _maw_certs__volume_result
 
-- name: migrate maw-certs
+- name: restore maw-certs
   ansible.builtin.include_role:
-    name: podman_copy
-  when: _maw_certs__volume_result.changed
+    name: podman_restore_volume
+  when: maw_certs__restore and _maw_certs__volume_result.changed
   vars:
-    pod_cp__skip_if_src_not_exists: true
-    pod_cp__src_dir_or_volume: "{{ maw_certs__volume_to_migrate }}"
-    pod_cp__dest_dir_or_volume: "{{ maw_certs__volume }}"
-
-- name: set the cert dir / volume name and fqdn prefix
-  ansible.builtin.set_fact:
-    _maw_certs__cert_vol: "{{ (maw_certs__dir | length > 0) | ternary(maw_certs__dir, maw_certs__volume) }}"
+    pod_vol_re__temp_remote_dir: "{{ maw_certs__temp_dir }}"
+    pod_vol_re__control_dir: "{{ maw_certs__restore_src_dir }}"
+    pod_vol_re__volume: "{{ maw_certs__volume }}"
 
 - name: ensure cert dir exists for local projects
   ansible.builtin.file:
     path: "{{ maw_certs__dir }}"
     state: directory
     mode: u+rwx
-  when: maw_certs__dir | length > 0
+  when: not maw__certs_use_volume
 
 # if you add a new environment, you may need to update the maw-certs image to be able to generate certs for the new env
 # todo: add logic to maw-certs to dynamically accept new env name
@@ -40,7 +36,7 @@
     state: started
     interactive: true
     volume:
-      - "{{ _maw_certs__cert_vol }}:/maw-certs:rw,z"
+      - "{{ maw_certs__dir_or_volume_mount_source }}:/maw-certs:rw,z"
 
 - name: wait for cert initialization to complete
   ansible.builtin.include_role:
@@ -64,7 +60,7 @@
   ansible.builtin.include_role:
     name: podman_copy
   vars:
-    pod_cp__src_dir_or_volume: "{{ _maw_certs__cert_vol }}"
+    pod_cp__src_dir_or_volume: "{{ maw_certs__dir_or_volume_mount_source }}"
     pod_cp__dest_dir_or_volume: "{{ maw_certs__temp_dir }}"
     pod_cp__command: "cp /src/{{ item }} /dest"
   loop:

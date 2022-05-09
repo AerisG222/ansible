@@ -46,7 +46,10 @@
         name: podman_alpine
       vars:
         pod_alpine__container: temp-copy-container
-        pod_alpine__command: "{{ pod_cp__command }}"
+        pod_alpine__command:
+          - sh
+          - '-c'
+          - "{{ pod_cp__command }}"
         pod_alpine__volumes:
           - "{{ pod_cp__src_dir_or_volume }}:{{ pod_cp__container_src_dir }}"
           - "{{ pod_cp__dest_dir_or_volume }}:{{ pod_cp__container_dest_dir }}"
@@ -58,7 +61,7 @@
         pod_stop__container_name: temp-copy-container
         pod_stop__result_varname: _pod_cp__exit_code
 
-    - name: set output variable
+    - name: fail if there was an error copying files
       ansible.builtin.fail:
         msg: there was an error copying files to/from the container
       when: _pod_cp__exit_code | int != 0

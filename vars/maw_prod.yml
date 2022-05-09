@@ -97,7 +97,9 @@ maw_revgeo__image: docker.io/aerisg222/maw-reverse-geocode:latest
 
 # maw certs
 maw_certs__image: docker.io/aerisg222/maw-certs:latest
+maw_certs__fqdn_prefix: ""
 maw_certs__register_ca: false
+maw_certs__restore: true
 
 # maw bash profile
 maw_bashenv__configure: false

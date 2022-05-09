@@ -317,10 +317,10 @@ maw_revgeo__calendar: '00:45:00'
 maw_certs__container: "{{ maw__env }}-maw-certs"
 maw_certs__dir: "{{ maw__certs_dir }}"
 maw_certs__volume: "{{ maw__env }}-maw-certs"
-maw_certs__volume_to_migrate: maw-certs
 maw_certs__env: "{{ maw__env }}"
-maw_certs__fqdn_prefix: "{{ maw__env }}"
 maw_certs__temp_dir: "{{ remote_home_dir }}/_tmp_ansible_certs"
+maw_certs__restore_src_dir: "{{ maw_prod_maw_cert_bu__control_dir }}"
+maw_certs__dir_or_volume_mount_source: "{{ maw__certs_use_volume | ternary(maw_certs__volume, maw_certs__dir) }}"
 
 # maw bash profile
 maw_bashenv__profile: "{{ remote_home_dir }}/.bash_profile"
