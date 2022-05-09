@@ -1,0 +1,19 @@
+---
+argument_specs:
+  main:
+    short_description: This role is responsible restoring the full contents of a volume backup (located on the controller) to a volume
+    options:
+      pod_vol_re__temp_remote_dir:
+        type: str
+        required: true
+        description: Absolute path to the temp directory on the remote host
+
+      pod_vol_re__control_dir:
+        type: str
+        required: true
+        description: Absolute path to the control directory containing backup files that should be copied to the volume
+
+      pod_vol_re__volume:
+        type: str
+        required: true
+        description: The target volume to restore the files to

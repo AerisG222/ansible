@@ -1,0 +1,33 @@
+---
+- name: make sure remote temp directory does not exist
+  ansible.builtin.file:
+    path: "{{ pod_vol_re__temp_remote_dir }}"
+    state: absent
+    mode: u+rwx
+
+- name: Ensure temp dir exists
+  ansible.builtin.file:
+    path: "{{ pod_vol_re__temp_remote_dir }}"
+    state: directory
+    mode: u+rw
+
+# todo: fix the issue carried over from the backup volume role =|
+- name: Copy backup files to remote
+  ansible.posix.synchronize:
+    src: "{{ pod_vol_re__control_dir }}/"
+    dest: "{{ pod_vol_re__temp_remote_dir }}"
+  vars:
+    ansible_user: svc_www_maw  # "{{ maw_current__prod_username }}"
+
+- name: Copy files to volume
+  ansible.builtin.include_role:
+    name: podman_copy
+  vars:
+    pod_cp__src_dir_or_volume: "{{ pod_vol_re__temp_remote_dir }}"
+    pod_cp__dest_dir_or_volume: "{{ pod_vol_re__volume }}"
+
+- name: Delete temp dir
+  ansible.builtin.file:
+    path: "{{ pod_vol_re__temp_remote_dir }}"
+    state: absent
+    mode: u+rwx

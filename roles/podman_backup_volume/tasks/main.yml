@@ -43,7 +43,7 @@
     dest: "{{ podman_vol_bu__control_dir }}"
     mode: pull
   vars:
-    ansible_user: svc_www_maw # "{{ maw_current__prod_username }}"
+    ansible_user: svc_www_maw  # "{{ maw_current__prod_username }}"
   delegate_to: localhost
 
 - name: finally, delete remote temp directory
