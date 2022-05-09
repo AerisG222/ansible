@@ -185,6 +185,7 @@ maw_postgres__sql_password_solr: "{{ maw__sql_password_solr }}"
 # maw redis
 maw_redis__version: 6
 maw_redis__pod: "{{ maw__podman_pod }}"
+maw_redis__image: docker.io/redis:{{ maw_redis__version }}-alpine
 maw_redis__container: "{{ maw__env }}-maw-redis"
 maw_redis__volume: "{{ maw__env }}-maw-redis-{{ maw_redis__version }}"
 maw_redis__cache_sync_container: "{{ maw__env }}-maw-cache-sync"

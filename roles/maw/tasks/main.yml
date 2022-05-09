@@ -13,6 +13,10 @@
   ansible.builtin.include_role:
     name: maw_postgres
 
+- name: Configure redis
+  ansible.builtin.include_role:
+    name: maw_redis
+
 
 # - name: Finalize maw_pod as a systemd service
 #   ansible.builtin.include_role:
