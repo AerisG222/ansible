@@ -42,7 +42,7 @@ maw__do_revgeo_backup: false
 maw_host__allow_low_ports: false
 maw_host__deploy_admin_scripts: false
 maw_host__allow_firewall_services:
-maw_host__username: "{{ ansible_user_id }}"
+maw_host__username: "{{ lookup('env', 'USER') }}"
 maw_host__password: ""
 
 # maw google credentials

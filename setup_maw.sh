@@ -1,12 +1,12 @@
 #!/bin/bash
 . ./_shared.sh
 
-MAW_ENV=prod # $(get_maw_env)
-HOST=vmtest2 # $(get_value "Hostname (must exist in inventory file): " 'n')
+MAW_ENV=dev # $(get_maw_env)
+HOST=barett # $(get_value "Hostname (must exist in inventory file): " 'n')
 FIRST_RUN=n  # $(get_value "First Run - need to prompt for sshd password?  (y/N): " 'n' 'n')
 VERBOSE=n    # $(get_value "Verbose?  (y/N): " 'n' 'n')
 TAGS=maw_services # $(get_value "Run specific tag?  (maw_backups | maw_host | maw_services): " 'n' 'n')
-PLAYBOOK_ARGS=() # "--ask-become-pass"
+PLAYBOOK_ARGS=("--ask-become-pass")
 
 if [ "${MAW_ENV}" == "prod" ]; then
     INVENTORY="inventories/inventory_prod.yml"

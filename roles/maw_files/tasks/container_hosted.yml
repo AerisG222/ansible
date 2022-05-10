@@ -1,0 +1,21 @@
+---
+- name: pull image
+  containers.podman.podman_image:
+    name: "{{ maw_files__image }}"
+
+- name: maw-files container
+  containers.podman.podman_container:
+    name: "{{ maw_files__container }}"
+    pod: "{{ maw_files__pod }}"
+    image: "{{ maw_files__image }}"
+    state: started
+    volume:
+      - "{{ maw_files__cert_volume }}:/certs:ro,z"
+    label:
+      io.containers.autoupdate: image
+
+- name: wait for files container
+  ansible.builtin.include_role:
+    name: podman_wait_for_start
+  vars:
+    pod_start__container_name: "{{ maw_files__container }}"
