@@ -338,7 +338,7 @@ maw_certs__dir_or_volume_mount_source: "{{ maw__certs_use_volume | ternary(maw_c
 
 # maw bash profile
 maw_bashenv__profile: "{{ remote_home_dir }}/.bash_profile"
-maw_bashenv__files:
+maw_bashenv__envfiles:
   - "{{ maw__podman_env_dir }}/maw-api.env"
   - "{{ maw__podman_env_dir }}/maw-auth.env"
   - "{{ maw__podman_env_dir }}/maw-www.env"

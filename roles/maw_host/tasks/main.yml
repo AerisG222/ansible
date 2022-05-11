@@ -61,3 +61,8 @@
     apply:
       become_user: "{{ maw_host__username }}"
   when: maw_host__deploy_admin_scripts
+
+- name: Update environment to load environment variables from generated .env files
+  ansible.builtin.include_role:
+    name: maw_bash_envfiles
+  when: maw_bashenv__configure

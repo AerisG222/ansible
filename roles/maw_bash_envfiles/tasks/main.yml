@@ -10,8 +10,8 @@
 
       set -o allexport
 
-      {% for _maw_bashenv__file in maw_bashenv__files %}
-        [ -f "{{ _maw_bashenv__file }}" ] && load_dotenv "{{ _maw_bashenv__file }}"
+      {% for _maw_bashenv__envfile in maw_bashenv__envfiles %}
+        [ -f "{{ _maw_bashenv__envfile }}" ] && load_dotenv "{{ _maw_bashenv__envfile }}"
       {% endfor %}
 
       set +o allexport
