@@ -23,6 +23,12 @@
     dest: "{{ maw_solr__tempdir }}"
     mode: u+rw
 
+- name: Copy synonym file
+  ansible.builtin.copy:
+    src: solr_synonyms.txt
+    dest: "{{ maw_solr__tempdir }}/synonyms.txt"
+    mode: u+rw
+
 - name: configure synonyms
   ansible.builtin.include_role:
     name: podman_copy
