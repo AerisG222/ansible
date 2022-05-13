@@ -111,5 +111,5 @@ maw_certs__restore: true
 maw_bashenv__configure: false
 
 # maw admin scripts
-maw_as__deploy: false
+maw_as__deploy: true
 maw_as__do_backup: true
