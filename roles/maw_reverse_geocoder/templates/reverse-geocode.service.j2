@@ -3,4 +3,4 @@ Description=Reverse Geocode job for mikeandwan.us
 
 [Service]
 Type=oneshot
-ExecStart=podman run -it --rm --pod {{ maw_revgeo__pod }} --name {{ maw_revgeo__container }} --volume {{ maw_revgeo__volume }}:/results:rw,z --env-file {{ maw_revgeo__envfile }} {{ maw_revgeo__image }}
+ExecStart=podman run -it --rm --pod {{ maw_revgeo__pod }} --name {{ maw_revgeo__container }} --volume {{ maw_revgeo__volume }}:/results:rw,z {{ maw_revgeo__image }} AUTO 'Server=127.0.0.1;Port=5432;Database=maw_website;User Id={{ maw_revgeo__sql_username }};Password={{ maw_revgeo__sql_password }}' '{{ maw_revgeo__google_api_key }}' /results

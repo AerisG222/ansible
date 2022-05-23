@@ -1,0 +1,13 @@
+---
+- name: Configure mikeandwan.us
+  hosts: maw
+  vars_files:
+    - "{{ controller_secrets_file }}"
+    - vars/maw_vars.yml
+  vars:
+    ansible_user: "{{ maw_host__username }}"
+
+  tasks:
+    - name: Update reverse geocoder
+      ansible.builtin.include_role:
+        name: maw_reverse_geocoder

@@ -5,13 +5,10 @@
       containers.podman.podman_image:
         name: "{{ maw_revgeo__image }}"
 
-    - name: prepare reverse geocode environment file
-      ansible.builtin.include_role:
-        name: maw_envfile
-      vars:
-        maw_env__template: maw-reverse-geocode.env.j2
-        maw_env__path: "{{ maw_revgeo__envfile }}"
-        maw_env__backup: "{{ maw_revgeo__envfile_backup }}"
+    - name: remove reverse geocode environment file if it exists, as it is no longer used
+      ansible.builtin.file:
+        path: "{{ maw_revgeo__envfile }}"
+        state: absent
 
     - name: create maw-reverse-geocode volume
       containers.podman.podman_volume:
