@@ -17,3 +17,4 @@
     - idsrvsql.sh
     - wwwsql.sh
     - update-support-images.sh
+    - clean_prt_images.sh

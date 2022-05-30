@@ -57,3 +57,8 @@ argument_specs:
         type: str
         required: true
         description: docker image to use for indexing content to solr
+
+      maw_as__asset_image_dir:
+        type: str
+        required: true
+        description: full path to the image asset directory

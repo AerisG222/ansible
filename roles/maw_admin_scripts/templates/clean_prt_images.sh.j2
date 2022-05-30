@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# delete prt directories modified 1 year or more ago
+find '{{ maw_as__asset_image_dir }}' -type d -regex '.*/prt' -ctime +365 -print0 | xargs -0 -n1 sudo rm -rf
