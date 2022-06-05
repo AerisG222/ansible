@@ -6,3 +6,4 @@ fed_b__hostname: barett
 
 # fedora workstation
 fed_w__nvidia: true
+fed_w__aws_cli: true
