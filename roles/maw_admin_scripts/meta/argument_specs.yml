@@ -62,3 +62,8 @@ argument_specs:
         type: str
         required: true
         description: full path to the image asset directory
+
+      maw_as__redis_container:
+        type: str
+        required: true
+        description: name of redis container
