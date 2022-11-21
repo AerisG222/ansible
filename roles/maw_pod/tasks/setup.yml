@@ -18,7 +18,7 @@
   containers.podman.podman_pod:
     name: "{{ maw__podman_pod }}"
     state: stopped
-  when: (podinfo.pods | length > 0) and (podinfo.pods[0].State == 'Running')
+  when: (podinfo.stderr | length == 0) and (podinfo.pods | length > 0) and (podinfo.pods[0].State == 'Running')
 
 - name: "create {{ maw__podman_pod }} pod"
   containers.podman.podman_pod:
