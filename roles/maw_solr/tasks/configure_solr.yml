@@ -19,14 +19,8 @@
 
 - name: Copy synonym file
   ansible.builtin.copy:
-    src: solr_synonyms.txt
+    src: synonyms.txt
     dest: "{{ maw_solr__tempdir }}"
-    mode: u+rw
-
-- name: Copy synonym file
-  ansible.builtin.copy:
-    src: solr_synonyms.txt
-    dest: "{{ maw_solr__tempdir }}/synonyms.txt"
     mode: u+rw
 
 - name: configure synonyms
@@ -35,7 +29,7 @@
   vars:
     pod_cp__src_dir_or_volume: "{{ maw_solr__tempdir }}"
     pod_cp__dest_dir_or_volume: "{{ maw_solr__volume }}"
-    pod_cp__command: cp -R /src/. /dest/data/multimedia-categories/conf
+    pod_cp__command: cp /src/synonyms.txt /dest/data/multimedia-categories/conf
 
 - name: cleanup temp dir
   ansible.builtin.file:
@@ -61,7 +55,7 @@
 
 - name: redefine unique key
   ansible.builtin.command:
-    cmd: "podman exec -it {{ maw_solr__container }} sed -i -E 's/(<uniqueKey>)id(<.uniqueKey>)/\\1solr_id\\2/' /var/solr/data/multimedia-categories/conf/managed-schema"
+    cmd: "podman exec -it {{ maw_solr__container }} sed -i -E 's/(<uniqueKey>)id(<.uniqueKey>)/\\1solr_id\\2/' /var/solr/data/multimedia-categories/conf/managed-schema.xml"
   changed_when: true
 
 - name: reload core so we don't loose the edit of updating the unique key
@@ -328,25 +322,25 @@
               teaser_photo_sq_path
               score
 
-- name: set request handler definition
-  ansible.builtin.set_fact:
-    maw_request_handler_definition: "{{ lookup('file', 'solr_request_handler.json') }}"
-
 - name: check if custom request handler is defined
   ansible.builtin.command:
     cmd: "podman exec -it {{ maw_solr__container }} curl 'http://localhost:8983/solr/multimedia-categories/config/requestHandler?componentName=/maw-photos-query'"
   changed_when: false
   register: solr_handler_exists_result
 
+- name: prepare check result into a variable
+  ansible.builtin.set_fact:
+    solr_handler_check_result: "{{ solr_handler_exists_result.stdout | from_json }}"
+
 - name: add handler if it does not exist
   ansible.builtin.command:
     cmd: "podman exec -it {{ maw_solr__container }} curl -X POST -H 'Content-type:application/json' --data-binary '{ \"add-requesthandler\": {{ maw_request_handler_definition | to_json }} }' 'http://localhost:8983/solr/multimedia-categories/config'"
-  when: not (solr_handler_exists_result.stdout | from_json).config.requestHandler['/maw-photos-query']
+  when: solr_handler_check_result['error'] is defined
 
 - name: update handler if different
   ansible.builtin.command:
     cmd: "podman exec -it {{ maw_solr__container }} curl -X POST -H 'Content-type:application/json' --data-binary '{ \"update-requesthandler\": {{ maw_request_handler_definition | to_json }} }' 'http://localhost:8983/solr/multimedia-categories/config'"
-  when: (solr_handler_exists_result.stdout | from_json).config.requestHandler['/maw-photos-query'] and maw_request_handler_definition != (solr_handler_exists_result.stdout | from_json).config.requestHandler['/maw-photos-query']
+  when: not (solr_handler_check_result['error'] is defined)
 
 - name: reload core for good measure
   ansible.builtin.command:
