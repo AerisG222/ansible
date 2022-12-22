@@ -1,0 +1,21 @@
+---
+- name: Volume directory test
+  hosts: localhost
+
+  tasks:
+    - name: get volume info
+      ansible.builtin.command:
+        cmd: podman volume inspect "dev-maw-solr-9"
+      register: _solr__volinfo
+
+    - name: show info
+      ansible.builtin.debug:
+        var: _solr__volinfo
+
+    - name: get volume path
+      ansible.builtin.set_fact:
+        _solr__voldir: "{{ (_solr__volinfo.stdout | from_json)[0].Mountpoint }}"
+
+    - name: print var
+      ansible.builtin.debug:
+        var: _solr__voldir
