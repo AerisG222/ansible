@@ -1,0 +1,4 @@
+- name: reload core
+  ansible.builtin.command:
+    cmd: "podman exec -it {{ maw_solr__container }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
+  changed_when: true

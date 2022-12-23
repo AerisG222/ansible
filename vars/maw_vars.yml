@@ -51,10 +51,10 @@ maw_current__homedir: /home/{{ maw_current__prod_username }}
 # current live site postgres backup (assumes ssh + key auth configured)
 maw_prod_pg_bu__hostname: "{{ maw_current__prod_host }}"
 maw_prod_pg_bu__username: "{{ maw_current__prod_username }}"
-maw_prod_pg_bu__pod: maw-pod
-maw_prod_pg_bu__image: docker.io/postgres:13-alpine
+maw_prod_pg_bu__pod: prod-maw-pod
+maw_prod_pg_bu__image: docker.io/postgres:14-alpine
 maw_prod_pg_bu__container: "{{ maw__env }}-ansible-postgres-backup"
-maw_prod_pg_bu__envfile: "{{ maw_current__homedir }}/maw-postgres-backup.env"
+maw_prod_pg_bu__envfile: "{{ maw_current__homedir }}/maw_prod/podman-env/maw-postgres.env"
 maw_prod_pg_bu__control_dir: "{{ maw__pg_backup_host_dir }}"
 maw_prod_pg_bu__temp_remote_dir: "{{ maw_current__homedir }}/_tmp_ansible_postgres_backup"
 
@@ -129,6 +129,7 @@ maw_host__hostnames:
 maw_host__asset_dirs:
   - "{{ maw__asset_dir_images }}"
   - "{{ maw__asset_dir_movies }}"
+maw_host__etc_hosts_backup: true
 
 # maw google credentials
 maw_google_creds__backup_dir: "{{ maw_prod_google_creds_bu__control_dir }}"
@@ -140,7 +141,7 @@ maw_google_creds__dir_for_site: "{{ maw_google_creds__use_volume | ternary('/goo
 maw_google_creds__file_for_site: "{{ maw_google_creds__dir_for_site }}/www_emailer.json"
 
 # maw postgres
-maw_postgres__version: 14
+maw_postgres__version: 15
 maw_postgres__pod: "{{ maw__podman_pod }}"
 maw_postgres__image: "docker.io/postgres:{{ maw_postgres__version }}-alpine"
 maw_postgres__container: "{{ maw__env }}-maw-postgres"
@@ -189,7 +190,7 @@ maw_postgres__sql_username_solr: "{{ maw__sql_username_solr }}"
 maw_postgres__sql_password_solr: "{{ maw__sql_password_solr }}"
 
 # maw redis
-maw_redis__version: 6
+maw_redis__version: 7
 maw_redis__pod: "{{ maw__podman_pod }}"
 maw_redis__image: docker.io/redis:{{ maw_redis__version }}-alpine
 maw_redis__container: "{{ maw__env }}-maw-redis"
@@ -200,7 +201,7 @@ maw_redis__cache_sync_sql_username: "{{ maw__sql_username_maw }}"
 maw_redis__cache_sync_sql_password: "{{ maw__sql_password_maw }}"
 
 # maw solr
-maw_solr__version: 8
+maw_solr__version: 9
 maw_solr__systemd_dir: "{{ maw__systemd_dir }}"
 maw_solr__tempdir: "{{ remote_home_dir }}/_tmp_ansible_maw_solr"
 maw_solr__pod: "{{ maw__podman_pod }}"

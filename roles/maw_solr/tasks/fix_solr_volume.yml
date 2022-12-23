@@ -1,0 +1,20 @@
+# the following was necessary when upgrading from v8 to v9.  Creating the core and copying in the synonyms.txt
+# would have incorrect ownership and selinux labels.  After much trouble, the steps below force all files in the
+# volume to be of the proper selinux context and owned by solr:solr (8983:8983) in the running solr container.
+# without this, the core would fail to load.  Also, I could not get the podman_unshare become plugin to work
+- name: get volume info
+  ansible.builtin.command:
+    cmd: podman volume inspect "{{ maw_solr__volume }}"
+  register: _solr__volinfo
+
+- name: get volume path
+  ansible.builtin.set_fact:
+    _solr__voldir: "{{ (_solr__volinfo.stdout | from_json)[0].Mountpoint }}"
+
+- name: chown solr files
+  ansible.builtin.command:
+    cmd: podman unshare chown -R 8983:8983 "{{ _solr__voldir }}"
+
+- name: selinux relabel solr files
+  ansible.builtin.command:
+    cmd: podman unshare chcon -R -u system_u -r object_r -t container_file_t -l s0 "{{ _solr__voldir }}"

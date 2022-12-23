@@ -1,4 +1,9 @@
 ---
+# ideally we would create an 'empty' solr instance and exclusively use the schema api to configure the core
+# from scratch.  however, there are a few things which do not seem to be possible just using the api, so
+# instead, we do some dirty deeds to setup the core we want.  for example, here is an issue on jira which
+# suggests that setting uniqueKey via api will likely never be available:
+# https://issues.apache.org/jira/browse/SOLR-7242
 - name: create multimedia-categories core
   ansible.builtin.command:
     cmd: "podman exec -it {{ maw_solr__container }} solr create_core -c multimedia-categories"
@@ -10,6 +15,9 @@
   ansible.builtin.command:
     cmd: "podman exec -it {{ maw_solr__container }} solr config -c multimedia-categories -p 8983 -action set-user-property -property update.autoCreateFields -value false"
   changed_when: true
+
+- name: fix solr volume ownership / selinux context (part 1)
+  ansible.builtin.include_tasks: fix_solr_volume.yml
 
 - name: Ensure temp dir exists
   ansible.builtin.file:
@@ -31,15 +39,16 @@
     pod_cp__dest_dir_or_volume: "{{ maw_solr__volume }}"
     pod_cp__command: cp /src/synonyms.txt /dest/data/multimedia-categories/conf
 
+- name: fix solr volume ownership / selinux context (part 2)
+  ansible.builtin.include_tasks: fix_solr_volume.yml
+
 - name: cleanup temp dir
   ansible.builtin.file:
     path: "{{ maw_solr__tempdir }}"
     state: absent
 
 - name: reload core for synonyms to take effect
-  ansible.builtin.command:
-    cmd: "podman exec -it {{ maw_solr__container }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
-  changed_when: true
+  ansible.builtin.include_tasks: reload_core.yml
 
 - name: add / update unique key
   ansible.builtin.include_tasks: define_field.yml
@@ -58,10 +67,8 @@
     cmd: "podman exec -it {{ maw_solr__container }} sed -i -E 's/(<uniqueKey>)id(<.uniqueKey>)/\\1solr_id\\2/' /var/solr/data/multimedia-categories/conf/managed-schema.xml"
   changed_when: true
 
-- name: reload core so we don't loose the edit of updating the unique key
-  ansible.builtin.command:
-    cmd: "podman exec -it {{ maw_solr__container }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
-  changed_when: true
+- name: reload core after updating unique key
+  ansible.builtin.include_tasks: reload_core.yml
 
 - name: add fields to schema
   ansible.builtin.include_tasks: define_field.yml
@@ -343,6 +350,4 @@
   when: not (solr_handler_check_result['error'] is defined)
 
 - name: reload core for good measure
-  ansible.builtin.command:
-    cmd: "podman exec -it {{ maw_solr__container }} curl 'http://127.0.0.1:8983/solr/admin/cores?action=RELOAD&core=multimedia-categories'"
-  changed_when: true
+  ansible.builtin.include_tasks: reload_core.yml
