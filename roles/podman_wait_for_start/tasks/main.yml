@@ -1,5 +1,5 @@
 ---
-- name: "wait for container {{ container_name }} to start"
+- name: "wait for container {{ pod_start__container_name }} to start"
   containers.podman.podman_container_info:
     name: "{{ pod_start__container_name }}"
   register: _pod_start__container_info
