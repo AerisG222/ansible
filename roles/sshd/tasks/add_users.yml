@@ -45,6 +45,7 @@
 
 - name: validate ssh
   delegate_to: localhost
+  become: false
   ansible.builtin.command:
     cmd: ssh {{ _sshd__allow_user }}@{{ current_ssh_server }} "echo success"
   register: validate_ssh_output
