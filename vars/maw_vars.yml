@@ -52,7 +52,7 @@ maw_current__homedir: /home/{{ maw_current__prod_username }}
 maw_prod_pg_bu__hostname: "{{ maw_current__prod_host }}"
 maw_prod_pg_bu__username: "{{ maw_current__prod_username }}"
 maw_prod_pg_bu__pod: prod-maw-pod
-maw_prod_pg_bu__image: docker.io/postgres:14-alpine
+maw_prod_pg_bu__image: docker.io/postgres:15-alpine
 maw_prod_pg_bu__container: "{{ maw__env }}-ansible-postgres-backup"
 maw_prod_pg_bu__envfile: "{{ maw_current__homedir }}/maw_prod/podman-env/maw-postgres.env"
 maw_prod_pg_bu__control_dir: "{{ maw__pg_backup_host_dir }}"
