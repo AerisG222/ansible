@@ -11,10 +11,13 @@
   ignore_errors: true
   tags: skip_ansible_lint
 
-- name: disable data driven schema
-  ansible.builtin.command:
-    cmd: "podman exec -it {{ maw_solr__container }} solr config -c multimedia-categories -p 8983 -action set-user-property -property update.autoCreateFields -value false"
-  changed_when: true
+# this step broke for some reason in prod, but worked fine locally - it errored w/ 404 and i couldn't figure out why
+# seeing this broke prod, i ended up disabling the line below to bring prod back online - will need to troubleshoot further
+# as we should make sure that we are not using data driven schema in prod...
+#- name: disable data driven schema
+#  ansible.builtin.command:
+#    cmd: "podman exec -it {{ maw_solr__container }} solr config -c multimedia-categories -p 8983 -action set-user-property -property update.autoCreateFields -value false"
+#  changed_when: true
 
 - name: fix solr volume ownership / selinux context (part 1)
   ansible.builtin.include_tasks: fix_solr_volume.yml

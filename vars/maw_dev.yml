@@ -30,7 +30,7 @@ maw__podman_publish_ports:
 maw_dev_prep__configure_tools: false
 
 # backup
-maw_prod_pg_bu__use_existing_backups: true
+maw_prod_pg_bu__use_existing_backups: false
 maw_prod_gdrive_creds_bu__use_existing_backups: true
 maw_prod_google_creds_bu__use_existing_backups: true
 maw__do_uploads_backup: false
@@ -42,7 +42,7 @@ maw__do_revgeo_backup: false
 # maw host
 maw_host__allow_low_ports: false
 maw_host__deploy_admin_scripts: false
-maw_host__allow_firewall_services:
+maw_host__allow_firewall_services: []
 maw_host__username: "{{ lookup('env', 'USER') }}"
 maw_host__password: ""
 
@@ -93,11 +93,11 @@ maw_photos__image: ""
 # maw gateway
 maw_gateway__run_in_container: false
 maw_gateway__configure_certbot: false
-maw_gateway__image:
+maw_gateway__image: []
 
 # maw reverse geocode
 maw_revgeo__configure_job: false
-maw_revgeo__image:
+maw_revgeo__image: []
 maw_revgeo__restore: false
 
 # maw certs
