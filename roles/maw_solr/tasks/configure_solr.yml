@@ -12,12 +12,18 @@
   tags: skip_ansible_lint
 
 # this step broke for some reason in prod, but worked fine locally - it errored w/ 404 and i couldn't figure out why
-# seeing this broke prod, i ended up disabling the line below to bring prod back online - will need to troubleshoot further
-# as we should make sure that we are not using data driven schema in prod...
+# update: i think this worked in older versions of solr, but is now failing with the latest container image
 #- name: disable data driven schema
 #  ansible.builtin.command:
 #    cmd: "podman exec -it {{ maw_solr__container }} solr config -c multimedia-categories -p 8983 -action set-user-property -property update.autoCreateFields -value false"
 #  changed_when: true
+
+# seeing the above no longer seems to work, we call the api directly via curl
+# see: https://solr.apache.org/guide/solr/latest/configuration-guide/config-api.html#creating-and-updating-user-defined-properties
+- name: disable data driven schema
+  ansible.builtin.command:
+    cmd: "podman exec -it {{ maw_solr__container }} curl -X POST -H 'Content-type:application/json' -d '{\"set-user-property\": { \"update.autoCreateFields\": \"false\" }}' http://localhost:8983/solr/multimedia-categories/config"
+  changed_when: true
 
 - name: fix solr volume ownership / selinux context (part 1)
   ansible.builtin.include_tasks: fix_solr_volume.yml
